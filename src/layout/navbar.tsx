@@ -17,12 +17,13 @@ import MoreVertIcon from '@material-ui/icons/ExpandMore';
 import {fade} from '@material-ui/core/styles/colorManipulator';
 import BaseProps from "../base/props";
 
-interface MainNavBarProps extends BaseProps{
+interface MainNavBarProps extends BaseProps {
 
 }
 
 interface MainNavBarState {
     anchorEl: any
+    isLogin: boolean
 }
 
 
@@ -34,6 +35,7 @@ class MainNavBar extends React.Component<MainNavBarProps, MainNavBarState> {
         this.classes = props.classes;
         this.state = {
             anchorEl: null,
+            isLogin: false
         };
 
     }
@@ -47,8 +49,30 @@ class MainNavBar extends React.Component<MainNavBarProps, MainNavBarState> {
     };
 
 
+    userButton = (isLogin, classes) => {
+        if (isLogin) {
+            return (
+                <Button className={classes.rightButton}>
+                    <Avatar
+                        alt="Adelle Charles"
+                        src="http://localhost:8888/static/upload/user/avatar/a228b09a7ca497d3a0c169272ab4c9ab.jpg"
+                    />
+                    <span className={classes.username}>TakayamaAren</span>
+                    <MoreVertIcon/>
+                </Button>
+            )
+        } else {
+            return (
+                <Button className={classes.rightButton}  href={"/login/login.html"}>
+                    <span className={classes.username}>登录</span>
+                </Button>
+            )
+        }
+    };
+
+
     render(): React.ReactNode {
-        const {anchorEl} = this.state;
+        const {anchorEl, isLogin} = this.state;
         return (
             <div className={this.classes.root}>
                 <AppBar position="static">
@@ -78,14 +102,7 @@ class MainNavBar extends React.Component<MainNavBarProps, MainNavBarState> {
                                 }}
                             />
                         </div>
-                        <Button className={this.classes.rightButton}>
-                            <Avatar
-                                alt="Adelle Charles"
-                                src="http://localhost:8888/static/upload/user/avatar/a228b09a7ca497d3a0c169272ab4c9ab.jpg"
-                            />
-                            <span className={this.classes.username}>TakayamaAren</span>
-                            <MoreVertIcon/>
-                        </Button>
+                        {this.userButton(this.state.isLogin, this.classes)}
                     </Toolbar>
                 </AppBar>
                 <Menu

@@ -94158,15 +94158,38 @@ function (_super) {
       });
     };
 
+    _this.userButton = function (isLogin, classes) {
+      if (isLogin) {
+        return React.createElement(core_1.Button, {
+          className: classes.rightButton
+        }, React.createElement(core_1.Avatar, {
+          alt: "Adelle Charles",
+          src: "http://localhost:8888/static/upload/user/avatar/a228b09a7ca497d3a0c169272ab4c9ab.jpg"
+        }), React.createElement("span", {
+          className: classes.username
+        }, "TakayamaAren"), React.createElement(ExpandMore_1.default, null));
+      } else {
+        return React.createElement(core_1.Button, {
+          className: classes.rightButton,
+          href: "/login/login.html"
+        }, React.createElement("span", {
+          className: classes.username
+        }, "\u767B\u5F55"));
+      }
+    };
+
     _this.classes = props.classes;
     _this.state = {
-      anchorEl: null
+      anchorEl: null,
+      isLogin: false
     };
     return _this;
   }
 
   MainNavBar.prototype.render = function () {
-    var anchorEl = this.state.anchorEl;
+    var _a = this.state,
+        anchorEl = _a.anchorEl,
+        isLogin = _a.isLogin;
     return React.createElement("div", {
       className: this.classes.root
     }, React.createElement(core_1.AppBar, {
@@ -94196,14 +94219,7 @@ function (_super) {
         root: this.classes.inputRoot,
         input: this.classes.inputInput
       }
-    })), React.createElement(core_1.Button, {
-      className: this.classes.rightButton
-    }, React.createElement(core_1.Avatar, {
-      alt: "Adelle Charles",
-      src: "http://localhost:8888/static/upload/user/avatar/a228b09a7ca497d3a0c169272ab4c9ab.jpg"
-    }), React.createElement("span", {
-      className: this.classes.username
-    }, "TakayamaAren"), React.createElement(ExpandMore_1.default, null)))), React.createElement(core_1.Menu, {
+    })), this.userButton(this.state.isLogin, this.classes))), React.createElement(core_1.Menu, {
       id: "simple-menu",
       anchorEl: anchorEl,
       disableAutoFocusItem: true,
@@ -95189,7 +95205,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61015" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63847" + '/');
 
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
