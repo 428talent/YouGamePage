@@ -9,19 +9,18 @@ import ContentBar from "./components/content-bar";
 import SaleGameSection from "./components/sale-game";
 import Footer from "../layout/footer";
 import GameList from "./components/game-rank";
+import Page from "../layout/page";
 
 function App() {
     return (
         <div>
-            <MuiThemeProvider theme={theme}>
+            <Page children={
                 <div>
-                    <MainNavBar/>
                     <Banner/>
                     <SaleGameSection/>
                     <GameList/>
-                    <Footer/>
                 </div>
-            </MuiThemeProvider>
+            }/>
         </div>
     )
 }

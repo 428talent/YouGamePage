@@ -1,6 +1,5 @@
-import {Component} from 'react'
+import * as React from 'react'
 import {Field, reduxForm} from 'redux-form'
-import * as React from "react";
 import {Button, TextField} from "@material-ui/core";
 
 const styles = {

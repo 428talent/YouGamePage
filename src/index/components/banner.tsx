@@ -17,16 +17,16 @@ class Banner extends React.Component {
         return (
             <Slider {...settings}>
                 <div>
-                    <img src="/ban1.773a4add.jpg" />
+                    <img src="/ban1.3eeed532.jpg" />
                 </div>
                 <div>
-                    <img src="/ban2.21e3556a.jpg" />
+                    <img src="/ban2.8304b2c7.jpg" />
                 </div>
                 <div>
-                    <img src="/ban3.02990fc1.jpg" />
+                    <img src="/ban3.c3bd67a6.jpg" />
                 </div>
                 <div>
-                    <img src="/ban4.0624c1b3.jpg" />
+                    <img src="/ban4.f3349e2d.jpg" />
                 </div>
             </Slider>
         );

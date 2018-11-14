@@ -6,7 +6,7 @@ import {Router, Route} from 'dva/router';
 import LoginCard from "./components/login-card";
 import {connect} from "dva";
 import theme from "../config/theme";
-
+import Page from "../layout/page";
 
 
 interface AppProps {
@@ -22,16 +22,14 @@ function App(props: AppProps) {
             }
         })
     }
+
     console.log(props);
 
     return (
         <div>
-            <MuiThemeProvider theme={theme}>
-                <div>
-                    <MainNavBar/>
-                    <LoginCard onLoginHandler={onLogin}/>
-                </div>
-            </MuiThemeProvider>
+            <Page children={
+                <LoginCard onLoginHandler={onLogin}/>
+            }/>
         </div>
     )
 }
