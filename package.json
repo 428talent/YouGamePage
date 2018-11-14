@@ -1,0 +1,33 @@
+{
+  "name": "yougame-page",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "dev": "parcel ./src/login/*.html",
+    "index": "parcel ./src/index/*.html",
+    "build": "parcel build ./src/login/*.html"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.1.5",
+    "parcel-bundler": "^1.10.3",
+    "postcss-modules": "^1.4.1",
+    "typescript": "^3.1.6"
+  },
+  "dependencies": {
+    "@babel/preset-react": "^7.0.0",
+    "@material-ui/core": "^3.4.0",
+    "@material-ui/icons": "^3.0.1",
+    "dva": "^2.4.1",
+    "js-cookie": "latest",
+    "js-cookies": "^1.0.4",
+    "json5": "^2.1.0",
+    "material-ui": "^0.20.2",
+    "react": "^16.6.1",
+    "react-dom": "^16.6.1",
+    "react-slick": "^0.23.2",
+    "react-swipeable-views": "^0.13.0",
+    "redux-form": "^7.4.2",
+    "tslint-config-airbnb": "^5.11.0"
+  }
+}
