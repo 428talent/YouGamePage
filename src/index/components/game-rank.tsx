@@ -2,7 +2,7 @@ import BaseProps from "../../base/props";
 import * as React from "react";
 import {AppBar, Grid, List, ListItem, Paper, Tab, Tabs, Typography, withStyles} from "@material-ui/core";
 import SwipeableViews from 'react-swipeable-views';
-import {NewGameList} from "../mock";
+import {NewGameList} from "../../mock/mock";
 import GameItem from "./game-item";
 
 function TabContainer({children, dir}) {

@@ -71092,7 +71092,7 @@ var styles = function styles(theme) {
 };
 
 exports.default = core_1.withStyles(styles)(GameCard);
-},{"@material-ui/core":"../node_modules/@material-ui/core/index.es.js","react":"../node_modules/react/index.js"}],"index/mock.ts":[function(require,module,exports) {
+},{"@material-ui/core":"../node_modules/@material-ui/core/index.es.js","react":"../node_modules/react/index.js"}],"mock/mock.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -71174,7 +71174,7 @@ var React = __importStar(require("react"));
 
 var game_card_1 = __importDefault(require("./game-card"));
 
-var mock_1 = require("../mock");
+var mock_1 = require("../../mock/mock");
 
 var SaleGameSection =
 /** @class */
@@ -71244,7 +71244,7 @@ var styles = function styles(theme) {
 
 
 exports.default = core_1.withStyles(styles)(SaleGameSection);
-},{"@material-ui/core":"../node_modules/@material-ui/core/index.es.js","react":"../node_modules/react/index.js","./game-card":"index/components/game-card.tsx","../mock":"index/mock.ts"}],"../node_modules/@babel/runtime/helpers/interopRequireDefault.js":[function(require,module,exports) {
+},{"@material-ui/core":"../node_modules/@material-ui/core/index.es.js","react":"../node_modules/react/index.js","./game-card":"index/components/game-card.tsx","../../mock/mock":"mock/mock.ts"}],"../node_modules/@babel/runtime/helpers/interopRequireDefault.js":[function(require,module,exports) {
 function _interopRequireDefault(obj) {
   return obj && obj.__esModule ? obj : {
     default: obj
@@ -72827,7 +72827,7 @@ var core_1 = require("@material-ui/core");
 
 var react_swipeable_views_1 = __importDefault(require("react-swipeable-views"));
 
-var mock_1 = require("../mock");
+var mock_1 = require("../../mock/mock");
 
 var game_item_1 = __importDefault(require("./game-item"));
 
@@ -72936,7 +72936,7 @@ var styles = function styles(theme) {
 exports.default = core_1.withStyles(styles, {
   withTheme: true
 })(GameList);
-},{"react":"../node_modules/react/index.js","@material-ui/core":"../node_modules/@material-ui/core/index.es.js","react-swipeable-views":"../node_modules/react-swipeable-views/lib/index.js","../mock":"index/mock.ts","./game-item":"index/components/game-item.tsx"}],"../node_modules/@material-ui/icons/node_modules/recompose/node_modules/@babel/runtime/helpers/interopRequireDefault.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","@material-ui/core":"../node_modules/@material-ui/core/index.es.js","react-swipeable-views":"../node_modules/react-swipeable-views/lib/index.js","../../mock/mock":"mock/mock.ts","./game-item":"index/components/game-item.tsx"}],"../node_modules/@material-ui/icons/node_modules/recompose/node_modules/@babel/runtime/helpers/interopRequireDefault.js":[function(require,module,exports) {
 function _interopRequireDefault(obj) {
   return obj && obj.__esModule ? obj : {
     default: obj
@@ -73669,7 +73669,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63847" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51331" + '/');
 
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);

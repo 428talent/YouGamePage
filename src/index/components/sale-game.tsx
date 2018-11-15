@@ -4,7 +4,7 @@ import {fade} from "@material-ui/core/styles/colorManipulator";
 import BaseProps from "../../base/props";
 import props from "../../base/props";
 import GameCard from "./game-card";
-import {NewGameList} from "../mock";
+import {NewGameList} from "../../mock/mock";
 
 interface SaleGameSectionProps extends BaseProps {
 
