@@ -75,7 +75,7 @@ class MainNavBar extends React.Component<MainNavBarProps, MainNavBarState> {
         const {anchorEl, isLogin} = this.state;
         return (
             <div className={this.classes.root}>
-                <AppBar position="static">
+                <AppBar>
                     <Toolbar>
                         <Typography className={this.classes.title} variant="h6" color="inherit" noWrap>
                             YouGame
