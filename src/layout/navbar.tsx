@@ -1,6 +1,6 @@
 import {
     AppBar, Avatar,
-    Button,
+    Button, createStyles,
     IconButton,
     InputBase,
     Menu,
@@ -16,28 +16,24 @@ import MoreVertIcon from '@material-ui/icons/ExpandMore';
 
 import {fade} from '@material-ui/core/styles/colorManipulator';
 import BaseProps from "../base/props";
+import {ServerUrl} from "../config/api";
 
 interface MainNavBarProps extends BaseProps {
-
+    user?: UserModel.User
 }
 
 interface MainNavBarState {
-    anchorEl: any
-    isLogin: boolean
+    anchorEl?: any
 }
 
 
 class MainNavBar extends React.Component<MainNavBarProps, MainNavBarState> {
-    classes: any = undefined;
+    state: Readonly<MainNavBarState> = {
+        anchorEl: undefined,
+    };
 
     constructor(props: MainNavBarProps) {
         super(props);
-        this.classes = props.classes;
-        this.state = {
-            anchorEl: null,
-            isLogin: false
-        };
-
     }
 
     handleClick = event => {
@@ -49,21 +45,21 @@ class MainNavBar extends React.Component<MainNavBarProps, MainNavBarState> {
     };
 
 
-    userButton = (isLogin, classes) => {
-        if (isLogin) {
+    userButton = (user: UserModel.User, classes) => {
+        if (user) {
             return (
                 <Button className={classes.rightButton}>
                     <Avatar
-                        alt="Adelle Charles"
-                        src="http://localhost:8888/static/upload/user/avatar/a228b09a7ca497d3a0c169272ab4c9ab.jpg"
+                        alt={user.profile.nickname}
+                        src={`${ServerUrl}/${user.profile.avatar}`}
                     />
-                    <span className={classes.username}>TakayamaAren</span>
+                    <span className={classes.username}>{user.profile.nickname}</span>
                     <MoreVertIcon/>
                 </Button>
             )
         } else {
             return (
-                <Button className={classes.rightButton}  href={"/login/login.html"}>
+                <Button className={classes.rightButton} href={"/login/login.html"}>
                     <span className={classes.username}>登录</span>
                 </Button>
             )
@@ -72,15 +68,15 @@ class MainNavBar extends React.Component<MainNavBarProps, MainNavBarState> {
 
 
     render(): React.ReactNode {
-        const {anchorEl, isLogin} = this.state;
+        const {classes} = this.props;
         return (
-            <div className={this.classes.root}>
+            <div className={classes.root}>
                 <AppBar>
                     <Toolbar>
-                        <Typography className={this.classes.title} variant="h6" color="inherit" noWrap>
+                        <Typography className={classes.title} variant="h6" color="inherit" noWrap>
                             YouGame
                         </Typography>
-                        <Button aria-owns={anchorEl ? 'simple-menu' : undefined}
+                        <Button aria-owns={this.state.anchorEl ? 'simple-menu' : undefined}
                                 aria-haspopup="true"
                                 onClick={this.handleClick}
 
@@ -89,28 +85,28 @@ class MainNavBar extends React.Component<MainNavBarProps, MainNavBarState> {
                             Primary
                             <MoreVertIcon/>
                         </Button>
-                        <div className={this.classes.grow}/>
-                        <div className={this.classes.search}>
-                            <div className={this.classes.searchIcon}>
+                        <div className={classes.grow}/>
+                        <div className={classes.search}>
+                            <div className={classes.searchIcon}>
                                 <SearchIcon/>
                             </div>
                             <InputBase
                                 placeholder="Search…"
                                 classes={{
-                                    root: this.classes.inputRoot,
-                                    input: this.classes.inputInput,
+                                    root: classes.inputRoot,
+                                    input: classes.inputInput,
                                 }}
                             />
                         </div>
-                        {this.userButton(this.state.isLogin, this.classes)}
+                        {this.userButton(this.props.user, classes)}
                     </Toolbar>
                 </AppBar>
                 <Menu
                     id="simple-menu"
-                    anchorEl={anchorEl}
+                    anchorEl={this.state.anchorEl}
                     disableAutoFocusItem={true}
                     onMouseLeave={this.handleClose}
-                    open={Boolean(anchorEl)}
+                    open={Boolean(this.state.anchorEl)}
                     onClose={this.handleClose}
                 >
                     <MenuItem onClick={this.handleClose}>Profile</MenuItem>
@@ -124,7 +120,7 @@ class MainNavBar extends React.Component<MainNavBarProps, MainNavBarState> {
 
 }
 
-const styles = theme => ({
+const styles = theme => createStyles({
     root: {
         width: '100%',
     },
@@ -191,5 +187,5 @@ const styles = theme => ({
         },
     },
 });
-// @ts-ignore
+
 export default withStyles(styles)(MainNavBar)
