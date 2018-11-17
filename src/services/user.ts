@@ -1,13 +1,26 @@
-import request from "../utils/request";
+import request, {apiRequest} from "../utils/request";
 import {url} from "inspector";
 import {Api} from "../config/api";
+import {AxiosResponse} from "axios";
 
-export async function UserLogin({username, password}) {
-    console.log(username)
-    const result = await request(
-        Api.userLogin,
-        "post",
-        {login_name: username, password: password}
-    );
-    return await result.json()
+export function UserLogin(username: string, password: string): Promise<AxiosResponse<UserModel.UserAuth>> {
+    return apiRequest({
+        method: "post",
+        url: Api.userLogin,
+        data: {
+            login_name: username, password: password
+        }
+    })
 }
+
+export function FetchUser(userId: number): Promise<AxiosResponse<UserModel.User>> {
+    return apiRequest<UserModel.User>({
+        method: "get",
+        url: Api.getUser,
+        pathParams: {
+            id: userId
+        }
+    })
+}
+
+

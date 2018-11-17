@@ -1,21 +1,48 @@
 import './css/login.css'
-import dva from 'dva';
 import * as React from "react";
-import App from "./app";
-import {reducer as formReducer} from 'redux-form'
-import LoginModel from "./model";
+import Cookies from 'js-cookie'
+
+import Page from "../layout/page";
+import LoginCard from "./components/login-card";
+import BaseProps from "../base/props";
+import {createStyles, withStyles} from "@material-ui/core";
+import {UserLogin} from "../services/user";
 
 // 创建应用
-const app = dva({
-    extraReducers: {
-        form: formReducer,
-    },
+
+
+interface AppProps extends BaseProps {
+
+}
+
+class Login extends React.Component<AppProps, {}> {
+    onLogin = (username: string, password: string) => {
+        console.log(username)
+        UserLogin(username, password).then(response => {
+            console.log(response.data);
+            Cookies.set('yougame_token', response.data.payload.Sign, {expires: 15});
+
+        })
+    };
+
+    render(): React.ReactNode {
+        return (
+
+            <Page children={
+                <div className={this.props.classes.container}>
+                    <LoginCard onLoginHandler={this.onLogin}/>
+                </div>
+            }/>
+
+        )
+    }
+
+
+}
+
+const styles = createStyles({
+    container: {
+        minHeight: 812
+    }
 });
-// 注册视图
-
-app.router(() => <App/>);
-
-app.model(require('./model').default);
-
-// 启动应用
-app.start('#root');
+export default withStyles(styles)(Login)

@@ -2,10 +2,10 @@ import Cookies from 'js-cookie'
 import axios, {AxiosResponse} from 'axios'
 import Game = GameModel.Game;
 
-interface ApiReqeustInit {
+interface ApiRequestInit {
     url: string,
     method: string,
-    data: object,
+    data?: object,
     queryParams?: object,
     pathParams?: object
 }
@@ -35,7 +35,7 @@ function request(url: string, method: string, data: object = undefined, queryPar
     })
 }
 
-export const apiRequest = <MT extends any>(init: ApiReqeustInit): Promise<AxiosResponse<MT>> => {
+export const apiRequest = <MT extends any>(init: ApiRequestInit): Promise<AxiosResponse<MT>> => {
     let {
         url, method, data, queryParams, pathParams
     } = init;
@@ -64,6 +64,7 @@ export const apiRequest = <MT extends any>(init: ApiReqeustInit): Promise<AxiosR
             return axios.request({
                 method: method,
                 data: data,
+                url:url,
                 headers: {
                     "Authorization": Cookies.get("yougame_token"),
                     "Content-Type": "application/json"

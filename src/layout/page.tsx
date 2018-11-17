@@ -3,11 +3,13 @@ import MainNavBar from "./navbar";
 import Footer from "./footer";
 import theme from "../config/theme";
 import {MuiThemeProvider} from "@material-ui/core";
+import {readCookieJWT} from "../utils/auth";
 
 class Page extends React.Component<PageProps, {}> {
 
     constructor(props: Readonly<PageProps>) {
         super(props);
+        readCookieJWT()
     }
 
     render(): React.ReactNode {

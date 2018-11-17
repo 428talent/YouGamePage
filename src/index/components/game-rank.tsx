@@ -95,7 +95,7 @@ const styles = theme => ({
 );
 
 interface GameListProps extends BaseProps {
-    theme: any
+    theme?: any
 }
 
 export default withStyles(styles, {withTheme: true})(GameList)
