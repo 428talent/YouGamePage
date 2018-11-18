@@ -29,6 +29,10 @@ export default ({
                 payload: {
                     user: result.data
                 }
+            });
+            yield put({
+                type: "cart/fetchCartList",
+                payload: {}
             })
 
 

@@ -22,6 +22,14 @@ class Setting extends React.Component<SettingProps, {}> {
             }
         })
     };
+    changeNickname = (nickname: string) => {
+        this.props.dispatch({
+            type: "setting/changeNickname",
+            payload: {
+                nickname
+            }
+        })
+    };
 
     render(): React.ReactNode {
         const {classes} = this.props;
@@ -32,6 +40,7 @@ class Setting extends React.Component<SettingProps, {}> {
                         <Grid item xs={12}>
                             <UserSection {...this.props.userSection} user={this.props.user}
                                          onUploadAvatar={this.uploadAvatar}
+                                         onChangeUserNickname={this.changeNickname}
                                          showChangeNicknameDialog={this.showChangeNicknameDialog}/>
                         </Grid>
                     </Grid>

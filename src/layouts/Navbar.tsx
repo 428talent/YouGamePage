@@ -1,5 +1,5 @@
 import {
-    AppBar, Avatar,
+    AppBar, Avatar, Badge,
     Button, createStyles,
     IconButton,
     InputBase,
@@ -13,7 +13,7 @@ import * as React from "react";
 import SearchIcon from '@material-ui/icons/Search';
 import MenuIcon from '@material-ui/icons/Menu';
 import MoreVertIcon from '@material-ui/icons/ExpandMore';
-
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart'
 import {fade} from '@material-ui/core/styles/colorManipulator';
 import BaseProps from "../base/props";
 import {ServerUrl} from "../config/api";
@@ -98,6 +98,11 @@ class MainNavBar extends React.Component<MainNavBarProps, MainNavBarState> {
                                 }}
                             />
                         </div>
+                        <IconButton color="inherit">
+                            <Badge badgeContent={17} color="secondary">
+                                <ShoppingCartIcon />
+                            </Badge>
+                        </IconButton>
                         {this.userButton(this.props.user, classes)}
                     </Toolbar>
                 </AppBar>

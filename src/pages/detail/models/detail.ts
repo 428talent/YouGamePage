@@ -12,7 +12,6 @@ export default ({
     },
     subscriptions: {
         'setup'({dispatch, history}) {
-            Logger.info(history);
             const match = pathToRegexp('/detail/:gameId').exec(history.location.pathname);
             if (match) {
                 dispatch({

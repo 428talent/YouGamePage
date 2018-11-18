@@ -1,5 +1,4 @@
-import request, {apiRequest} from "../utils/request";
-import {url} from "inspector";
+import {apiRequest} from "../utils/request";
 import {Api} from "../config/api";
 import {AxiosResponse} from "axios";
 
@@ -23,17 +22,29 @@ export const FetchUser = ({userId}): Promise<AxiosResponse<UserModel.User>> => {
     })
 };
 
-export const UploadUserAvatar = ({avatar,userId}):Promise<AxiosResponse<UserModel.User>> =>{
+export const UploadUserAvatar = ({avatar, userId}): Promise<AxiosResponse<UserModel.User>> => {
     let form = new FormData();
-    form.append("avatar",avatar);
+    form.append("avatar", avatar);
     return apiRequest({
-        url:Api.uploadUserAvatar,
-        method:"post",
-        pathParams:{
-            id:userId
+        url: Api.uploadUserAvatar,
+        method: "post",
+        pathParams: {
+            id: userId
         },
         form
     })
 };
 
 
+export const ChangeProfile = ({email, nickname,userId}): Promise<AxiosResponse<UserModel.User>> => {
+    return apiRequest({
+        url: Api.changeProfile,
+        method: "put",
+        data: {
+            email: email, nickname: nickname
+        },
+        pathParams:{
+            id:userId
+        }
+    })
+};

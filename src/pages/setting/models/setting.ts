@@ -1,6 +1,6 @@
 import Axios, {AxiosResponse} from "axios";
 import {UserSectionProps} from "../components/UserSection";
-import {UploadUserAvatar} from "../../../services/user";
+import {ChangeProfile, UploadUserAvatar} from "../../../services/user";
 
 
 export default ({
@@ -24,6 +24,25 @@ export default ({
                     payload: {user: uploadResult.data}
                 });
             }
+        },
+        * changeNickname({payload}, {select, call, put}) {
+            const user: UserModel.User = yield select(state => (state.app.user));
+            yield put({
+                type: "changeNicknameDialogVisitable",
+                payload: {isShow: false}
+            });
+            const uploadResult: AxiosResponse<UserModel.User> = yield call(ChangeProfile, {
+                nickname: payload.nickname,
+                email: user.profile.email,
+                userId:user.id
+            });
+            if (uploadResult.status == 200) {
+                yield put({
+                    type: 'app/setUser',
+                    payload: {user: uploadResult.data}
+                });
+            }
+
         }
 
     },

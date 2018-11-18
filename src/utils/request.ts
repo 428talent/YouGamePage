@@ -8,37 +8,22 @@ interface ApiRequestInit {
     data?: object,
     queryParams?: object,
     pathParams?: object
-    form?: FormData
+    form?: FormData,
+    page?: {
+        pageSize: number,
+        page: number
+    }
 }
 
-function request(url: string, method: string, data: object = undefined, queryParams: object = undefined, pathParams: object = undefined): Promise<AxiosResponse> {
-    if (queryParams) {
-        url = url + "?" + Object.getOwnPropertyNames(queryParams).map(value => {
-            return `${value}=${queryParams[value]}`
-        }).join("&")
-    }
-    if (pathParams) {
-        Object.getOwnPropertyNames(pathParams).forEach(value => {
-            url = url.replace(`:${value}`, pathParams[value])
-        })
-    }
-
-    return axios({
-        method,
-        url: url,
-        headers: {
-            "Authorization": Cookies.get("yougame_token"),
-            "Content-Type": "application/json"
-        },
-        data: data
-
-    })
-}
 
 export const apiRequest = <MT extends any>(init: ApiRequestInit): Promise<AxiosResponse<MT>> => {
     let {
-        url, method, data, queryParams, pathParams, form
+        url, method, data, queryParams, pathParams, form, page
     } = init;
+    if (page) {
+        queryParams["page"] = page.page;
+        queryParams["pageSize"] = page.pageSize;
+    }
     if (queryParams) {
         url = url + "?" + Object.getOwnPropertyNames(queryParams).map(value => {
             return `${value}=${queryParams[value]}`
@@ -86,4 +71,3 @@ export const apiRequest = <MT extends any>(init: ApiRequestInit): Promise<AxiosR
 
 };
 
-export default request
