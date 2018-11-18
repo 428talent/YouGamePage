@@ -1,4 +1,4 @@
-import Cookies from 'js-cookie'
+import * as Cookies from 'js-cookie'
 import axios, {AxiosResponse} from 'axios'
 import Game = GameModel.Game;
 
@@ -8,11 +8,10 @@ interface ApiRequestInit {
     data?: object,
     queryParams?: object,
     pathParams?: object
+    form?: FormData
 }
 
 function request(url: string, method: string, data: object = undefined, queryParams: object = undefined, pathParams: object = undefined): Promise<AxiosResponse> {
-    console.log(pathParams);
-    console.log(data);
     if (queryParams) {
         url = url + "?" + Object.getOwnPropertyNames(queryParams).map(value => {
             return `${value}=${queryParams[value]}`
@@ -26,21 +25,20 @@ function request(url: string, method: string, data: object = undefined, queryPar
 
     return axios({
         method,
-        url:url,
+        url: url,
         headers: {
             "Authorization": Cookies.get("yougame_token"),
             "Content-Type": "application/json"
         },
-        data:data
+        data: data
+
     })
 }
 
 export const apiRequest = <MT extends any>(init: ApiRequestInit): Promise<AxiosResponse<MT>> => {
     let {
-        url, method, data, queryParams, pathParams
+        url, method, data, queryParams, pathParams, form
     } = init;
-    console.log(pathParams);
-    console.log(data);
     if (queryParams) {
         url = url + "?" + Object.getOwnPropertyNames(queryParams).map(value => {
             return `${value}=${queryParams[value]}`
@@ -52,25 +50,39 @@ export const apiRequest = <MT extends any>(init: ApiRequestInit): Promise<AxiosR
         })
     }
     method = method.toLowerCase();
-    switch (method) {
-        case "get":
-            return axios.get(url, {
-                headers: {
-                    "Authorization": Cookies.get("yougame_token"),
-                    "Content-Type": "application/json"
-                }
-            });
-        default:
-            return axios.request({
-                method: method,
-                data: data,
-                url:url,
-                headers: {
-                    "Authorization": Cookies.get("yougame_token"),
-                    "Content-Type": "application/json"
-                },
-            })
+
+    if (form) {
+        return axios.request({
+            method: method,
+            data: form,
+            url: url,
+            headers: {
+                "Authorization": Cookies.get("yougame_token"),
+                'Content-Type': 'multipart/form-data'
+            },
+        })
+    } else {
+        switch (method) {
+            case "get":
+                return axios.get(url, {
+                    headers: {
+                        "Authorization": Cookies.get("yougame_token"),
+                        "Content-Type": "application/json"
+                    }
+                });
+            default:
+                return axios.request({
+                    method: method,
+                    data: data,
+                    url: url,
+                    headers: {
+                        "Authorization": Cookies.get("yougame_token"),
+                        "Content-Type": "application/json"
+                    },
+                })
+        }
     }
+
 
 };
 

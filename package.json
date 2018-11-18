@@ -24,12 +24,14 @@
     "axios": "^0.18.0",
     "babel-loader": "^8.0.4",
     "dva": "^2.4.1",
+    "dva-logger": "^1.0.0",
     "final-form": "^4.11.0",
     "js-cookie": "^2.2.0",
     "json5": "^2.1.0",
     "jsonwebtoken": "^8.4.0",
     "lodash": "^4.17.11",
     "material-ui": "^0.20.2",
+    "path-to-regexp": "^2.4.0",
     "react": "^16.6.1",
     "react-dom": "^16.6.1",
     "react-final-form": "^4.0.2",
@@ -37,6 +39,9 @@
     "react-slick": "^0.23.2",
     "react-swipeable-views": "^0.13.0",
     "redux-form": "^7.4.2",
-    "tslint-config-airbnb": "^5.11.0"
+    "tslint-config-airbnb": "^5.11.0",
+    "umi": "^2.2.7",
+    "umi-plugin-react": "^1.2.3",
+    "winston": "^3.1.0"
   }
 }

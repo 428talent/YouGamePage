@@ -1,0 +1,8 @@
+@import "/node_modules/react-image-gallery/styles/css/image-gallery.css";
+
+.preview-img{
+    height: 200px;
+}
+body{
+    background-color: #EEEEEE;
+}

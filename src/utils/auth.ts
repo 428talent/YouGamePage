@@ -1,5 +1,5 @@
-import jwt from 'jsonwebtoken'
-import Cookies from 'js-cookie'
+import * as jwt from 'jsonwebtoken'
+import * as Cookies from 'js-cookie'
 
 export function readCookieJWTPayload(): any {
     const token = Cookies.get("yougame_token");
