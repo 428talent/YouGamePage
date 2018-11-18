@@ -4,7 +4,7 @@ import Footer from "./Footer";
 import theme from "../config/theme";
 import {MuiThemeProvider} from "@material-ui/core";
 import {connect} from "dva";
-
+import "./page.css"
 class Page extends React.Component<PageProps, {}> {
     render(): React.ReactNode {
         console.log(this.state);

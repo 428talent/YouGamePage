@@ -1,5 +1,6 @@
 import * as React from "react";
-import {createRef} from "react";
+import {createRef, RefObject} from "react";
+import {Field, reduxForm} from 'redux-form'
 import {
     Avatar,
     Button,
@@ -7,8 +8,8 @@ import {
     Dialog,
     DialogActions,
     DialogContent,
-    DialogContentText,
-    DialogTitle, Divider,
+    DialogTitle,
+    Divider,
     Grid,
     List,
     ListItem,
@@ -19,25 +20,53 @@ import {
     Typography,
     withStyles
 } from '@material-ui/core'
+
 import BaseProps from "../../../base/props";
 import {ServerUrl} from "../../../config/api";
 
+const ReduxTextField = (
+    { input, label, meta: { touched, error }, ...custom },
+) => (
+    <TextField
+        floatingLabelText={label}
+        errorText={touched && error}
+        {...input}
+        {...custom}
+    />
+);
+let ChangeNicknameForm = props => {
+    const {handleSubmit} = props;
+    return (
+        <form onSubmit={handleSubmit}>
+            <Field name="nickname" component={ReduxTextField} label="昵称" fullWidth hint={"新的昵称"} />
+        </form>
+    )
+};
+
+ChangeNicknameForm = reduxForm({
+    form: 'changeNickname'
+})(ChangeNicknameForm);
 
 class UserSection extends React.Component<UserSectionProps, UserSectionState> {
     uploadAvatar: any;
     state: Readonly<UserSectionState> = {
         changeNicknameDialogOpen: false
     };
+    nicknameFormRef:any = createRef();
 
 
     constructor(props: Readonly<UserSectionProps>) {
         super(props);
         this.uploadAvatar = createRef();
         this.onUploadAvatar = this.onUploadAvatar.bind(this);
+        this.onSubmitChangeNicknameForm = this.onSubmitChangeNicknameForm.bind(this)
     }
 
     onUploadAvatar() {
         this.uploadAvatar.current.click()
+    }
+    onSubmitChangeNicknameForm(){
+        this.nicknameFormRef.current.submit()
     }
 
 
@@ -100,21 +129,14 @@ class UserSection extends React.Component<UserSectionProps, UserSectionState> {
                 >
                     <DialogTitle id="form-dialog-title">变更昵称</DialogTitle>
                     <DialogContent>
-                        <TextField
-                            autoFocus
-                            margin="dense"
-                            id="name"
-                            label="新昵称"
-                            type="text"
-                            fullWidth
-                        />
+                        <ChangeNicknameForm ref={this.nicknameFormRef} onSubmit={({nickname}) => this.props.onChangeUserNickname(nickname)} />
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={() => this.props.showChangeNicknameDialog(false)} color="primary">
-                            Cancel
+                            取消
                         </Button>
-                        <Button onClick={() => this.props.showChangeNicknameDialog(false)} color="primary">
-                            Subscribe
+                        <Button onClick={(e) => this.onSubmitChangeNicknameForm()} color="primary">
+                            修改
                         </Button>
                     </DialogActions>
                 </Dialog>
@@ -130,6 +152,8 @@ export interface UserSectionProps extends BaseProps {
     onUploadAvatar(avatar): void
 
     showChangeNicknameDialog(isShow: boolean): void
+
+    onChangeUserNickname(nickname: String): void
 }
 
 interface UserSectionState {
