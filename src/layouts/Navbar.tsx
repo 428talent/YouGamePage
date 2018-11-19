@@ -24,6 +24,7 @@ import {fade} from '@material-ui/core/styles/colorManipulator';
 import BaseProps from "../base/props";
 import {ServerUrl} from "../config/api";
 import HomeIcon from '@material-ui/icons/Home';
+import PersonIcon from '@material-ui/icons/Person';
 import router from "umi/router";
 
 interface MainNavBarProps extends BaseProps {
@@ -73,10 +74,24 @@ class MainNavBar extends React.Component<MainNavBarProps, {}> {
     fullList = (
         <div className={this.props.classes.fullList}>
             <div style={{height: 150, display: "flex", alignItems: "center", justifyContent: "center"}}>
-                <Avatar
-                    style={{width: 80, height: 80}}
-                    src={`${ServerUrl}/static/upload/user/avatar/17f2adcba338a298e3c59bd176b85984.jpg`}
-                />
+                {function (user) {
+                    if(user != null){
+                        return (
+                            <Avatar
+                                style={{width: 80, height: 80}}
+                                src={`${ServerUrl}/static/upload/user/avatar/17f2adcba338a298e3c59bd176b85984.jpg`}
+                            />
+                        )
+                    }else{
+                        return(
+                            <Avatar style={{width: 80, height: 80}}>
+                                <PersonIcon style={{width: 64, height: 64}}/>
+                            </Avatar>
+
+                        )
+                    }
+                }(this.props.user)}
+
             </div>
             <List>
                 <ListItem button key="Home" onClick={() => router.push("/")}>
@@ -93,7 +108,6 @@ class MainNavBar extends React.Component<MainNavBarProps, {}> {
 
     render(): React.ReactNode {
         const {classes, isDrawerOpen} = this.props;
-        console.log(isDrawerOpen)
         return (
             <div className={classes.root}>
                 <AppBar>

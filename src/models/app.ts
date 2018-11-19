@@ -18,11 +18,15 @@ export default ({
     effects: {
         * 'refreshUser'({payload}, {select, call, put}) {
             const jwtPayload = readCookieJWTPayload();
+
             if (jwtPayload == null) {
                 yield put({
                     type: 'setUser',
-                    user: null
-                })
+                    payload: {
+                        user: null
+                    }
+                });
+                return
             }
             const result: AxiosResponse<UserModel.User> = yield call(FetchUser, {userId: jwtPayload.UserId});
             yield put({
