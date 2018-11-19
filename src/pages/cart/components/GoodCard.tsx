@@ -1,5 +1,16 @@
 import * as React from "react";
-import {createStyles, Paper, Typography, withStyles} from "@material-ui/core";
+import {
+    Button,
+    Card,
+    CardActionArea,
+    CardActions,
+    CardContent,
+    CardMedia,
+    createStyles,
+    Paper,
+    Typography,
+    withStyles
+} from "@material-ui/core";
 import BaseProps from "../../../base/props";
 import {ServerUrl} from "../../../config/api";
 
@@ -10,8 +21,32 @@ class GoodCard extends React.Component<GoodCartProp, {}> {
             goodName,
             gameName,
             price,
-            cover
+            cover,
+            isPhone
         } = this.props;
+        if (isPhone) {
+            return (
+                <Card >
+                    <CardActionArea>
+                        <CardMedia
+                            className={classes.media}
+                            image={`${ServerUrl}/${cover}`}
+                        />
+                        <CardContent>
+                            <Typography gutterBottom variant="h5">
+                                {gameName}
+                            </Typography>
+                            <Typography gutterBottom variant="h6">
+                                {goodName}
+                            </Typography>
+                            <Typography variant="h5" color="primary">
+                                ￥{price}
+                            </Typography>
+                        </CardContent>
+                    </CardActionArea>
+                </Card>
+            )
+        }
         return (
             <Paper className={classes.goodCard}>
                 <div style={{display: "inline-flex"}}>
@@ -41,7 +76,8 @@ interface GoodCartProp extends BaseProps {
     gameName: string,
     goodName: string,
     price: number,
-    cover: string
+    cover: string,
+    isPhone: boolean
 }
 
 const styles = createStyles({
@@ -61,6 +97,9 @@ const styles = createStyles({
         height: 94,
         display: "flex",
         justifyContent: "space-between"
-    }
+    },
+    media: {
+        height: 140,
+    },
 });
 export default withStyles(styles)(GoodCard)

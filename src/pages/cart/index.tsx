@@ -1,9 +1,10 @@
 import * as React from "react";
-import {Button, createStyles, Grid, Typography, withStyles} from "@material-ui/core";
+import {Button, createStyles, Grid, Typography, withStyles, withWidth} from "@material-ui/core";
 import BaseProps from "../../base/props";
 import GoodCard from "./components/GoodCard";
 import {connect} from "dva";
 import {ReactNode} from "react";
+import {isWidthDown} from "@material-ui/core/withWidth";
 
 class ShoppingCartPage extends React.Component<ShoppingCartPageProp, {}> {
     createGoodCard(): Array<ReactNode> {
@@ -11,14 +12,17 @@ class ShoppingCartPage extends React.Component<ShoppingCartPageProp, {}> {
             return (
                 <Grid item xs={12} key={cartItem.id} className={this.props.classes.goodCartContainer}>
                     <GoodCard gameName={cartItem.game.name} price={cartItem.good.price} goodName={cartItem.good.name}
-                              cover={cartItem.game.band}/>
+                              cover={cartItem.game.band}
+                              isPhone={isWidthDown('md', this.props.width)}
+                    />
                 </Grid>
             )
         })
     }
 
     render() {
-        const {classes, totalPrice} = this.props;
+        const {classes, totalPrice,width} = this.props;
+        console.log(width)
         return (
             <div>
                 <div className={this.props.classes.container}>
@@ -32,7 +36,7 @@ class ShoppingCartPage extends React.Component<ShoppingCartPageProp, {}> {
                                 <Typography variant="h5">
                                     合计：￥{totalPrice}
                                 </Typography>
-                                <Button  className={classes.createOrderButton} color="primary" variant="contained">
+                                <Button className={classes.createOrderButton} color="primary" variant="contained">
                                     付款
                                 </Button>
                             </Grid>
@@ -48,15 +52,34 @@ class ShoppingCartPage extends React.Component<ShoppingCartPageProp, {}> {
 
 interface ShoppingCartPageProp extends BaseProps {
     cartItems: Array<CartModel.CartItem>
-    totalPrice: number
+    totalPrice: number,
+    width:any
 }
 
-const styles = createStyles({
+const styles = createStyles(theme => ({
     container: {
         marginTop: 89,
         marginLeft: 500,
         marginRight: 500,
-        minHeight: 800
+        minHeight: 800,
+        [theme.breakpoints.only('xl')]: {
+            marginLeft: 500,
+            marginRight: 500,
+        },
+        [theme.breakpoints.only('lg')]: {
+            marginLeft: 400,
+            marginRight: 400,
+        },
+        [theme.breakpoints.only('md')]: {
+            marginLeft: 300,
+            marginRight: 300,
+        },
+        [theme.breakpoints.down('md')]: {
+            marginLeft: 16,
+            marginRight: 16,
+        }
+
+
     },
     goodCollection: {
         marginTop: 16
@@ -70,10 +93,10 @@ const styles = createStyles({
     cartInfo: {
         textAlign: "right",
         marginTop: 16,
-        paddingRight:40
+        paddingRight: 40
     },
     createOrderButton: {
-        marginTop:8
+        marginTop: 8
     },
     goodImage: {
         width: 200,
@@ -89,5 +112,5 @@ const styles = createStyles({
         display: "flex",
         justifyContent: "space-between"
     }
-});
-export default connect(({cart}) => ({...cart}))(withStyles(styles)(ShoppingCartPage))
+}));
+export default connect(({cart}) => ({...cart}))(withWidth()(withStyles(styles)(ShoppingCartPage)))
