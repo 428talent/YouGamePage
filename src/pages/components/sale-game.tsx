@@ -1,4 +1,4 @@
-import {Grid, Typography, withStyles} from "@material-ui/core";
+import {createStyles, Grid, Typography, withStyles} from "@material-ui/core";
 import * as React from "react";
 import BaseProps from "../../base/props";
 import GameCard from "./game-card";
@@ -48,23 +48,26 @@ class SaleGameSection extends React.Component<SaleGameSectionProps, SaleGameSect
     }
 }
 
-const styles = theme => ({
+const styles =  createStyles(theme => ({
     container: {
         paddingLeft: 100,
         paddingRight: 100,
-        marginTop: 60
+        marginTop: 60,
+        [theme.breakpoints.only('xs')]: {
+            paddingLeft: 16,
+            paddingRight: 16,
+        },
     },
     root: {
         flexGrow: 1,
     },
     card: {
-        maxWidth: 345,
+
     },
     media: {
-        // ⚠️ object-fit is not supported by IE 11.
         objectFit: 'cover',
     },
 
-});
+}));
 // @ts-ignore
 export default withStyles(styles)(SaleGameSection)

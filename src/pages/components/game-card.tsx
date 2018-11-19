@@ -47,7 +47,7 @@ interface GameCardProps extends BaseProps {
 
 const styles = theme => ({
     card: {
-        maxWidth: 345,
+
     },
     media: {
         // ⚠️ object-fit is not supported by IE 11.

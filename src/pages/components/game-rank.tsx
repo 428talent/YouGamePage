@@ -1,6 +1,6 @@
 import BaseProps from "../../base/props";
 import * as React from "react";
-import {AppBar, Grid, List, ListItem, Paper, Tab, Tabs, Typography, withStyles} from "@material-ui/core";
+import {AppBar, createStyles, Grid, List, ListItem, Paper, Tab, Tabs, Typography, withStyles} from "@material-ui/core";
 import SwipeableViews from 'react-swipeable-views';
 import {NewGameList} from "../../mock/mock";
 import GameItem from "./game-item";
@@ -36,7 +36,7 @@ class GameList extends React.Component<GameListProps, {}> {
         const dailyRank = NewGameList.map((game, key) => {
             return (
 
-                <ListItem  key={key}>
+                <ListItem key={key}>
                     <GameItem gameCover={game.cover} gamePrice={game.price} gameName={game.name}/>
                 </ListItem>
 
@@ -78,11 +78,15 @@ class GameList extends React.Component<GameListProps, {}> {
     }
 }
 
-const styles = theme => ({
+const styles = createStyles(theme => ({
         root: {
             marginTop: 60,
             marginLeft: 100,
-            marginRight: 100
+            marginRight: 100,
+            [theme.breakpoints.only('xs')]: {
+                marginLeft: 16,
+                marginRight: 16,
+            },
         },
         tab: {
             backgroundColor: theme.palette.background.paper,
@@ -91,7 +95,7 @@ const styles = theme => ({
             backgroundColor: "#FFFFFF"
         }
 
-    }
+    })
 );
 
 interface GameListProps extends BaseProps {
