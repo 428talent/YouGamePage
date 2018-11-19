@@ -5,7 +5,8 @@ import {FetchUser} from "../services/user";
 export default ({
     namespace: "app",
     state: {
-        user: null
+        user: null,
+        isDrawerOpen: false
     },
     subscriptions: {
         setup({dispatch, history}) {
@@ -44,6 +45,12 @@ export default ({
             return {
                 ...state,
                 user: payload.user
+            }
+        },
+        'switchDrawer'(state, {payload: {isOpen}}) {
+            return {
+                ...state,
+                isDrawerOpen: isOpen
             }
         },
     },

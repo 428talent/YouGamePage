@@ -1,10 +1,16 @@
 import {
-    AppBar, Avatar, Badge,
-    Button, createStyles,
+    AppBar,
+    Avatar,
+    Badge,
+    Button,
+    createStyles,
     IconButton,
     InputBase,
-    Menu,
-    MenuItem,
+    List,
+    ListItem,
+    ListItemIcon,
+    ListItemText,
+    SwipeableDrawer,
     Toolbar,
     Typography,
     withStyles
@@ -17,33 +23,30 @@ import ShoppingCartIcon from '@material-ui/icons/ShoppingCart'
 import {fade} from '@material-ui/core/styles/colorManipulator';
 import BaseProps from "../base/props";
 import {ServerUrl} from "../config/api";
+import HomeIcon from '@material-ui/icons/Home';
+import router from "umi/router";
 
 interface MainNavBarProps extends BaseProps {
-    user?: UserModel.User
+    user?: UserModel.User,
+    isDrawerOpen: boolean,
+    dispatch: any
 }
 
-interface MainNavBarState {
-    anchorEl?: any
-}
+class MainNavBar extends React.Component<MainNavBarProps, {}> {
 
-
-class MainNavBar extends React.Component<MainNavBarProps, MainNavBarState> {
-    state: Readonly<MainNavBarState> = {
-        anchorEl: undefined,
-    };
 
     constructor(props: MainNavBarProps) {
         super(props);
     }
 
-    handleClick = event => {
-        this.setState({anchorEl: event.currentTarget});
+    switchDrawer = (isOpen: boolean) => {
+        this.props.dispatch({
+            type: "app/switchDrawer",
+            payload: {
+                isOpen
+            }
+        })
     };
-
-    handleClose = () => {
-        this.setState({anchorEl: null});
-    };
-
 
     userButton = (user: UserModel.User, classes) => {
         if (user) {
@@ -67,20 +70,44 @@ class MainNavBar extends React.Component<MainNavBarProps, MainNavBarState> {
     };
 
 
+    fullList = (
+        <div className={this.props.classes.fullList}>
+            <div style={{height: 150, display: "flex", alignItems: "center", justifyContent: "center"}}>
+                <Avatar
+                    style={{width: 80, height: 80}}
+                    src={`${ServerUrl}/static/upload/user/avatar/17f2adcba338a298e3c59bd176b85984.jpg`}
+                />
+            </div>
+            <List>
+                <ListItem button key="Home" onClick={() => router.push("/")}>
+                    <ListItemIcon>
+                        <HomeIcon/>
+                    </ListItemIcon>
+                    <ListItemText primary="Home"/>
+                </ListItem>
+
+            </List>
+        </div>
+    );
+
+
     render(): React.ReactNode {
-        const {classes} = this.props;
+        const {classes, isDrawerOpen} = this.props;
+        console.log(isDrawerOpen)
         return (
             <div className={classes.root}>
                 <AppBar>
                     <Toolbar>
+                        <IconButton onClick={() => this.switchDrawer(true)} className={classes.menuButton}
+                                    color="inherit" aria-label="Menu">
+                            <MenuIcon/>
+                        </IconButton>
                         <Typography className={classes.title} variant="h6" color="inherit" noWrap>
                             YouGame
                         </Typography>
-                        <Button aria-owns={this.state.anchorEl ? 'simple-menu' : undefined}
-                                aria-haspopup="true"
-                                onClick={this.handleClick}
-
-                                style={{height: 60, color: "#FFFFFF"}}
+                        <Button
+                            aria-haspopup="true"
+                            style={{height: 60, color: "#FFFFFF", display: 'none'}}
                         >
                             Primary
                             <MoreVertIcon/>
@@ -98,34 +125,35 @@ class MainNavBar extends React.Component<MainNavBarProps, MainNavBarState> {
                                 }}
                             />
                         </div>
-                        <IconButton color="inherit">
+                        <IconButton color="inherit" className={classes.rightButton}>
                             <Badge badgeContent={17} color="secondary">
-                                <ShoppingCartIcon />
+                                <ShoppingCartIcon/>
                             </Badge>
                         </IconButton>
                         {this.userButton(this.props.user, classes)}
                     </Toolbar>
                 </AppBar>
-                <Menu
-                    id="simple-menu"
-                    anchorEl={this.state.anchorEl}
-                    disableAutoFocusItem={true}
-                    onMouseLeave={this.handleClose}
-                    open={Boolean(this.state.anchorEl)}
-                    onClose={this.handleClose}
+                <SwipeableDrawer
+                    open={this.props.isDrawerOpen}
+                    onClose={() => this.switchDrawer(false)}
+                    onOpen={() => this.switchDrawer(true)}
                 >
-                    <MenuItem onClick={this.handleClose}>Profile</MenuItem>
-                    <MenuItem onClick={this.handleClose}>My account</MenuItem>
-                    <MenuItem onClick={this.handleClose}>Logout</MenuItem>
-                </Menu>
-
+                    <div
+                        tabIndex={0}
+                        role="button"
+                        onClick={() => this.switchDrawer(false)}
+                        onKeyDown={() => this.switchDrawer(false)}
+                    >
+                        {this.fullList}
+                    </div>
+                </SwipeableDrawer>
             </div>
         )
     }
 
 }
 
-const styles = theme => createStyles({
+const styles = createStyles(theme => ({
     root: {
         width: '100%',
     },
@@ -135,6 +163,9 @@ const styles = theme => createStyles({
     menuButton: {
         marginLeft: -12,
         marginRight: 20,
+        [theme.breakpoints.up('sm')]: {
+            display: 'none',
+        },
     },
     title: {
         display: 'none',
@@ -159,7 +190,10 @@ const styles = theme => createStyles({
     rightButton: {
         position: 'relative',
         color: "#FFFFFF",
-        height: 60
+        height: 60,
+        [theme.breakpoints.down('md')]: {
+            display: 'none',
+        },
     },
     searchIcon: {
         width: theme.spacing.unit * 9,
@@ -191,6 +225,13 @@ const styles = theme => createStyles({
             },
         },
     },
-});
+    list: {
+        width: 250,
+    },
+    fullList: {
+        width: 'auto',
+        minWidth: 250
+    },
+}));
 
 export default withStyles(styles)(MainNavBar)
