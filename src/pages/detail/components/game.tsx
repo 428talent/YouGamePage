@@ -88,23 +88,23 @@ class Game extends React.Component<GameProps, {}> {
                     </Grid>
                     <Grid container spacing={24}>
 
-                        <Grid item xs={8}>
+                        <Grid item xs={12} sm={12} md={12} lg={8} xl={8}>
                             <Paper>
-                                <ImageGallery items={game?
-                                    game.preview_images.map(image => ({original : `${ServerUrl}/${image.path}`})) : []
+                                <ImageGallery items={game ?
+                                    game.preview_images.map(image => ({original: `${ServerUrl}/${image.path}`})) : []
                                 } showThumbnails={false} showPlayButton={false}/>
                             </Paper>
                         </Grid>
-                        <Grid item xs={4}>
+                        <Grid item xs={12} sm={12} md={12} lg={4} xl={4}>
                             <Paper>
-                                <img src={game? `${ServerUrl}/${game.band}` : ""}
+                                <img src={game ? `${ServerUrl}/${game.band}` : ""}
                                      className={classes.band}/>
                                 <div style={{padding: 8}}>
                                     <div className={classes.tagContainer}>
                                         {this.createTags(classes)}
                                     </div>
                                     <Typography variant="subtitle2">
-                                        开发商: {game? game.publisher : ""}
+                                        开发商: {game ? game.publisher : ""}
                                     </Typography>
                                     <Typography variant="subtitle2">
                                         日期：
@@ -125,12 +125,12 @@ class Game extends React.Component<GameProps, {}> {
                             <Paper className={classes.content}>
                                 <div>
                                     <p>
-                                        {game? game.intro : ""}
+                                        {game ? game.intro : ""}
                                     </p>
                                 </div>
                             </Paper>
                         </Grid>
-                        <Grid item xs={9}>
+                        <Grid item xs={12} sm={12} md={12} lg={9} xl={9}>
                             <Paper>
                                 <div>
                                     <List>
@@ -247,7 +247,7 @@ class Game extends React.Component<GameProps, {}> {
                                 </div>
                             </Paper>
                         </Grid>
-                        <Grid item xs={3}>
+                        <Grid item xs={12} sm={12} md={12} lg={3} xl={3}>
                             <Paper>
                                 <div style={{padding: 8, height: 100, textAlign: "center"}}>
                                     <div style={{margin: "0 auto", marginTop: 20}}>
@@ -308,11 +308,27 @@ interface GameProps extends BaseProps {
 }
 
 
-const styles = theme => createStyles({
+const styles = createStyles(theme => ({
     root: {
         marginLeft: 500,
         marginRight: 500,
         marginTop: 100,
+        [theme.breakpoints.only('xl')]: {
+            marginLeft: 500,
+            marginRight: 500,
+        },
+        [theme.breakpoints.only('lg')]: {
+            marginLeft: 400,
+            marginRight: 400,
+        },
+        [theme.breakpoints.only('md')]: {
+            marginLeft: 300,
+            marginRight: 300,
+        },
+        [theme.breakpoints.down('md')]: {
+            marginLeft: 16,
+            marginRight: 16,
+        }
 
     },
     title: {
@@ -338,7 +354,8 @@ const styles = theme => createStyles({
     tag: {
         marginRight: 8,
         height: 15
-    }
+    },
 
-});
+
+}));
 export default (withStyles(styles)(Game))

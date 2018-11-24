@@ -38,6 +38,10 @@ export default ({
             yield put({
                 type: "cart/fetchCartList",
                 payload: {}
+            });
+            yield put({
+                type: "order/fetchOrders",
+                payload: {}
             })
 
 

@@ -7,9 +7,10 @@ export const Api = {
     getWishListItems: ServerUrl + "/api/user/:id/wishlist",
     getGame: ServerUrl + "/api/game/:id",
     getCartList: ServerUrl + "/api/user/:id/carts",
-    getOrderList: ServerUrl + "/api/user/:id/orders",
+    getOrderList: ServerUrl + "/api/orders",
     payOrder: ServerUrl + "/api/order/:id/pay",
     changeProfile: ServerUrl + "/api/user/:id/profile",
     fetchGame: ServerUrl + "/api/game/:id",
-    uploadUserAvatar: ServerUrl + "/api/user/:id/avatar/upload"
+    uploadUserAvatar: ServerUrl + "/api/user/:id/avatar/upload",
+    fetchOrderGood: ServerUrl + "/api/ordergood"
 };

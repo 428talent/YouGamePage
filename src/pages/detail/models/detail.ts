@@ -23,7 +23,8 @@ export default ({
     },
     effects: {
         * 'fetchGame'({payload}, {select, call, put}) {
-            const fetchGameResponse: AxiosResponse<GameModel.Game> = yield call(fetchGame, payload)
+            const fetchGameResponse: AxiosResponse<GameModel.Game> = yield call(fetchGame, payload);
+            console.log(fetchGameResponse)
             yield put({
                 type: "fetchGameSuccess",
                 payload: {

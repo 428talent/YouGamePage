@@ -71,15 +71,16 @@ class MainNavBar extends React.Component<MainNavBarProps, {}> {
     };
 
 
-    fullList = (
+    fullList = () => (
         <div className={this.props.classes.fullList}>
             <div style={{height: 150, display: "flex", alignItems: "center", justifyContent: "center"}}>
                 {function (user) {
                     if(user != null){
+                        console.log(user);
                         return (
                             <Avatar
                                 style={{width: 80, height: 80}}
-                                src={`${ServerUrl}/static/upload/user/avatar/17f2adcba338a298e3c59bd176b85984.jpg`}
+                                src={`${ServerUrl}/${user.profile.avatar}`}
                             />
                         )
                     }else{
@@ -158,7 +159,7 @@ class MainNavBar extends React.Component<MainNavBarProps, {}> {
                         onClick={() => this.switchDrawer(false)}
                         onKeyDown={() => this.switchDrawer(false)}
                     >
-                        {this.fullList}
+                        {this.fullList()}
                     </div>
                 </SwipeableDrawer>
             </div>

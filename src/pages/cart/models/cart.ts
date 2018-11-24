@@ -1,6 +1,7 @@
 import {FetchUserCart} from "../../../services/cart";
 import {AxiosResponse} from "axios";
 import pathToRegexp = require("path-to-regexp");
+import {PageResult} from "../../../services/model/base";
 
 export default ({
     namespace: "cart",
