@@ -6,6 +6,7 @@ import * as lodash from "lodash";
 import router from "umi/router";
 import {OrderGood} from "../../../services/model/ordergood";
 import {getOrderGoods} from "../../../utils/schema";
+import {DataState} from "../../../models/data";
 
 export default ({
     namespace: "order",
@@ -26,8 +27,6 @@ export default ({
             const OrderFilter = lodash.pickBy(filter);
 
             //get start page
-            const startPage = yield select(state => (state.order.startPage));
-
             const response: AxiosResponse<PageResult<Order>> = yield call(fetchOrderList, {
                 user: user.id, ...OrderFilter, page: payload.page, pageSize: payload.pageSize
             });
@@ -55,8 +54,7 @@ export default ({
             })
         },
         * fetchOrderGood({payload}, {select, call, put}) {
-            const orderGoods =  getOrderGoods(yield select(state => state.orderGoods));
-            console.log(orderGoods);
+            const orderGoods =  getOrderGoods(yield select(state => state.data.orderGoods));
             if (orderGoods.filter(good => good.orderId === payload.orderId).length > 0) {
                 return
             }

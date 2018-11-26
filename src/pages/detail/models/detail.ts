@@ -1,4 +1,4 @@
-import {AxiosResponse} from "axios";
+import {AxiosError, AxiosResponse} from "axios";
 import {UserLogin} from "../../../services/user";
 import router from "umi/router";
 import {fetchGame} from "../../../services/game";
@@ -23,14 +23,20 @@ export default ({
     },
     effects: {
         * 'fetchGame'({payload}, {select, call, put}) {
-            const fetchGameResponse: AxiosResponse<GameModel.Game> = yield call(fetchGame, payload);
-            console.log(fetchGameResponse)
-            yield put({
-                type: "fetchGameSuccess",
-                payload: {
-                    game: fetchGameResponse.data
-                }
-            })
+            try {
+                const fetchGameResponse: AxiosResponse<GameModel.Game> = yield call(fetchGame, payload);
+                console.log(fetchGameResponse);
+
+                yield put({
+                    type: "fetchGameSuccess",
+                    payload: {
+                        game: fetchGameResponse.data
+                    }
+                })
+            } catch (e) {
+                router.push("/detail/notexist")
+            }
+
         },
     },
     reducers: {

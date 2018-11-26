@@ -4,7 +4,13 @@
     "target": "es5",
     "sourceMap": true,
     "lib": [ "es2015","es2016","DOM" ],
-    "jsx": "preserve"
+    "jsx": "preserve",
+    "baseUrl": "./",
+    "paths" : {
+      "ramda": [
+        "location-of-types/npm-ramda-package/index"
+      ]
+    }
   },
   "exclude": [
     "node_modules"

@@ -12,5 +12,6 @@ export const Api = {
     changeProfile: ServerUrl + "/api/user/:id/profile",
     fetchGame: ServerUrl + "/api/game/:id",
     uploadUserAvatar: ServerUrl + "/api/user/:id/avatar/upload",
-    fetchOrderGood: ServerUrl + "/api/ordergood"
+    fetchOrderGood: ServerUrl + "/api/ordergood",
+    fetchGood: `${ServerUrl}/api/good/:id`
 };
