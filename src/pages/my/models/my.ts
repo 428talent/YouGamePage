@@ -19,6 +19,9 @@ export default ({
                 ...state,
                 tabIndex: tab
             }
+        },
+        fetchWishListSuccess(state,{}){
+            return state
         }
     },
 

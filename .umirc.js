@@ -4,8 +4,10 @@ export default {
         // ref: https://umijs.org/plugin/umi-plugin-react.html
         ['umi-plugin-react', {
             antd: false,
-            dva: true,
-            dynamicImport: true,
+            dva: {
+                dynamicImport: undefined
+            },
+            dynamicImport: false,
             title: 'yougame',
             dll: true,
             routes: {

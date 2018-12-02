@@ -5,6 +5,7 @@ import DraftsIcon from '@material-ui/icons/Drafts';
 import BaseProps from "../../../base/props";
 import createStyles from "@material-ui/core/styles/createStyles";
 import {ServerUrl} from "../../../config/api";
+import router from "umi/router";
 
 const LeftNav = (props: LeftNavProps) => {
     const {tabIndex,onTabChange,classes} = props;
@@ -25,22 +26,28 @@ const LeftNav = (props: LeftNavProps) => {
                 <ListItem
                     button
                     selected={tabIndex === 'home'}
-                    onClick={() => onTabChange('home')}
+                    onClick={() => {
+                        onTabChange('home');
+                        router.push("/my/home")
+                    }}
                 >
                     <ListItemIcon>
                         <InboxIcon/>
                     </ListItemIcon>
-                    <ListItemText primary="Home"/>
+                    <ListItemText primary="主页"/>
                 </ListItem>
                 <ListItem
                     button
-                    selected={tabIndex === 'order'}
-                    onClick={() => onTabChange('order')}
+                    selected={tabIndex === 'wishlist'}
+                    onClick={() => {
+                        onTabChange('wishlist');
+                        router.push("/my/wishlist")
+                    }}
                 >
                     <ListItemIcon>
                         <DraftsIcon/>
                     </ListItemIcon>
-                    <ListItemText primary="Order"/>
+                    <ListItemText primary="愿望单"/>
                 </ListItem>
             </List>
             <Divider/>

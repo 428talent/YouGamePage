@@ -11,7 +11,10 @@ export default ({
     subscriptions: {
         setup({dispatch, history}) {
             dispatch({
-                type: "refreshUser"
+                type: "refreshUser",
+                payload: {
+                    path: history.location.pathname
+                }
             })
         }
     },
@@ -39,11 +42,12 @@ export default ({
                 type: "cart/fetchCartList",
                 payload: {}
             });
-            yield put({
-                type: "order/fetchOrders",
-                payload: {}
-            })
-
+            // if (payload.path === '/my/wishlist') {
+            //     yield put({
+            //         type: "wishlist/fetchWishList",
+            //         payload: {}
+            //     });
+            // }
 
         },
 

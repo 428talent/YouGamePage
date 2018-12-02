@@ -26,3 +26,12 @@ export function getGoodList(goodStore?: any): Array<StoreGoodModel> {
     }
     return []
 }
+
+
+export function getStoreResultIndexs(name: string, store: any): Array<number> {
+    return store[name].result
+}
+
+export function getStoreItemByIndex(id: number, name: string, store: any): Array<number> {
+    return store[name].entities[name][id]
+}

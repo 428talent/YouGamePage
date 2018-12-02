@@ -1,21 +1,21 @@
 import {normalize, schema} from 'normalizr'
-import {gameEntity, goodEntity, orderEntity, orderGoodsEntity, ordersSchema} from "../utils/schema";
-import {OrderGood} from "../services/model/ordergood";
+import {goodEntity, ordersSchema} from "../utils/schema";
 import {AxiosResponse} from "axios";
 import {Good} from "../services/model/good";
 import {fetchGood} from "../services/good";
 import {StoreGoodModel} from "../store/model/Good";
-import {number, object} from "prop-types";
 import {fetchGame} from "../services/game";
-import Game = GameModel.Game;
 import * as lodash from "lodash"
 import {StoreGameModel} from "../store/model/Game";
 import {PageResult} from "../services/model/base";
 import {Order} from "../services/model/order";
 import {fetchOrderList} from "../services/order";
-import {EffectsCommandMap, EffectsMapObject, Model, ReducersMapObjectWithEnhancer, SubscriptionsMapObject} from "dva";
-import {ReducersMapObject} from "redux";
-import {any, none} from "ramda"
+import {none} from "ramda"
+import {fetchWishList} from "../services/wishlist";
+import {WishListItem} from "../services/model/wishlist";
+import StoreWishList from "../store/model/WishList";
+import Game = GameModel.Game;
+
 enum RequestQueueAction {
     Add, Remove
 }
@@ -41,6 +41,12 @@ export interface DataState {
         result: Array<number>,
         entities: {
             goods: StoreGoodModel
+        }
+    },
+    wishListItems: {
+        result: Array<number>,
+        entities: {
+            wishListItems: any
         }
     },
     games: {
@@ -78,6 +84,12 @@ export default ({
                 goods: {}
             }
         },
+        wishListItems: {
+            result: [],
+            entities: {
+                wishListItems: {}
+            }
+        },
         games: {
             result: [],
             entities: {
@@ -107,42 +119,7 @@ export default ({
             })
 
         },
-        * fetchGame({payload: {gameId}}, {select, call, put}) {
-            const games = yield select(state => state.data.games);
-            const requestGameQueue = yield select(state => state.data.requestQueue.games);
 
-            if (games.entities.games[gameId]) {
-                return
-            }
-
-            if (requestGameQueue.has(gameId)) {
-                return
-            }
-            yield put({
-                type: "setRequestState",
-                payload: {
-                    ref: "games",
-                    type: RequestQueueAction.Add,
-                    id: gameId
-                }
-            });
-            const fetchGameResult: AxiosResponse<Game> = yield call(fetchGame, {gameId});
-            yield put({
-                type: "setRequestState",
-                payload: {
-                    ref: "games",
-                    type: RequestQueueAction.Remove,
-                    id: gameId
-                }
-            });
-
-            yield put({
-                type: "storeGame",
-                payload: {
-                    game: new StoreGameModel(fetchGameResult.data)
-                }
-            })
-        },
         * 'fetchOrders'({payload}, {select, call, put}) {
             //get current user
             const user: UserModel.User = yield select(state => (state.app.user));
@@ -178,6 +155,46 @@ export default ({
                     reload: payload.reload,
                 }
             })
+        },
+        * 'fetchWishList'({payload}, {select, call, put}) {
+            //get current user
+            const user: UserModel.User = yield select(state => (state.app.user));
+
+            const response: AxiosResponse<PageResult<WishListItem>> = yield call(fetchWishList, {
+                option:{
+                    user: user.id,
+                    ...payload
+                }
+            });
+            const wishLists:Array<StoreWishList> = response.data.result.map(item => (new StoreWishList(item)));
+            console.log(response);
+
+
+            const task = wishLists.map(item => item.gameId).map(gameId => call(fetchGame, {gameId}));
+            const fetchGamesResults: Array<AxiosResponse<Game>> = yield task;
+            const gameList = fetchGamesResults.map(response => (new StoreGameModel(response.data)));
+            yield put({
+                type: "storeGame",
+                payload: {
+                    list: gameList
+                }
+            });
+
+            yield put({
+                type: "storeWishLists",
+                payload: {
+                    wishListItems:wishLists
+                }
+
+            });
+            yield put({
+                type: "my/fetchWishListSuccess",
+                payload: {
+
+                }
+
+            });
+
         }
     },
     reducers: {
@@ -241,13 +258,33 @@ export default ({
             return newState
         },
         'storeGame'(state, {payload}) {
-            const game: StoreGameModel = payload.game;
             const newState = Object.assign({}, state);
+            if (payload.list){
+                payload.list.forEach(game => {
+                    newState.games.entities.games[game.id] = game;
+                    if (!newState.games.result.includes(game.id)) {
+                        newState.games.result = [...newState.games.result,game.id]
+                    }
+                });
+                return newState
+            }
+            const game: StoreGameModel = payload.game;
             newState.games.entities.games[game.id] = game;
             if (!newState.games.result.includes(game.id)) {
                 newState.games.result.push(game.id)
             }
             newState.games.result.sort().reverse();
+            return newState
+        },
+        'storeWishLists'(state, {payload}) {
+            const wishListItems: Array<StoreWishList> = payload.wishListItems;
+            const newState = Object.assign({}, state);
+            wishListItems.forEach(item => {
+                newState.wishListItems.entities.wishListItems[item.id] = item;
+                if (!newState.wishListItems.result.includes(item.id)) {
+                    newState.wishListItems.result.push(item.id)
+                }
+            });
             return newState
         }
     },

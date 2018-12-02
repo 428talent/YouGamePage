@@ -3,10 +3,12 @@ import {createStyles, Grid, Paper, withStyles} from "@material-ui/core";
 import BaseProps from "../../base/props";
 import {connect} from "dva";
 import LeftNav from "./components/LeftNav";
+import withRouter from "umi/withRouter";
 
 
 class MyPage extends React.Component<MyPageProps, {}> {
     render(): React.ReactNode {
+        console.log("render my page ...")
         const {classes, tabIndex, dispatch} = this.props;
         return (
             <div className={this.props.classes.container}>
@@ -22,9 +24,8 @@ class MyPage extends React.Component<MyPageProps, {}> {
                         />
                     </Grid>
                     <Grid item xs={9}>
-                        <Paper style={{minHeight: 800}}>
-                           {this.props.children}
-                        </Paper>
+                        {this.props.children}
+
                     </Grid>
                 </Grid>
             </div>
@@ -52,4 +53,4 @@ interface MyPageState extends BaseProps {
 
 }
 
-export default connect(({myPage}) => ({...myPage}))(withStyles(styles)(MyPage))
+export default withRouter(connect(({myPage}) => ({...myPage}))(withStyles(styles)(MyPage)))
