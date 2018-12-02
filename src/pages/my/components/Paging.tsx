@@ -42,31 +42,31 @@ const Paging = (props: PagingProps) => {
                         )
                     }
                     return buttonGroups
-                })()}
+                })}
+                {/*<Button*/}
+                    {/*variant="contained"*/}
+                    {/*className={classes.pageButton}*/}
+                    {/*color="primary"*/}
+                    {/*style={{display: pageIndex === totalCount ? "none" : undefined}}*/}
+                    {/*onClick={() => {*/}
+                        {/*const page = (Math.trunc(pageIndex / pageRange) + 1) * pageRange;*/}
+                        {/*onChangePage(page)*/}
+                    {/*}}*/}
+                {/*>*/}
+                    {/*...*/}
+                {/*</Button>*/}
+                {/*<Button*/}
+                    {/*variant="contained"*/}
+                    {/*className={classes.pageButton}*/}
+                    {/*color="primary"*/}
+                    {/*style={{display: pageIndex === totalCount ? "none" : undefined}}*/}
+                    {/*onClick={() => onChangePage(totalCount)}*/}
+                {/*>*/}
+                    {/*{totalCount}*/}
+                {/*</Button>*/}
                 <Button
                     variant="contained"
-                    className={classes.pageButton}
-                    color="primary"
-                    style={{display: pageIndex === totalCount ? "none" : undefined}}
-                    onClick={() => {
-                        const page = (Math.trunc(pageIndex / pageRange) + 1) * pageRange;
-                        onChangePage(page)
-                    }}
-                >
-                    ...
-                </Button>
-                <Button
-                    variant="contained"
-                    className={classes.pageButton}
-                    color="primary"
-                    style={{display: pageIndex === totalCount ? "none" : undefined}}
-                    onClick={() => onChangePage(totalCount)}
-                >
-                    {totalCount}
-                </Button>
-                <Button
-                    variant="contained"
-                    disabled={pageIndex === totalCount}
+                    disabled={pageIndex * pageRange > totalCount}
                     className={classes.pageButton}
                     color="primary"
                     onClick={() => onChangePage(pageIndex + 1)}

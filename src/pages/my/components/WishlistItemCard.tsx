@@ -1,15 +1,13 @@
 import {withStyles} from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
-import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import * as React from "react";
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
-import {IconButton} from "@material-ui/core";
+import CloseIcon from '@material-ui/icons/Close'
+import DeleteIcon from '@material-ui/icons/Delete'
+import {Checkbox, Collapse, Fade, IconButton} from "@material-ui/core";
+import BaseProps from "../../../base/props";
 
 const styles = {
     card: {
@@ -18,36 +16,123 @@ const styles = {
     media: {
         height: 140,
     },
+
 };
 
-function WishlistItemCard(props) {
-    const {classes} = props;
-    return (
-        <Card className={classes.card}>
+class WishlistItemCard extends React.Component<WishlistItemCardProp, WishlistItemCardState> {
+    state: Readonly<WishlistItemCardState> = {
+        isActionMode: false,
+        isSelected: false,
+    };
 
-            <div style={{position: "relative"}}>
-                <div style={{position: "absolute", width: "100%",bottom:0,backgroundColor:"rgba(0, 0, 0, .5)",display:"flex",justifyContent: "space-between",
-                    alignItems: "flex-end"}}>
-                    <Typography style={{display: "inline-flex",color:"#FFFFFF",marginLeft:8}} gutterBottom variant="subtitle1" component="h2">
-                        {props.gameName ? props.gameName : "Unknown"}
-                    </Typography>
-                    <IconButton style={{display:"inline-flex"}} >
-                        <MoreVertIcon style={{color: "#FFFFFF"}} fontSize={"small"}/>
+
+    constructor(props: Readonly<WishlistItemCardProp>) {
+        super(props);
+    }
+
+    renderActionMode() {
+        return (
+            <Collapse in={this.state.isActionMode} collapsedHeight="0px">
+                <div style={{
+                    position: "absolute",
+                    width: "100%",
+                    bottom: 0,
+                    height: 44,
+                    backgroundColor: "rgba(0, 0, 0, 1)",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "flex-end"
+                }}>
+                    <div style={{display: "inline-flex", color: "#FFFFFF", marginLeft: 8}}>
+                        <IconButton>
+                            <DeleteIcon style={{color: "#FFFFFF"}} fontSize={"small"}/>
+                        </IconButton>
+                    </div>
+                    <IconButton style={{display: "inline-flex"}} onClick={() => this.setState({isActionMode: false})}>
+                        <CloseIcon style={{color: "#FFFFFF"}} fontSize={"small"}/>
                     </IconButton>
                 </div>
-                <CardMedia
-                    className={classes.media}
-                    image={props.gameCover ? props.gameCover : "https://media.st.dl.bscstorage.net/steam/apps/517630/header.jpg?t=1543511282"}
-                    title="Contemplative Reptile"
+            </Collapse>
+        )
+    }
+
+    renderNonActionMode() {
+        const {onItemSelectChange,id,isSelectMode,selected} = this.props;
+        return (
+            <div style={{
+                position: "absolute",
+                width: "100%",
+                bottom: 0,
+                height: 44,
+                backgroundColor: isSelectMode && selected ? "#333333" : "rgba(0, 0, 0, .5)",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "flex-end"
+            }}>
+
+                <Typography style={{display: "inline-flex", color: "#FFFFFF", marginLeft: 8}} gutterBottom
+                            variant="subtitle1" component="h2">
+
+                    {this.props.gameName ? this.props.gameName : "Unknown"}
+                </Typography>
+                <Checkbox
+                    checked={selected}
+                    style={{
+                        width: 8,
+                        height: 8,
+                        color: "#FFFFFF",
+                        display: this.props.isSelectMode ? undefined : "none"
+                    }}
+                    onChange={(_, checked) => {
+                        onItemSelectChange(checked,id)
+                    }}
                 />
-                <div style={{position: "absolute", width: "100%"}}>
+                <IconButton style={{display: this.props.isSelectMode ? "none" : "inline-flex"}}
+                            onClick={() => this.setState({isActionMode: true})}>
+                    <MoreVertIcon style={{color: "#FFFFFF"}} fontSize={"small"}/>
+                </IconButton>
+            </div>
+
+        )
+    }
+
+    render(): React.ReactNode {
+        const {classes} = this.props;
+        const {isActionMode} = this.state;
+        return (
+            <Card className={classes.card}>
+
+                <div style={{position: "relative"}}>
+                    {isActionMode ? this.renderActionMode() : this.renderNonActionMode()}
+                    <CardMedia
+                        className={classes.media}
+                        image={this.props.gameCover ? this.props.gameCover : "https://media.st.dl.bscstorage.net/steam/apps/517630/header.jpg?t=1543511282"}
+                        title="Contemplative Reptile"
+                    />
+                    <div style={{position: "absolute", width: "100%"}}>
+
+                    </div>
 
                 </div>
+            </Card>
+        );
+    }
 
-            </div>
-        </Card>
-    );
+
 }
 
+interface WishlistItemCardProp extends BaseProps {
+    gameName: string,
+    gameCover: string,
+    isSelectMode: boolean
+    id:number
+    onItemSelectChange(isSelect: boolean, id: number): void,
+    selected:boolean
+}
+
+interface WishlistItemCardState {
+    isActionMode: boolean,
+    isSelected: boolean
+}
 
 export default withStyles(styles)(WishlistItemCard);

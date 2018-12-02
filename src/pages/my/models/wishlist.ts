@@ -3,6 +3,7 @@ import {PageResult} from "../../../services/model/base";
 import {WishListItem} from "../../../services/model/wishlist";
 import {fetchWishList} from "../../../services/wishlist";
 import StoreWishList from "../../../store/model/WishList";
+import {number} from "prop-types";
 
 export interface MyPageModelState {
     pageIndex: number
@@ -12,18 +13,20 @@ export default ({
     namespace: "myWishlist",
     state: {
         pageIndex: 1,
-        firstLoading:false,
-        totalCount:0,
-        wishListItems:{},
-        pageSize:1,
+        firstLoading: false,
+        totalCount: 0,
+        wishListItems: {},
+        pageSize: 10,
+        isActionMode: false,
+        selectedItems: new Set<number>()
     },
     subscriptions: {
         setup({dispatch, history}) {
-            if (history.location.pathname === '/my/wishlist'){
+            if (history.location.pathname === '/my/wishlist') {
                 dispatch({
-                    type:"myPage/changeTab",
-                    payload:{
-                        tab:"wishlist"
+                    type: "myPage/changeTab",
+                    payload: {
+                        tab: "wishlist"
                     }
                 });
             }
@@ -57,16 +60,25 @@ export default ({
 
             });
             yield put({
-                type:"fetchWishlistItemsSuccess",
-                payload:{
-                    totalCount:response.data.count,
-                    items:response.data.result.map(item => item.id),
-                    page:payload.page.page
+                type: "fetchWishlistItemsSuccess",
+                payload: {
+                    totalCount: response.data.count,
+                    items: response.data.result.map(item => item.id),
+                    page: payload.page.page
                 }
             })
         }
     },
     reducers: {
+        onItemSelectChange(state, {payload: {isSelect, id}}) {
+            const selectedItems: Set<number> = new Set<number>(state.selectedItems);
+            isSelect ? selectedItems.add(id) : selectedItems.delete(id);
+            console.log(isSelect);
+            return {
+                ...state,
+                selectedItems: selectedItems
+            }
+        },
         changePage(state, {payload: {page}}) {
             return {
                 ...state,
@@ -79,13 +91,19 @@ export default ({
                 firstLoading
             }
         },
-        fetchWishlistItemsSuccess(state, {payload: {totalCount,items,page}}){
+        fetchWishlistItemsSuccess(state, {payload: {totalCount, items, page}}) {
             const wishListItems = {...state.wishListItems};
             wishListItems[page] = items;
             return {
                 ...state,
-                totalCount:totalCount,
+                totalCount: totalCount,
                 wishListItems,
+            }
+        },
+        switchActionMode(state, {payload: {isActionMode}}) {
+            return {
+                ...state,
+                isActionMode
             }
         }
 
