@@ -13,5 +13,6 @@ export const Api = {
     fetchGame: ServerUrl + "/api/game/:id",
     uploadUserAvatar: ServerUrl + "/api/user/:id/avatar/upload",
     fetchOrderGood: ServerUrl + "/api/ordergood",
-    fetchGood: `${ServerUrl}/api/good/:id`
+    fetchGood: `${ServerUrl}/api/good/:id`,
+    deleteWishlistItems:`${ServerUrl}/api/wishlist`
 };

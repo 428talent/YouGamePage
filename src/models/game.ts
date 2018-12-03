@@ -2,6 +2,7 @@ import {AxiosResponse} from "axios";
 import {fetchGame} from "../services/game";
 import {StoreGameModel} from "../store/model/Game";
 import Game = GameModel.Game;
+import {GameStore} from "../store/GameStore";
 
 export interface GameModelState {
     isLoading: boolean,
@@ -98,26 +99,18 @@ export default ({
         },
         'storeGame'(state, {payload}) {
             const newState = Object.assign({}, state);
+
+            const gameStore = new GameStore(state);
             if (payload.list) {
-                payload.list.forEach(game => {
-                    newState.games.entities.games[game.id] = game;
-                    if (!newState.games.result.includes(game.id)) {
-                        newState.games.result = [...newState.games.result, game.id]
-                    }
-                });
-                return {
-                    ...newState
-                }
+                gameStore.addItems(payload.list)
             }
-            const game: StoreGameModel = payload.game;
-            newState.games.entities.games[game.id] = game;
-            if (!newState.games.result.includes(game.id)) {
-                newState.games.result.push(game.id)
+            if (payload.game) {
+                const game: StoreGameModel = payload.game;
+                gameStore.addItems([game])
             }
-            newState.games.result.sort().reverse();
-            return {
-                ...newState
-            }
+
+            return newState
+
         },
     },
 

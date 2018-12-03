@@ -35,7 +35,12 @@ const WishListPage = (props: WishListPageProps) => {
         <div style={{alignItems: "center", display: "flex"}}>
             <div style={{display: "inline-flex"}}>
                 <Tooltip title="删除所选" aria-label="Add">
-                    <IconButton style={{color: "#FFFFFF"}}>
+                    <IconButton style={{color: "#FFFFFF"}} onClick={() =>dispatch({
+                        type: "myWishlist/deleteWishlistItems",
+                        payload: {
+                            ids:Array.from(props.selectedItems)
+                        }
+                    })}>
                         <DeleteIcon/>
                     </IconButton>
                 </Tooltip>
@@ -63,13 +68,11 @@ const WishListPage = (props: WishListPageProps) => {
             <Grid container spacing={24} className={classes.wishlistCollection}>
                 {function () {
                     if (!wishListItems[pageIndex]) {
-                        return undefined;
+                        return
                     }
-                    console.log(props.selectedItems.values())
                     return wishListItems[pageIndex].map(id => {
                         const item = wishlistStore.getItemByIndex(id);
                         const wishGame = game.getItemByIndex(item.gameId);
-                        wishGame? console.log( props.selectedItems.has(wishGame.id)) : undefined;
                         return (
                             <Grid item xs={4} key={item.id}>
                                 <WishlistItemCard
@@ -81,6 +84,12 @@ const WishListPage = (props: WishListPageProps) => {
                                         type: "myWishlist/onItemSelectChange",
                                         payload: {
                                             isSelect, id
+                                        }
+                                    })}
+                                    onRemoveClick={(id) =>dispatch({
+                                        type: "myWishlist/deleteWishlistItems",
+                                        payload: {
+                                            ids:[id]
                                         }
                                     })}
                                     selected={wishGame? props.selectedItems.has(wishGame.id):false}

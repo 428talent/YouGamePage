@@ -31,6 +31,7 @@ class WishlistItemCard extends React.Component<WishlistItemCardProp, WishlistIte
     }
 
     renderActionMode() {
+        const {onRemoveClick, id} = this.props;
         return (
             <Collapse in={this.state.isActionMode} collapsedHeight="0px">
                 <div style={{
@@ -44,7 +45,7 @@ class WishlistItemCard extends React.Component<WishlistItemCardProp, WishlistIte
                     alignItems: "flex-end"
                 }}>
                     <div style={{display: "inline-flex", color: "#FFFFFF", marginLeft: 8}}>
-                        <IconButton>
+                        <IconButton onClick={() => onRemoveClick(id)}>
                             <DeleteIcon style={{color: "#FFFFFF"}} fontSize={"small"}/>
                         </IconButton>
                     </div>
@@ -57,7 +58,7 @@ class WishlistItemCard extends React.Component<WishlistItemCardProp, WishlistIte
     }
 
     renderNonActionMode() {
-        const {onItemSelectChange,id,isSelectMode,selected} = this.props;
+        const {onItemSelectChange, id, isSelectMode, selected} = this.props;
         return (
             <div style={{
                 position: "absolute",
@@ -84,7 +85,7 @@ class WishlistItemCard extends React.Component<WishlistItemCardProp, WishlistIte
                         display: this.props.isSelectMode ? undefined : "none"
                     }}
                     onChange={(_, checked) => {
-                        onItemSelectChange(checked,id)
+                        onItemSelectChange(checked, id)
                     }}
                 />
                 <IconButton style={{display: this.props.isSelectMode ? "none" : "inline-flex"}}
@@ -125,9 +126,13 @@ interface WishlistItemCardProp extends BaseProps {
     gameName: string,
     gameCover: string,
     isSelectMode: boolean
-    id:number
+    id: number
+
     onItemSelectChange(isSelect: boolean, id: number): void,
-    selected:boolean
+
+    selected: boolean
+
+    onRemoveClick(id: number): void
 }
 
 interface WishlistItemCardState {

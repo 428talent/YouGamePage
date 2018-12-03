@@ -1,9 +1,9 @@
 import {AxiosResponse} from "axios";
 import {PageResult} from "../../../services/model/base";
 import {WishListItem} from "../../../services/model/wishlist";
-import {fetchWishList} from "../../../services/wishlist";
+import {deleteWishListItems, fetchWishList} from "../../../services/wishlist";
 import StoreWishList from "../../../store/model/WishList";
-import {number} from "prop-types";
+import {without} from "ramda";
 
 export interface MyPageModelState {
     pageIndex: number
@@ -67,10 +67,40 @@ export default ({
                     page: payload.page.page
                 }
             })
+        },
+        * 'deleteWishlistItems'({payload: {ids}}, {select, call, put}) {
+            console.log(ids)
+            const deleteResult : AxiosResponse<any> = yield call(deleteWishListItems, {
+                option: {
+                    items: ids
+                }
+            });
+            if (deleteResult.status === 200){
+                yield put({
+                    type:"removeWishlistItems",
+                    payload:{
+                        ids
+                    }
+                });
+                yield put({
+                    type:"wishlist/removeWishListItems",
+                    payload:{
+                        ids
+                    }
+                })
+            }
         }
     },
     reducers: {
-        onItemSelectChange(state, {payload: {isSelect, id}}) {
+        'removeWishlistItems'(state, {payload: {ids}}) {
+            const newState = Object.assign({}, state);
+            Object.getOwnPropertyNames(newState.wishListItems).forEach(index => {
+                const pageItem: Array<number> = newState.wishListItems[index];
+                newState.wishListItems[index] = without(ids, pageItem)
+            });
+            return newState
+        },
+        'onItemSelectChange'(state, {payload: {isSelect, id}}) {
             const selectedItems: Set<number> = new Set<number>(state.selectedItems);
             isSelect ? selectedItems.add(id) : selectedItems.delete(id);
             console.log(isSelect);
@@ -79,13 +109,13 @@ export default ({
                 selectedItems: selectedItems
             }
         },
-        changePage(state, {payload: {page}}) {
+        'changePage'(state, {payload: {page}}) {
             return {
                 ...state,
                 pageIndex: page
             }
         },
-        setFirstLoading(state, {payload: {firstLoading}}) {
+        'setFirstLoading'(state, {payload: {firstLoading}}) {
             return {
                 ...state,
                 firstLoading

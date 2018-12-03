@@ -4,6 +4,7 @@ import {fetchWishList} from "../services/wishlist";
 import {WishListItem} from "../services/model/wishlist";
 import StoreWishList from "../store/model/WishList";
 import data from "./data";
+import {WishlistStore} from "../store/WishlistStore";
 
 export interface WishlistModelState {
     isLoading:boolean,
@@ -59,18 +60,17 @@ export default ({
         'storeWishLists'(state, {payload}) {
             const wishListItems: Array<StoreWishList> = payload.wishListItems;
             const newState = Object.assign({}, state);
-            wishListItems.forEach(item => {
-                newState.wishListItems.entities.wishListItems[item.id] = item;
-                if (!newState.wishListItems.result.includes(item.id)) {
-                    newState.wishListItems.result = [...newState.wishListItems.result, item.id]
-                }
-            });
-            console.log({
-                ...newState
-            });
+            const wishListStore = new WishlistStore(state);
+            wishListStore.addItems(wishListItems);
             return {
                 ...newState,
             }
+        },
+        'removeWishListItems' (state,{payload:{ids}}){
+            const newState = Object.assign({}, state);
+            const wishListStore = new WishlistStore(state);
+            wishListStore.removeItems(ids);
+            return newState
         }
     },
 
