@@ -9,10 +9,11 @@ export const Api = {
     getCartList: ServerUrl + "/api/user/:id/carts",
     getOrderList: ServerUrl + "/api/orders",
     payOrder: ServerUrl + "/api/order/:id/pay",
-    changeProfile: ServerUrl + "/api/user/:id/profile",
+    profile: ServerUrl + "/api/user/:id/profile",
     fetchGame: ServerUrl + "/api/game/:id",
     uploadUserAvatar: ServerUrl + "/api/user/:id/avatar/upload",
     fetchOrderGood: ServerUrl + "/api/ordergood",
     fetchGood: `${ServerUrl}/api/good/:id`,
+    goods: `${ServerUrl}/api/goods`,
     deleteWishlistItems:`${ServerUrl}/api/wishlist`
 };

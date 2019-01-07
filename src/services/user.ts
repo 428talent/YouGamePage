@@ -1,6 +1,7 @@
 import {apiRequest} from "../utils/request";
 import {Api} from "../config/api";
 import {AxiosResponse} from "axios";
+import {ApiResponse} from "./model/base";
 
 export function UserLogin({username, password}): Promise<AxiosResponse<UserModel.UserAuth>> {
     return apiRequest({
@@ -36,15 +37,25 @@ export const UploadUserAvatar = ({avatar, userId}): Promise<AxiosResponse<UserMo
 };
 
 
-export const ChangeProfile = ({email, nickname,userId}): Promise<AxiosResponse<UserModel.User>> => {
+export const ChangeProfile = ({email, nickname, userId}): Promise<AxiosResponse<UserModel.User>> => {
     return apiRequest({
-        url: Api.changeProfile,
+        url: Api.profile,
         method: "put",
         data: {
             email: email, nickname: nickname
         },
-        pathParams:{
-            id:userId
+        pathParams: {
+            id: userId
+        }
+    })
+};
+
+export const QueryProfile = ({userId}): Promise<ApiResponse<Profile>> => {
+    return apiRequest({
+        url: Api.profile,
+        method: "get",
+        pathParams: {
+            id: userId
         }
     })
 };

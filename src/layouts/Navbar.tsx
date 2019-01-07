@@ -63,7 +63,7 @@ class MainNavBar extends React.Component<MainNavBarProps, {}> {
             )
         } else {
             return (
-                <Button className={classes.rightButton} href={"/login/login.html"}>
+                <Button className={classes.rightButton} href={"/login"}>
                     <span className={classes.username}>登录</span>
                 </Button>
             )
@@ -108,6 +108,7 @@ class MainNavBar extends React.Component<MainNavBarProps, {}> {
 
 
     render(): React.ReactNode {
+        console.log(this.props.user)
         const {classes, isDrawerOpen} = this.props;
         return (
             <div className={classes.root}>

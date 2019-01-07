@@ -16,7 +16,7 @@ interface ApiRequestInit {
 }
 
 
-export const apiRequest = <MT extends any>(init: ApiRequestInit): Promise<AxiosResponse<MT>> => {
+export const apiRequest = <MT extends any>(init: ApiRequestInit): Promise<any> => {
     let {
         url, method, data, queryParams, pathParams, form, page
     } = init;
@@ -35,38 +35,64 @@ export const apiRequest = <MT extends any>(init: ApiRequestInit): Promise<AxiosR
         })
     }
     method = method.toLowerCase();
-
-    if (form) {
-        return axios.request({
-            method: method,
-            data: form,
-            url: url,
-            headers: {
-                "Authorization": Cookies.get("yougame_token"),
-                'Content-Type': 'multipart/form-data'
-            },
-        })
-    } else {
-        switch (method) {
-            case "get":
-                return axios.get(url, {
-                    headers: {
-                        "Authorization": Cookies.get("yougame_token"),
-                        "Content-Type": "application/json"
-                    }
-                });
-            default:
-                return axios.request({
-                    method: method,
-                    data: data,
-                    url: url,
-                    headers: {
-                        "Authorization": Cookies.get("yougame_token"),
-                        "Content-Type": "application/json"
-                    },
-                })
+    const sendRequest = () => {
+        if (form) {
+            return axios.request({
+                method: method,
+                data: form,
+                url: url,
+                headers: {
+                    "Authorization": Cookies.get("yougame_token"),
+                    'Content-Type': 'multipart/form-data'
+                },
+            })
+        } else {
+            switch (method) {
+                case "get":
+                    return axios.get(url, {
+                        headers: {
+                            "Authorization": Cookies.get("yougame_token"),
+                            "Content-Type": "application/json"
+                        }
+                    });
+                default:
+                    return axios.request({
+                        method: method,
+                        data: data,
+                        url: url,
+                        headers: {
+                            "Authorization": Cookies.get("yougame_token"),
+                            "Content-Type": "application/json"
+                        },
+                    })
+            }
         }
     }
+
+    return sendRequest().then(response => {
+        const {statusText, status} = response
+        return Promise.resolve({
+            requestSuccess: true,
+            message: statusText,
+            statusCode: status,
+            data: response.data
+        })
+    }).catch(error => {
+        const {response} = error;
+        let msg;
+        let statusCode;
+        if (response && response instanceof Object) {
+            const {data, statusText} = response;
+            statusCode = response.status;
+            msg = data.message || statusText
+        } else {
+            statusCode = 600;
+            msg = error.message || 'Network Error'
+        }
+
+        /* eslint-disable */
+        return Promise.reject({success: false, statusCode, message: msg, error: data})
+    })
 
 
 };

@@ -21,11 +21,7 @@ declare module GameModel {
         name: string;
         release_time: number;
         publisher: string;
-        band: string;
         intro: string;
-        tags: Tag[];
-        preview_images: PreviewImage[];
-        goods: Good[];
     }
 
 }

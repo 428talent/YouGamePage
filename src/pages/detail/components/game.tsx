@@ -1,6 +1,10 @@
 import * as React from "react";
+import {ReactNode} from "react";
 import {
-    Avatar, Badge, Button, Chip,
+    Avatar,
+    Badge,
+    Button,
+    Chip,
     createStyles,
     Divider,
     Grid,
@@ -13,11 +17,12 @@ import {
 } from "@material-ui/core";
 import BaseProps from "../../../base/props";
 import ImageGallery from 'react-image-gallery';
-import {fetchGame} from "../../../services/game";
 import {ServerUrl} from "../../../config/api";
-import {ReactNode} from "react";
 import "react-image-gallery/styles/css/image-gallery.css";
-import {connect} from "dva";
+import {Image} from "../../../services/model/image";
+import {Good} from "../../../services/model/good";
+import Tag = GameModel.Tag;
+import {parseDate} from "../../../utils/time";
 
 class Game extends React.Component<GameProps, {}> {
 
@@ -44,71 +49,84 @@ class Game extends React.Component<GameProps, {}> {
     };
 
 
-    createTags(classes): Array<ReactNode> {
-        if (this.props.game) {
-            return this.props.game.tags.map(tag => {
-                return (
-                    <Chip className={classes.tag} label={tag.name} key={tag.id}/>
-                )
-            })
-        }
+    createTags(): Array<ReactNode> {
+        const {classes, tags} = this.props;
+        return tags.map(tag => {
+            return (
+                <Chip className={classes.tag} label={tag.name} key={tag.id}/>
+            )
+        })
+
 
     }
 
-    createGoods(classes): Array<ReactNode> {
-        if (this.props.game) {
-            return this.props.game.goods.map(good => {
-                return (
-                    <div key={good.id}>
-                        <ListItem>
-                            <ListItemText primary={good.name} secondary={`￥${good.price}`}/>
-                            <div style={{float: "right"}}>
-                                <Button variant="outlined">加入购物车</Button>
-                            </div>
+    renderGoods(): Array<ReactNode> {
+        const {classes, goods} = this.props;
+        return goods.map(good => {
+            return (
+                <div key={good.id}>
+                    <ListItem>
+                        <ListItemText primary={good.name} secondary={`￥${good.price}`}/>
+                        <div style={{float: "right"}}>
+                            <Button variant="outlined">加入购物车</Button>
+                        </div>
 
-                        </ListItem>
-                    </div>
-                )
-            })
-        }
+                    </ListItem>
+                </div>
+            )
+        })
+
     }
 
 
     render() {
-        const {classes, game} = this.props;
+        const {classes, game, band, preview} = this.props;
+        console.log(this.props)
         return (
             <div>
+                <img style={{position: "fixed", zIndex: -100, marginTop: -55,width:"120%",filter:"blur(20px)",marginLeft:-30,marginRight:-20}}
+                src={preview.length > 0 ? `${ServerUrl}/${preview[0].path}` : ""}/>
                 <div className={classes.root}>
+
                     <Grid container spacing={24}>
                         <Grid item xs={12}>
+                            <Paper style={{padding:16}}>
                             <Typography variant="h4">
                                 {game ? game.name : ""}
                             </Typography>
+                            </Paper>
                         </Grid>
                     </Grid>
                     <Grid container spacing={24}>
 
                         <Grid item xs={12} sm={12} md={12} lg={8} xl={8}>
                             <Paper>
-                                <ImageGallery items={game ?
-                                    game.preview_images.map(image => ({original: `${ServerUrl}/${image.path}`})) : []
-                                } showThumbnails={false} showPlayButton={false}/>
+                                <ImageGallery
+                                    items={preview.map(image => ({original: `${ServerUrl}/${image.path}`}))}
+                                    showThumbnails={false}
+                                    showPlayButton={false}
+                                />
                             </Paper>
                         </Grid>
                         <Grid item xs={12} sm={12} md={12} lg={4} xl={4}>
                             <Paper>
-                                <img src={game ? `${ServerUrl}/${game.band}` : ""}
+                                <img src={band ? `${ServerUrl}/${band}` : ""}
                                      className={classes.band}/>
                                 <div style={{padding: 8}}>
                                     <div className={classes.tagContainer}>
-                                        {this.createTags(classes)}
+                                        {this.createTags()}
                                     </div>
                                     <Typography variant="subtitle2">
                                         开发商: {game ? game.publisher : ""}
                                     </Typography>
                                     <Typography variant="subtitle2">
-                                        日期：
+                                        日期：{game?game.release_time:""}
                                     </Typography>
+                                </div>
+                                <div style={{textAlign: "center", paddingBottom: 8, paddingLeft: 8, paddingRight: 8}}>
+                                    <Button variant={"contained"} fullWidth={true} color={"primary"}>
+                                        加入愿望单
+                                    </Button>
                                 </div>
                             </Paper>
                         </Grid>
@@ -116,7 +134,7 @@ class Game extends React.Component<GameProps, {}> {
                             <Paper>
                                 <div>
                                     <List>
-                                        {this.createGoods(classes)}
+                                        {this.renderGoods()}
                                     </List>
                                 </div>
                             </Paper>
@@ -138,7 +156,7 @@ class Game extends React.Component<GameProps, {}> {
                                             <div>
                                                 <div style={{display: "block"}}>
                                                     <Avatar style={{float: "left"}}
-                                                            src="http://localhost:8888/static/upload/user/avatar/a228b09a7ca497d3a0c169272ab4c9ab.jpg"/>
+                                                            src="https://randomuser.me/api/portraits/med/men/65.jpg"/>
                                                     <div style={{marginLeft: 50}}>
                                                         <div>ArenTakayama</div>
                                                         <div>2018-11-16</div>
@@ -156,7 +174,7 @@ class Game extends React.Component<GameProps, {}> {
                                             <div>
                                                 <div style={{display: "block"}}>
                                                     <Avatar style={{float: "left"}}
-                                                            src="http://localhost:8888/static/upload/user/avatar/a228b09a7ca497d3a0c169272ab4c9ab.jpg"/>
+                                                            src="https://randomuser.me/api/portraits/med/men/65.jpg"/>
                                                     <div style={{marginLeft: 50}}>
                                                         <div>ArenTakayama</div>
                                                         <div>2018-11-16</div>
@@ -174,7 +192,7 @@ class Game extends React.Component<GameProps, {}> {
                                             <div>
                                                 <div style={{display: "block"}}>
                                                     <Avatar style={{float: "left"}}
-                                                            src="http://localhost:8888/static/upload/user/avatar/a228b09a7ca497d3a0c169272ab4c9ab.jpg"/>
+                                                            src="https://randomuser.me/api/portraits/med/men/65.jpg"/>
                                                     <div style={{marginLeft: 50}}>
                                                         <div>ArenTakayama</div>
                                                         <div>2018-11-16</div>
@@ -192,7 +210,7 @@ class Game extends React.Component<GameProps, {}> {
                                             <div>
                                                 <div style={{display: "block"}}>
                                                     <Avatar style={{float: "left"}}
-                                                            src="http://localhost:8888/static/upload/user/avatar/a228b09a7ca497d3a0c169272ab4c9ab.jpg"/>
+                                                            src="https://randomuser.me/api/portraits/med/men/65.jpg"/>
                                                     <div style={{marginLeft: 50}}>
                                                         <div>ArenTakayama</div>
                                                         <div>2018-11-16</div>
@@ -209,7 +227,7 @@ class Game extends React.Component<GameProps, {}> {
                                         <div>
                                             <div style={{display: "block"}}>
                                                 <Avatar style={{float: "left"}}
-                                                        src="http://localhost:8888/static/upload/user/avatar/a228b09a7ca497d3a0c169272ab4c9ab.jpg"/>
+                                                        src="https://randomuser.me/api/portraits/med/men/65.jpg"/>
                                                 <div style={{marginLeft: 50}}>
                                                     <div>ArenTakayama</div>
                                                     <div>2018-11-16</div>
@@ -227,7 +245,7 @@ class Game extends React.Component<GameProps, {}> {
                                             <div>
                                                 <div style={{display: "block"}}>
                                                     <Avatar style={{float: "left"}}
-                                                            src="http://localhost:8888/static/upload/user/avatar/a228b09a7ca497d3a0c169272ab4c9ab.jpg"/>
+                                                            src="https://randomuser.me/api/portraits/med/men/65.jpg"/>
                                                     <div style={{marginLeft: 50}}>
                                                         <div>ArenTakayama</div>
                                                         <div>2018-11-16</div>
@@ -305,6 +323,10 @@ interface GameProps extends BaseProps {
         tagContainer: string
     }
     game?: GameModel.Game
+    band?: string
+    preview?: Array<Image>
+    goods?: Array<Good>
+    tags?: Array<Tag>
 }
 
 

@@ -1,6 +1,7 @@
 import {readCookieJWTPayload} from "../utils/auth";
 import Axios, {AxiosResponse} from "axios";
-import {FetchUser} from "../services/user";
+import {FetchUser, QueryProfile} from "../services/user";
+import {ApiResponse} from "../services/model/base";
 
 export default ({
     namespace: "app",
@@ -21,7 +22,6 @@ export default ({
     effects: {
         * 'refreshUser'({payload}, {select, call, put}) {
             const jwtPayload = readCookieJWTPayload();
-
             if (jwtPayload == null) {
                 yield put({
                     type: 'setUser',
@@ -31,24 +31,21 @@ export default ({
                 });
                 return
             }
-            const result: AxiosResponse<UserModel.User> = yield call(FetchUser, {userId: jwtPayload.UserId});
+            const result: ApiResponse<UserModel.User> = yield call(FetchUser, {userId: jwtPayload.UserId});
+            const queryUserProfileResponse : ApiResponse<Profile> =  yield call(QueryProfile,{userId: jwtPayload.UserId});
             yield put({
                 type: "setUser",
                 payload: {
-                    user: result.data
+                    user: {
+                        ...result.data,
+                        profile:queryUserProfileResponse.data
+                    }
                 }
             });
             yield put({
                 type: "cart/fetchCartList",
                 payload: {}
             });
-            // if (payload.path === '/my/wishlist') {
-            //     yield put({
-            //         type: "wishlist/fetchWishList",
-            //         payload: {}
-            //     });
-            // }
-
         },
 
     },

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {withStyles} from "@material-ui/core";
+import {withStyles,Typography} from "@material-ui/core";
 import BaseProps from "../base/props";
 
 class Footer extends React.Component<FooterProps, {}> {
@@ -12,7 +12,12 @@ class Footer extends React.Component<FooterProps, {}> {
         const {classes} = this.props;
         return (
             <div className={classes.root}>
-                YouGame
+                <div style={{display:"inline-block"}}>
+                    <Typography variant={"h6"} style={{color:"#FFFFFF"}}>
+                        YouGame
+                    </Typography>
+
+                </div>
             </div>
         )
     }
@@ -24,10 +29,13 @@ interface FooterProps extends BaseProps {
 
 const styles = theme => ({
     root: {
+        display: "flex",
+        marginTop:55,
         textAlign: "center" as "center",
         height: 100,
-        marginTop: 60,
-        backgroundColor: "#FFFFFF"
+        justifyContent:"center",
+        alignItems:"center",
+        backgroundColor: "#333333"
 
     }
 });
