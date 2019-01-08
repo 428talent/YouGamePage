@@ -7,8 +7,9 @@ import withRouter from "umi/withRouter";
 
 
 class MyPage extends React.Component<MyPageProps, {}> {
+
     render(): React.ReactNode {
-        console.log("render my page ...")
+        const {app} = this.props;
         const {classes, tabIndex, dispatch} = this.props;
         return (
             <div className={this.props.classes.container}>
@@ -21,6 +22,7 @@ class MyPage extends React.Component<MyPageProps, {}> {
                                          tab: tabIndex
                                      }
                                  })}
+                                 profile={app.user.profile}
                         />
                     </Grid>
                     <Grid item xs={9}>
@@ -47,10 +49,11 @@ interface MyPageProps extends BaseProps {
     tabIndex: string
     history: any
     children:any
+    app:any
 }
 
 interface MyPageState extends BaseProps {
 
 }
 
-export default withRouter(connect(({myPage}) => ({...myPage}))(withStyles(styles)(MyPage)))
+export default withRouter(connect(({myPage,app}) => ({...myPage,app}))(withStyles(styles)(MyPage)))

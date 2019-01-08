@@ -11,9 +11,12 @@ class ShoppingCartPage extends React.Component<ShoppingCartPageProp, {}> {
         return this.props.cartItems.map(cartItem => {
             return (
                 <Grid item xs={12} key={cartItem.id} className={this.props.classes.goodCartContainer}>
-                    <GoodCard gameName={cartItem.game.name} price={cartItem.good.price} goodName={cartItem.good.name}
-                              cover={cartItem.game.band}
-                              isPhone={isWidthDown('md', this.props.width)}
+                    <GoodCard
+                        gameName={cartItem.game.name}
+                        price={cartItem.good.price}
+                        goodName={cartItem.good.name}
+                        cover={cartItem.game.band}
+                        isPhone={isWidthDown('md', this.props.width)}
                     />
                 </Grid>
             )
@@ -21,7 +24,7 @@ class ShoppingCartPage extends React.Component<ShoppingCartPageProp, {}> {
     }
 
     render() {
-        const {classes, totalPrice,width} = this.props;
+        const {classes, totalPrice, width} = this.props;
         console.log(width)
         return (
             <div>
@@ -51,9 +54,9 @@ class ShoppingCartPage extends React.Component<ShoppingCartPageProp, {}> {
 }
 
 interface ShoppingCartPageProp extends BaseProps {
-    cartItems: Array<CartModel.CartItem>
+    cartItems: Array<any>
     totalPrice: number,
-    width:any
+    width: any
 }
 
 const styles = createStyles(theme => ({

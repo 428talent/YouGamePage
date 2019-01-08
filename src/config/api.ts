@@ -6,6 +6,7 @@ export const Api = {
     userLogin: ServerUrl + "/api/user/auth",
     getWishListItems: ServerUrl + "/api/wishlist",
     getGame: ServerUrl + "/api/game/:id",
+    games: ServerUrl + "/api/games",
     getCartList: ServerUrl + "/api/user/:id/carts",
     getOrderList: ServerUrl + "/api/orders",
     payOrder: ServerUrl + "/api/order/:id/pay",

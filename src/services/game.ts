@@ -18,6 +18,14 @@ export function fetchGame({gameId}): Promise<AxiosResponse<Game>> {
     })
 }
 
+export function fetchGameList({param}): Promise<ApiResponse<Game>> {
+    return apiRequest({
+        url: Api.games,
+        method: "get",
+        queryParams: param
+    })
+}
+
 export function getGameBand({gameId}): Promise<ApiResponse<Image>> {
     return apiRequest<Image>({
         url: `${Api.fetchGame}/band`,

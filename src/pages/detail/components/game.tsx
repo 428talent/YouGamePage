@@ -84,16 +84,36 @@ class Game extends React.Component<GameProps, {}> {
         console.log(this.props)
         return (
             <div>
-                <img style={{position: "fixed", zIndex: -100, marginTop: -55,width:"120%",filter:"blur(20px)",marginLeft:-30,marginRight:-20}}
-                src={preview.length > 0 ? `${ServerUrl}/${preview[0].path}` : ""}/>
+                <img style={{
+                    position: "fixed",
+                    zIndex: -100,
+                    marginTop: -55,
+                    width: "120%",
+                    filter: "blur(20px)",
+                    marginLeft: -30,
+                    marginRight: -20
+                }}
+                     src={preview.length > 0 ? `${ServerUrl}/${preview[0].path}` : ""}/>
+                <img style={{
+                    position: "fixed",
+                    zIndex: -50,
+                    height: 1024,
+                    marginTop: -55,
+                    width: "120%",
+                    opacity: 0.7,
+                    filter: "blur(20px)",
+                    marginLeft: -30,
+                    marginRight: -20,
+                    backgroundColor: "#000000"
+                }}/>
                 <div className={classes.root}>
 
                     <Grid container spacing={24}>
                         <Grid item xs={12}>
-                            <Paper style={{padding:16}}>
-                            <Typography variant="h4">
-                                {game ? game.name : ""}
-                            </Typography>
+                            <Paper style={{padding: 16}}>
+                                <Typography variant="h4">
+                                    {game ? game.name : ""}
+                                </Typography>
                             </Paper>
                         </Grid>
                     </Grid>
@@ -120,7 +140,7 @@ class Game extends React.Component<GameProps, {}> {
                                         开发商: {game ? game.publisher : ""}
                                     </Typography>
                                     <Typography variant="subtitle2">
-                                        日期：{game?game.release_time:""}
+                                        日期：{game ? game.release_time : ""}
                                     </Typography>
                                 </div>
                                 <div style={{textAlign: "center", paddingBottom: 8, paddingLeft: 8, paddingRight: 8}}>

@@ -14,9 +14,9 @@ declare module CartModel {
 
     export interface CartItem {
         id: number;
-        good: Good;
-        game: Game;
-        created: number;
+        good_id: number;
+        user_id: number;
+        created: string;
     }
 
 }
