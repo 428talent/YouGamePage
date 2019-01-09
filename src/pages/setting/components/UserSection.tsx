@@ -25,7 +25,7 @@ import BaseProps from "../../../base/props";
 import {ServerUrl} from "../../../config/api";
 
 const ReduxTextField = (
-    { input, label, meta: { touched, error }, ...custom },
+    {input, label, meta: {touched, error}, ...custom},
 ) => (
     <TextField
         floatingLabelText={label}
@@ -38,7 +38,7 @@ let ChangeNicknameForm = props => {
     const {handleSubmit} = props;
     return (
         <form onSubmit={handleSubmit}>
-            <Field name="nickname" component={ReduxTextField} label="昵称" fullWidth hint={"新的昵称"} />
+            <Field name="nickname" component={ReduxTextField} label="昵称" fullWidth hint={"新的昵称"}/>
         </form>
     )
 };
@@ -52,7 +52,7 @@ class UserSection extends React.Component<UserSectionProps, UserSectionState> {
     state: Readonly<UserSectionState> = {
         changeNicknameDialogOpen: false
     };
-    nicknameFormRef:any = createRef();
+    nicknameFormRef: any = createRef();
 
 
     constructor(props: Readonly<UserSectionProps>) {
@@ -65,8 +65,30 @@ class UserSection extends React.Component<UserSectionProps, UserSectionState> {
     onUploadAvatar() {
         this.uploadAvatar.current.click()
     }
-    onSubmitChangeNicknameForm(){
+
+    onSubmitChangeNicknameForm() {
         this.nicknameFormRef.current.submit()
+    }
+
+    renderUserAvatar(user) {
+        if (user != null) {
+            if (user.profile.avatar.length > 0) {
+                return (
+                    <Avatar
+                        alt="avatar"
+                        src={`${ServerUrl}/${user.profile.avatar}`}
+                    />
+                )
+            } else {
+                return (
+                    <Avatar
+                        alt="avatar"
+                    >
+                        {user.profile.nickname[0]}
+                    </Avatar>
+                )
+            }
+        }
     }
 
 
@@ -85,16 +107,7 @@ class UserSection extends React.Component<UserSectionProps, UserSectionState> {
                             <List>
                                 <ListItem onClick={this.onUploadAvatar} button>
                                     <ListItemIcon>
-                                        <Avatar
-                                            alt="Adelle Charles"
-                                            src={function (user: UserModel.User) {
-                                                if (user != null) {
-                                                    return `${ServerUrl}/${user.profile.avatar}`
-                                                } else {
-                                                    return "http://localhost:8888/static/upload/user/avatar/a228b09a7ca497d3a0c169272ab4c9ab.jpg"
-                                                }
-                                            }(this.props.user)}
-                                        />
+                                        {this.renderUserAvatar(this.props.user)}
                                     </ListItemIcon>
                                     <ListItemText primary="头像">
 
@@ -129,7 +142,8 @@ class UserSection extends React.Component<UserSectionProps, UserSectionState> {
                 >
                     <DialogTitle id="form-dialog-title">变更昵称</DialogTitle>
                     <DialogContent>
-                        <ChangeNicknameForm ref={this.nicknameFormRef} onSubmit={({nickname}) => this.props.onChangeUserNickname(nickname)} />
+                        <ChangeNicknameForm ref={this.nicknameFormRef}
+                                            onSubmit={({nickname}) => this.props.onChangeUserNickname(nickname)}/>
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={() => this.props.showChangeNicknameDialog(false)} color="primary">

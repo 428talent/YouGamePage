@@ -3,6 +3,7 @@ export const WebServer = "http://127.0.0.1:8888";
 export const MockServer = "http://127.0.0.1:8888";
 export const Api = {
     getUser: ServerUrl + "/api/user/:id",
+    users: ServerUrl + "/api/users",
     userLogin: ServerUrl + "/api/user/auth",
     getWishListItems: ServerUrl + "/api/wishlist",
     getGame: ServerUrl + "/api/game/:id",

@@ -6,11 +6,11 @@ import BaseProps from "../../base/props";
 import RegisterForm from "./components/RegisterForm";
 
 interface RegisterPageProps extends BaseProps {
-
+    dispatch: any
 }
 
 const RegisterPage = (props: RegisterPageProps) => {
-    const {classes} = props;
+    const {classes, dispatch} = props;
     return (
         <div className={classes.container}>
             <Paper className={classes.registerCard}>
@@ -18,8 +18,15 @@ const RegisterPage = (props: RegisterPageProps) => {
                     <Typography variant={"h5"}>
                         注册用户
                     </Typography>
-                    <div style={{marginTop:32}}>
-                    <RegisterForm onLoginSubmit={(username,password) => console.log({username,password})}/>
+                    <div style={{marginTop: 32}}>
+                        <RegisterForm
+                            onLoginSubmit={(username, password) => dispatch({
+                                type: 'register/createUser',
+                                payload: {
+                                    username, password
+                                },
+                            })}
+                        />
                     </div>
                 </div>
             </Paper>

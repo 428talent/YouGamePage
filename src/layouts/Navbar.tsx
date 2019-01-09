@@ -36,9 +36,35 @@ interface MainNavBarProps extends BaseProps {
 class MainNavBar extends React.Component<MainNavBarProps, {}> {
 
 
-    constructor(props: MainNavBarProps) {
-        super(props);
-    }
+    renderUserAvatar = (user) => {
+        if (user != null) {
+            const {profile} = user;
+            if (profile.avatar.length > 0) {
+                return (
+                    <Avatar
+                        alt="avatar"
+                        src={`${ServerUrl}/${profile.avatar}`}
+                    />
+                )
+            } else {
+
+                return (
+                    <Avatar
+                        alt="avatar"
+                    >
+                        {profile.nickname[0]}
+                    </Avatar>
+                )
+            }
+        } else {
+            return (
+                <Avatar style={{width: 80, height: 80}}>
+                    <PersonIcon style={{width: 64, height: 64}}/>
+                </Avatar>
+            )
+        }
+
+    };
 
     switchDrawer = (isOpen: boolean) => {
         this.props.dispatch({
@@ -53,10 +79,7 @@ class MainNavBar extends React.Component<MainNavBarProps, {}> {
         if (user) {
             return (
                 <Button className={classes.rightButton}>
-                    <Avatar
-                        alt={user.profile.nickname}
-                        src={`${ServerUrl}/${user.profile.avatar}`}
-                    />
+                   {this.renderUserAvatar(this.props.user)}
                     <span className={classes.username}>{user.profile.nickname}</span>
                     <MoreVertIcon/>
                 </Button>
@@ -74,24 +97,7 @@ class MainNavBar extends React.Component<MainNavBarProps, {}> {
     fullList = () => (
         <div className={this.props.classes.fullList}>
             <div style={{height: 150, display: "flex", alignItems: "center", justifyContent: "center"}}>
-                {function (user) {
-                    if(user != null){
-                        console.log(user);
-                        return (
-                            <Avatar
-                                style={{width: 80, height: 80}}
-                                src={`${ServerUrl}/${user.profile.avatar}`}
-                            />
-                        )
-                    }else{
-                        return(
-                            <Avatar style={{width: 80, height: 80}}>
-                                <PersonIcon style={{width: 64, height: 64}}/>
-                            </Avatar>
-
-                        )
-                    }
-                }(this.props.user)}
+                {this.renderUserAvatar(this.props.user)}
 
             </div>
             <List>

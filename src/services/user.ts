@@ -59,3 +59,13 @@ export const QueryProfile = ({userId}): Promise<ApiResponse<Profile>> => {
         }
     })
 };
+
+export const CreateUser = ({username, password}): Promise<ApiResponse<any>> => {
+    return apiRequest({
+        url: Api.users,
+        method: "post",
+        data: {
+            username, password
+        }
+    })
+};

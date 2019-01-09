@@ -7,11 +7,13 @@ import BaseProps from "../../../../base/props";
 interface RegisterProps extends BaseProps {
     onLoginSubmit(username: string, password: string)
 }
+const required = value => (value ? undefined : "Required");
 
 class RegisterForm extends React.Component<RegisterProps, {}> {
     onSubmit = values => {
         this.props.onLoginSubmit(values.username, values.password)
     };
+
 
     render(): React.ReactNode {
         const {classes} = this.props;
@@ -35,7 +37,7 @@ class RegisterForm extends React.Component<RegisterProps, {}> {
             <Form onSubmit={this.onSubmit} render={({handleSubmit, pristine, invalid}) => (
                 <form onSubmit={handleSubmit}>
                     <div>
-                        <Field label="用户名" name="username" type="text" className={classes.inputField}
+                        <Field validate={required} label="用户名" name="username" type="text" className={classes.inputField}
                                component={TextInput}/>
                     </div>
                     <div>
