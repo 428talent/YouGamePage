@@ -74,6 +74,7 @@ export const apiRequest = <MT extends any>(init: ApiRequestInit): Promise<any> =
 
     return sendRequest().then(response => {
         const {statusText, status} = response
+        console.log(response.data)
         return Promise.resolve({
             requestSuccess: true,
             message: statusText,

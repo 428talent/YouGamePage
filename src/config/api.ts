@@ -17,5 +17,6 @@ export const Api = {
     fetchOrderGood: ServerUrl + "/api/ordergood",
     fetchGood: `${ServerUrl}/api/good/:id`,
     goods: `${ServerUrl}/api/goods`,
-    deleteWishlistItems:`${ServerUrl}/api/wishlist`
+    deleteWishlistItems:`${ServerUrl}/api/wishlist`,
+    wishlist:`${ServerUrl}/api/wishlist/:id`
 };

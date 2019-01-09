@@ -114,7 +114,7 @@ class MainNavBar extends React.Component<MainNavBarProps, {}> {
 
 
     render(): React.ReactNode {
-        console.log(this.props.user)
+        console.log(this.props.user);
         const {classes, isDrawerOpen} = this.props;
         return (
             <div className={classes.root}>

@@ -7,6 +7,8 @@ import {Image} from "../../../services/model/image";
 import {Good} from "../../../services/model/good";
 import {fetchGoodList} from "../../../services/good";
 import Tag = GameModel.Tag;
+import {WishListItem} from "../../../services/model/wishlist";
+import {deleteWishlistItem, fetchWishList, AddToWishList} from "../../../services/wishlist";
 
 export default ({
     namespace: "detail",
@@ -15,7 +17,8 @@ export default ({
         band: undefined,
         preview: [],
         goods: [],
-        tags: []
+        tags: [],
+        wishlist: undefined
     },
     subscriptions: {
         'setup'({dispatch, history}) {
@@ -31,8 +34,7 @@ export default ({
     effects: {
         * 'fetchGame'({payload}, {select, call, put}) {
 
-            const fetchGameResponse: ApiResponse<GameModel.Game> = yield call(fetchGame, payload);
-            console.log(fetchGameResponse);
+            const fetchGameResponse: ApiResponse<any> = yield call(fetchGame, payload);
             if (fetchGameResponse.requestSuccess) {
                 yield put({
                     type: "fetchGameSuccess",
@@ -47,15 +49,20 @@ export default ({
                 yield put({
                     type: 'fetchGamePreview',
                     id: fetchGameResponse.data.id
-                })
+                });
                 yield put({
                     type: 'fetchGameGood',
                     id: fetchGameResponse.data.id
-                })
+                });
                 yield put({
                     type: 'fetchGameTag',
                     id: fetchGameResponse.data.id
+                });
+                yield put({
+                    type: 'checkGameInWishlist',
+                    id: fetchGameResponse.data.id
                 })
+
             }
 
 
@@ -63,7 +70,7 @@ export default ({
 
         * 'fetchGameBand'({id}, {select, call, put}) {
             const getGameBandResponse: ApiResponse<Image> = yield call(getGameBand, {gameId: id});
-            console.log(getGameBandResponse)
+            console.log(getGameBandResponse);
             if (getGameBandResponse.requestSuccess) {
                 yield put({
                     type: 'fetchGameBandSuccess',
@@ -71,6 +78,24 @@ export default ({
                         path: getGameBandResponse.data.path
                     },
                 })
+            }
+        },
+        * 'checkGameInWishlist'({id}, {select, call, put}) {
+            const fetchWishlistResponse: ApiResponse<PageResult<WishListItem>> = yield call(fetchWishList, {
+                option: {
+                    game: id,
+                    page: {page: 1, pageSize: 1}
+                }
+            });
+            if (fetchWishlistResponse.requestSuccess) {
+                if (fetchWishlistResponse.data.count == 1) {
+                    yield put({
+                        type: 'setState',
+                        payload: {
+                            wishlist: fetchWishlistResponse.data.result[0]
+                        },
+                    });
+                }
             }
         },
         * 'fetchGamePreview'({id}, {select, call, put}) {
@@ -106,6 +131,32 @@ export default ({
                     },
                 })
             }
+        },
+        * 'removeFromWishlist'({payload: {id}}, {select, call, put}) {
+            const removeWishlistResponse: ApiResponse<any> = yield call(deleteWishlistItem, {id});
+            if (removeWishlistResponse.requestSuccess) {
+                yield put({
+                    type: 'setState',
+                    payload: {
+                        wishlist: undefined
+                    },
+                });
+            }
+        },
+        * 'addToWishlist'({payload: {}}, {select, call, put}) {
+            const game = yield select(state => (state.detail.game));
+            if (game) {
+                const addWishlistResponse: ApiResponse<WishListItem> = yield call(AddToWishList, {gameId: game.id});
+                if (addWishlistResponse.requestSuccess) {
+                    yield put({
+                        type: 'setState',
+                        payload: {
+                            wishlist: addWishlistResponse.data
+                        },
+                    });
+                }
+            }
+
         }
     },
     reducers: {
@@ -138,6 +189,12 @@ export default ({
             return {
                 ...state,
                 tags
+            }
+        },
+        'setState'(state, {payload}) {
+            return {
+                ...state,
+                ...payload
             }
         }
     },

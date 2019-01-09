@@ -1,6 +1,7 @@
 import Axios, {AxiosResponse} from "axios";
 import {UserSectionProps} from "../components/UserSection";
 import {ChangeProfile, UploadUserAvatar} from "../../../services/user";
+import {ApiResponse} from "../../../services/model/base";
 
 
 export default ({
@@ -14,14 +15,14 @@ export default ({
     effects: {
         * 'uploadUserAvatar'({payload}, {select, call, put}) {
             const user: UserModel.User = yield select(state => (state.app.user));
-            const uploadResult: AxiosResponse<UserModel.User> = yield call(UploadUserAvatar, {
+            const uploadResult: ApiResponse<Profile> = yield call(UploadUserAvatar, {
                 avatar: payload.avatar,
                 userId: user.id
             });
-            if (uploadResult.status == 200) {
+            if (uploadResult.requestSuccess) {
                 yield put({
-                    type: 'app/setUser',
-                    payload: {user: uploadResult.data}
+                    type: 'app/refreshUser',
+                    payload: {}
                 });
             }
         },
@@ -31,15 +32,15 @@ export default ({
                 type: "changeNicknameDialogVisitable",
                 payload: {isShow: false}
             });
-            const uploadResult: AxiosResponse<UserModel.User> = yield call(ChangeProfile, {
+            const uploadResult: ApiResponse<Profile> = yield call(ChangeProfile, {
                 nickname: payload.nickname,
                 email: user.profile.email,
                 userId:user.id
             });
-            if (uploadResult.status == 200) {
+            if (uploadResult.requestSuccess) {
                 yield put({
-                    type: 'app/setUser',
-                    payload: {user: uploadResult.data}
+                    type: 'app/refreshUser',
+                    payload: {}
                 });
             }
 

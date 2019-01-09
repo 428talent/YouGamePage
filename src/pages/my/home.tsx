@@ -47,34 +47,27 @@ const HomePage = (props: HomePageProps) => {
                     </header>
 
                     <Grid container spacing={24}>
-                        {(() => {
-                            const wishListItems = props.wishListItems.wishListItems;
-                            const gameToFetch = [];
-                            const games = props.game.games;
-                            const items = wishListItems.result.map(id => (wishListItems.entities.wishListItems[id])).map(item => {
-                                const game = games.entities.games[item.gameId];
-                                if (!game) {
-                                    gameToFetch.push(item.gameId)
-                                }
-                                console.log(games.entities.games);
-                                return (
-                                    <Grid item xs={3} key={item.id}>
-                                        <img className={classes.wishlistImg}
-                                             src={
-                                                 game ? `${ServerUrl}/${game.band}` : "https://steamcdn-a.akamaihd.net/steam/apps/275850/header.jpg?t=1542978561"
-                                             }/>
-                                    </Grid>
-                                )
-                            });
-                            // props.dispatch({
-                            //     type:"game/fetchGameList",
-                            //     payload:{
-                            //         gameIds:gameToFetch
-                            //     }
-                            // });
-                            // console.log(gameToFetch)
-                            return items
-                        })()}
+                        {/*{(() => {*/}
+                            {/*const wishListItems = props.wishListItems.wishListItems;*/}
+                            {/*const gameToFetch = [];*/}
+                            {/*const games = props.game.games;*/}
+                            {/*const items = wishListItems.result.map(id => (wishListItems.entities.wishListItems[id])).map(item => {*/}
+                                {/*const game = games.entities.games[item.gameId];*/}
+                                {/*if (!game) {*/}
+                                    {/*gameToFetch.push(item.gameId)*/}
+                                {/*}*/}
+                                {/*console.log(games.entities.games);*/}
+                                {/*return (*/}
+                                    {/*<Grid item xs={3} key={item.id}>*/}
+                                        {/*<img className={classes.wishlistImg}*/}
+                                             {/*src={*/}
+                                                 {/*game ? `${ServerUrl}/${game.band}` : "https://steamcdn-a.akamaihd.net/steam/apps/275850/header.jpg?t=1542978561"*/}
+                                             {/*}/>*/}
+                                    {/*</Grid>*/}
+                                {/*)*/}
+                            {/*});*/}
+                            {/*return items*/}
+                        {/*})()}*/}
                     </Grid>
                 </section>
             </Paper>

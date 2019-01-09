@@ -7,7 +7,7 @@ import {Image} from "./model/image";
 import {Good} from "./model/good";
 import Tag = GameModel.Tag;
 
-export function fetchGame({gameId}): Promise<AxiosResponse<Game>> {
+export function fetchGame({gameId}): Promise<ApiResponse<Game>> {
     return apiRequest<Game>({
         url: Api.fetchGame,
         data: {},

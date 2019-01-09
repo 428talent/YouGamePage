@@ -78,10 +78,31 @@ class Game extends React.Component<GameProps, {}> {
 
     }
 
+    handleWishlistAction(){
+        const {wishlist,dispatch} = this.props;
+        if (wishlist) {
+            dispatch({
+                type: 'detail/removeFromWishlist',
+                payload: {
+                    id: wishlist.id
+                },
+
+            })
+        }else{
+            dispatch({
+                type: 'detail/addToWishlist',
+                payload: {
+                   
+                },
+
+            })
+        }
+    }
+
 
     render() {
-        const {classes, game, band, preview} = this.props;
-        console.log(this.props)
+        const {classes, game, band, preview, dispatch,wishlist} = this.props;
+        console.log(this.props);
         return (
             <div>
                 <img style={{
@@ -144,8 +165,9 @@ class Game extends React.Component<GameProps, {}> {
                                     </Typography>
                                 </div>
                                 <div style={{textAlign: "center", paddingBottom: 8, paddingLeft: 8, paddingRight: 8}}>
-                                    <Button variant={"contained"} fullWidth={true} color={"primary"}>
-                                        加入愿望单
+                                    <Button variant={"contained"} fullWidth={true} color={"primary"}
+                                            onClick={(e) => this.handleWishlistAction()}>
+                                        {wishlist? "从愿望单删除" : "加入愿望单"}
                                     </Button>
                                 </div>
                             </Paper>
@@ -347,6 +369,8 @@ interface GameProps extends BaseProps {
     preview?: Array<Image>
     goods?: Array<Good>
     tags?: Array<Tag>
+    wishlist?: any
+    dispatch?: any
 }
 
 

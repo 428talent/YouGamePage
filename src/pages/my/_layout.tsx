@@ -22,7 +22,7 @@ class MyPage extends React.Component<MyPageProps, {}> {
                                          tab: tabIndex
                                      }
                                  })}
-                                 profile={app.user.profile}
+                                 profile={app.user == null ? undefined : app.user.profile}
                         />
                     </Grid>
                     <Grid item xs={9}>
@@ -48,12 +48,12 @@ interface MyPageProps extends BaseProps {
     dispatch: Function
     tabIndex: string
     history: any
-    children:any
-    app:any
+    children: any
+    app: any
 }
 
 interface MyPageState extends BaseProps {
 
 }
 
-export default withRouter(connect(({myPage,app}) => ({...myPage,app}))(withStyles(styles)(MyPage)))
+export default withRouter(connect(({myPage, app}) => ({...myPage, app}))(withStyles(styles)(MyPage)))

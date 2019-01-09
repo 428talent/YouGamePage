@@ -69,7 +69,6 @@ export default ({
             })
         },
         * 'deleteWishlistItems'({payload: {ids}}, {select, call, put}) {
-            console.log(ids)
             const deleteResult : AxiosResponse<any> = yield call(deleteWishListItems, {
                 option: {
                     items: ids

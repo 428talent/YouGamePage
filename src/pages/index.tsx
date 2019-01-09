@@ -20,14 +20,6 @@ class Home extends React.Component {
                     alignItems: "center",
                     justifyContent: "center"
                 }}>
-                    {/*<Paper style={{width: 500, height: 55, display: "flex"}}>*/}
-                        {/*<div style={{display: "inline-flex"}}>*/}
-                            {/*<SearchIcon/>*/}
-                        {/*</div>*/}
-                        {/*<div style={{display: "inline-flex"}}>*/}
-                            {/*<TextField InputProps={{disableUnderline: true}}/>*/}
-                        {/*</div>*/}
-                    {/*</Paper>*/}
                 </div>
                 <Banner/>
 
