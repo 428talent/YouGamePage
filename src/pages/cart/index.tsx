@@ -8,14 +8,17 @@ import {isWidthDown} from "@material-ui/core/withWidth";
 
 class ShoppingCartPage extends React.Component<ShoppingCartPageProp, {}> {
     createGoodCard(): Array<ReactNode> {
+        const {dispatch} = this.props;
         return this.props.cartItems.map(cartItem => {
             return (
                 <Grid item xs={12} key={cartItem.id} className={this.props.classes.goodCartContainer}>
                     <GoodCard
+                        goodId={cartItem.id}
+                        onDeleteItem={(id) => dispatch({type: 'cart/deleteCartItem', payload: {id}})}
                         gameName={cartItem.game.name}
                         price={cartItem.good.price}
                         goodName={cartItem.good.name}
-                        cover={cartItem.game.band}
+                        cover={cartItem.game.band.path}
                         isPhone={isWidthDown('md', this.props.width)}
                     />
                 </Grid>
@@ -57,6 +60,7 @@ interface ShoppingCartPageProp extends BaseProps {
     cartItems: Array<any>
     totalPrice: number,
     width: any
+    dispatch: any,
 }
 
 const styles = createStyles(theme => ({

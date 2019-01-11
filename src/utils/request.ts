@@ -18,7 +18,7 @@ interface ApiRequestInit {
 
 export const apiRequest = <MT extends any>(init: ApiRequestInit): Promise<any> => {
     let {
-        url, method, data, queryParams, pathParams, form, page
+        url, method, data, queryParams = {}, pathParams = {}, form, page
     } = init;
     if (page) {
         queryParams["page"] = page.page;

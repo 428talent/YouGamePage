@@ -9,6 +9,8 @@ export const Api = {
     getGame: ServerUrl + "/api/game/:id",
     games: ServerUrl + "/api/games",
     getCartList: ServerUrl + "/api/user/:id/carts",
+    carts: ServerUrl + "/api/carts",
+    cart: ServerUrl + "/api/cart/:id",
     getOrderList: ServerUrl + "/api/orders",
     payOrder: ServerUrl + "/api/order/:id/pay",
     profile: ServerUrl + "/api/user/:id/profile",

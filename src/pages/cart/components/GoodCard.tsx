@@ -6,13 +6,14 @@ import {
     CardActions,
     CardContent,
     CardMedia,
-    createStyles,
+    createStyles, IconButton,
     Paper,
     Typography,
     withStyles
 } from "@material-ui/core";
 import BaseProps from "../../../base/props";
 import {ServerUrl} from "../../../config/api";
+import MoreIcon from '@material-ui/icons/Delete'
 
 class GoodCard extends React.Component<GoodCartProp, {}> {
     render(): React.ReactNode {
@@ -21,12 +22,14 @@ class GoodCard extends React.Component<GoodCartProp, {}> {
             goodName,
             gameName,
             price,
+            goodId,
             cover,
+            onDeleteItem,
             isPhone
         } = this.props;
         if (isPhone) {
             return (
-                <Card >
+                <Card>
                     <CardActionArea>
                         <CardMedia
                             className={classes.media}
@@ -60,24 +63,31 @@ class GoodCard extends React.Component<GoodCartProp, {}> {
                         <Typography variant="subtitle2" noWrap>
                             {goodName}
                         </Typography>
+                        <div>
+                            <MoreIcon style={{color: "#6c6c6c"}} onClick={() => onDeleteItem(goodId)}/>
+                        </div>
                     </div>
                 </div>
-                <div style={{display: "inline-flex"}}>
+                <div style={{display: "inline-flex", textAlign: "right", position: "relative"}}>
+
                     <Typography variant={"h5"} style={{margin: "auto 40px"}}>
                         ￥{price}
                     </Typography>
                 </div>
+
             </Paper>
         )
     }
 }
 
 interface GoodCartProp extends BaseProps {
+    goodId: number,
     gameName: string,
     goodName: string,
     price: number,
     cover: string,
-    isPhone: boolean
+    isPhone: boolean,
+    onDeleteItem: (id) => void
 }
 
 const styles = createStyles({
