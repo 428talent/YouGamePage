@@ -24,3 +24,4 @@ export function fetchGoodList(param): Promise<ApiResponse<PageResult<Good>>> {
         }
     })
 }
+

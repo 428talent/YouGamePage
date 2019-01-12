@@ -1,5 +1,7 @@
 import {apiRequest} from "../utils/request";
 import {Api} from "../config/api";
+import {ApiResponse} from "./model/base";
+import CartItem = CartModel.CartItem;
 
 export async function FetchUserCart({userId, page}) {
     return apiRequest({
@@ -27,6 +29,16 @@ export function deleteCartItem({id}) {
         method: "delete",
         pathParams: {
             id
+        }
+    })
+}
+
+export function addToCart({id}): Promise<ApiResponse<CartItem>> {
+    return apiRequest({
+        url: Api.carts,
+        method: "post",
+        data: {
+            good_id: id
         }
     })
 }

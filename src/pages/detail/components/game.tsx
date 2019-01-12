@@ -61,14 +61,17 @@ class Game extends React.Component<GameProps, {}> {
     }
 
     renderGoods(): Array<ReactNode> {
-        const {classes, goods} = this.props;
+        const {classes, goods, dispatch} = this.props;
         return goods.map(good => {
             return (
                 <div key={good.id}>
                     <ListItem>
                         <ListItemText primary={good.name} secondary={`￥${good.price}`}/>
                         <div style={{float: "right"}}>
-                            <Button variant="outlined">加入购物车</Button>
+                            <Button variant="outlined" onClick={(e) => dispatch({
+                                type: "detail/addToCart",
+                                payload: {id: good.id}
+                            })}>加入购物车</Button>
                         </div>
 
                     </ListItem>
@@ -78,8 +81,8 @@ class Game extends React.Component<GameProps, {}> {
 
     }
 
-    handleWishlistAction(){
-        const {wishlist,dispatch} = this.props;
+    handleWishlistAction() {
+        const {wishlist, dispatch} = this.props;
         if (wishlist) {
             dispatch({
                 type: 'detail/removeFromWishlist',
@@ -88,12 +91,10 @@ class Game extends React.Component<GameProps, {}> {
                 },
 
             })
-        }else{
+        } else {
             dispatch({
                 type: 'detail/addToWishlist',
-                payload: {
-                   
-                },
+                payload: {},
 
             })
         }
@@ -101,7 +102,7 @@ class Game extends React.Component<GameProps, {}> {
 
 
     render() {
-        const {classes, game, band, preview, dispatch,wishlist} = this.props;
+        const {classes, game, band, preview, dispatch, wishlist} = this.props;
         console.log(this.props);
         return (
             <div>
@@ -167,7 +168,7 @@ class Game extends React.Component<GameProps, {}> {
                                 <div style={{textAlign: "center", paddingBottom: 8, paddingLeft: 8, paddingRight: 8}}>
                                     <Button variant={"contained"} fullWidth={true} color={"primary"}
                                             onClick={(e) => this.handleWishlistAction()}>
-                                        {wishlist? "从愿望单删除" : "加入愿望单"}
+                                        {wishlist ? "从愿望单删除" : "加入愿望单"}
                                     </Button>
                                 </div>
                             </Paper>

@@ -9,6 +9,7 @@ import {fetchGoodList} from "../../../services/good";
 import Tag = GameModel.Tag;
 import {WishListItem} from "../../../services/model/wishlist";
 import {deleteWishlistItem, fetchWishList, AddToWishList} from "../../../services/wishlist";
+import {addToCart} from "../../../services/cart";
 
 export default ({
     namespace: "detail",
@@ -157,6 +158,12 @@ export default ({
                 }
             }
 
+        },
+        * 'addToCart'({payload: {id}}, {select, call, put}) {
+            const addCartResponse = yield call(addToCart, {id});
+            if (addCartResponse) {
+                console.log(addCartResponse.data)
+            }
         }
     },
     reducers: {

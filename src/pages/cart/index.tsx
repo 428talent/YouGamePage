@@ -28,7 +28,6 @@ class ShoppingCartPage extends React.Component<ShoppingCartPageProp, {}> {
 
     render() {
         const {classes, totalPrice, width} = this.props;
-        console.log(width)
         return (
             <div>
                 <div className={this.props.classes.container}>
