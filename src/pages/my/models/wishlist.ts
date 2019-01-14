@@ -1,9 +1,11 @@
 import {AxiosResponse} from "axios";
-import {PageResult} from "../../../services/model/base";
+import {ApiResponse, PageResult} from "../../../services/model/base";
 import {WishListItem} from "../../../services/model/wishlist";
 import {deleteWishListItems, fetchWishList} from "../../../services/wishlist";
 import StoreWishList from "../../../store/model/WishList";
-import {without} from "ramda";
+import {uniq, without} from "ramda";
+import Game = GameModel.Game;
+import {fetchGameList, getGameBand} from "../../../services/game";
 
 export interface MyPageModelState {
     pageIndex: number
@@ -17,73 +19,71 @@ export default ({
         totalCount: 0,
         wishListItems: {},
         pageSize: 10,
+        page: 1,
+        count: 0,
         isActionMode: false,
-        selectedItems: new Set<number>()
+        selectedItems: new Set<number>(),
+        items: []
     },
-    subscriptions: {
-        setup({dispatch, history}) {
-            if (history.location.pathname === '/my/wishlist') {
-                dispatch({
-                    type: "myPage/changeTab",
-                    payload: {
-                        tab: "wishlist"
-                    }
-                });
-            }
-        }
-    },
+    subscriptions: {},
     effects: {
         * 'fetchWishList'({payload}, {select, call, put}) {
             //get current user
-            const user: UserModel.User = yield select(state => (state.app.user));
-            if (!user) {
-                return
-            }
-            const response: AxiosResponse<PageResult<WishListItem>> = yield call(fetchWishList, {
+            // const user: UserModel.User = yield select(state => (state.app.user));
+            // if (!user) {
+            //     return
+            // }
+            const {page, pageSize} = yield select(state => (state.myWishlist));
+            // if (!user) {
+            //     return
+            // }
+            const fetchWishListResponse: ApiResponse<PageResult<WishListItem>> = yield call(fetchWishList, {
                 option: {
-                    user: user.id,
-                    ...payload
+                    ...payload,
+                    page,
+                    pageSize,
                 }
             });
-            const wishLists: Array<StoreWishList> = response.data.result.map(item => (new StoreWishList(item)));
-            yield put({
-                type: "game/fetchGameList",
-                payload: {
-                    gameIds: wishLists.map(it => it.gameId)
-                }
-            });
-            yield put({
-                type: "wishlist/storeWishLists",
-                payload: {
-                    wishListItems: wishLists
-                }
+            const gameIdToFetch: Array<number> = uniq(fetchWishListResponse.data.result.map(item => (item.game_id)));
+            const fetchGameListResponse: ApiResponse<PageResult<Game>> = yield call(fetchGameList, {id: gameIdToFetch});
 
-            });
+            const gameBands = [];
+            for (let idx in gameIdToFetch) {
+                gameBands[gameIdToFetch[idx]] = yield call(getGameBand, {gameId: gameIdToFetch[idx]})
+            }
             yield put({
-                type: "fetchWishlistItemsSuccess",
-                payload: {
-                    totalCount: response.data.count,
-                    items: response.data.result.map(item => item.id),
-                    page: payload.page.page
+                type: "fetchWishlistItemsSuccess", payload: {
+                    items: fetchWishListResponse.data.result.map(wishListItem => ({
+                        ...wishListItem,
+                        game: {
+                            ...fetchGameListResponse.data.result.find(game => game.id === wishListItem.game_id),
+                            band: gameBands[wishListItem.game_id].data.path
+                        }
+                    })),
+                    count: fetchGameListResponse.data.count,
+                    page: fetchGameListResponse.data.page,
+                    pageSize: fetchGameListResponse.data.page_size,
                 }
             })
+
+
         },
         * 'deleteWishlistItems'({payload: {ids}}, {select, call, put}) {
-            const deleteResult : AxiosResponse<any> = yield call(deleteWishListItems, {
+            const deleteResult: AxiosResponse<any> = yield call(deleteWishListItems, {
                 option: {
                     items: ids
                 }
             });
-            if (deleteResult.status === 200){
+            if (deleteResult.status === 200) {
                 yield put({
-                    type:"removeWishlistItems",
-                    payload:{
+                    type: "removeWishlistItems",
+                    payload: {
                         ids
                     }
                 });
                 yield put({
-                    type:"wishlist/removeWishListItems",
-                    payload:{
+                    type: "wishlist/removeWishListItems",
+                    payload: {
                         ids
                     }
                 })
@@ -120,13 +120,10 @@ export default ({
                 firstLoading
             }
         },
-        fetchWishlistItemsSuccess(state, {payload: {totalCount, items, page}}) {
-            const wishListItems = {...state.wishListItems};
-            wishListItems[page] = items;
+        fetchWishlistItemsSuccess(state, {payload}) {
             return {
                 ...state,
-                totalCount: totalCount,
-                wishListItems,
+                ...payload
             }
         },
         switchActionMode(state, {payload: {isActionMode}}) {

@@ -6,8 +6,8 @@ import * as React from "react";
 import MoreVertIcon from '@material-ui/icons/MoreVert'
 import CloseIcon from '@material-ui/icons/Close'
 import DeleteIcon from '@material-ui/icons/Delete'
-import {Checkbox, Collapse, Fade, IconButton} from "@material-ui/core";
-import BaseProps from "../../../base/props";
+import {Checkbox, Collapse, IconButton} from "@material-ui/core";
+import BaseProps from "../../../../base/props";
 
 const styles = {
     card: {
@@ -19,17 +19,10 @@ const styles = {
 
 };
 
-class WishlistItemCard extends React.Component<WishlistItemCardProp, WishlistItemCardState> {
+class Index extends React.Component<WishlistItemCardProp, WishlistItemCardState> {
     state: Readonly<WishlistItemCardState> = {
         isActionMode: false,
-        isSelected: false,
     };
-
-
-    constructor(props: Readonly<WishlistItemCardProp>) {
-        super(props);
-    }
-
     renderActionMode() {
         const {onRemoveClick, id} = this.props;
         return (
@@ -98,7 +91,7 @@ class WishlistItemCard extends React.Component<WishlistItemCardProp, WishlistIte
     }
 
     render(): React.ReactNode {
-        const {classes} = this.props;
+        const {classes,gameCover} = this.props;
         const {isActionMode} = this.state;
         return (
             <Card className={classes.card}>
@@ -107,7 +100,7 @@ class WishlistItemCard extends React.Component<WishlistItemCardProp, WishlistIte
                     {isActionMode ? this.renderActionMode() : this.renderNonActionMode()}
                     <CardMedia
                         className={classes.media}
-                        image={this.props.gameCover ? this.props.gameCover : "https://media.st.dl.bscstorage.net/steam/apps/517630/header.jpg?t=1543511282"}
+                        image={gameCover ? gameCover : "https://media.st.dl.bscstorage.net/steam/apps/517630/header.jpg?t=1543511282"}
                         title="Contemplative Reptile"
                     />
                     <div style={{position: "absolute", width: "100%"}}>
@@ -127,17 +120,13 @@ interface WishlistItemCardProp extends BaseProps {
     gameCover: string,
     isSelectMode: boolean
     id: number
-
     onItemSelectChange(isSelect: boolean, id: number): void,
-
     selected: boolean
-
     onRemoveClick(id: number): void
 }
 
 interface WishlistItemCardState {
     isActionMode: boolean,
-    isSelected: boolean
 }
 
-export default withStyles(styles)(WishlistItemCard);
+export default withStyles(styles)(Index);
