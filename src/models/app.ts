@@ -1,13 +1,16 @@
 import {readCookieJWTPayload} from "../utils/auth";
 import Axios, {AxiosResponse} from "axios";
 import {FetchUser, QueryProfile} from "../services/user";
-import {ApiResponse} from "../services/model/base";
+import {ApiResponse, PageResult} from "../services/model/base";
+import {getUserCart} from "../services/cart";
+import CartItem = CartModel.CartItem;
 
 export default ({
     namespace: "app",
     state: {
         user: null,
-        isDrawerOpen: false
+        isDrawerOpen: false,
+        cartCount: 0
     },
     subscriptions: {
         setup({dispatch, history}) {
@@ -32,21 +35,34 @@ export default ({
                 return
             }
             const result: ApiResponse<UserModel.User> = yield call(FetchUser, {userId: jwtPayload.UserId});
-            const queryUserProfileResponse : ApiResponse<Profile> =  yield call(QueryProfile,{userId: jwtPayload.UserId});
+            const queryUserProfileResponse: ApiResponse<Profile> = yield call(QueryProfile, {userId: jwtPayload.UserId});
             yield put({
                 type: "setUser",
                 payload: {
                     user: {
                         ...result.data,
-                        profile:queryUserProfileResponse.data
+                        profile: queryUserProfileResponse.data
                     }
                 }
             });
-            // yield put({
-            //     type: "cart/fetchCartList",
-            //     payload: {}
-            // });
+            yield put({
+                type: "fetchUserCartInfo",
+                payload: {}
+            });
         },
+        * 'fetchUserCartInfo'({payload}, {call, put}) {
+            const fetchUserCartResponse: ApiResponse<PageResult<CartItem>> = yield call(getUserCart, {
+                payload: {
+                    page: {
+                        page: 1,
+                        pageSize: 1
+                    }
+                }
+            });
+            if (fetchUserCartResponse.requestSuccess) {
+                yield put({type: "setState", payload: {cartCount: fetchUserCartResponse.data.count}})
+            }
+        }
 
     },
     reducers: {
@@ -62,6 +78,12 @@ export default ({
                 isDrawerOpen: isOpen
             }
         },
+        'setState'(state, {payload}) {
+            return {
+                ...state,
+                ...payload,
+            }
+        }
     },
 
 })

@@ -1,227 +1,75 @@
 import * as React from "react";
-import {createRef, RefObject} from "react";
 import BaseProps from "../../base/props";
-import {createStyles, Grid, Paper, Tab, Tabs, Typography, withStyles} from "@material-ui/core";
+import {createStyles, Grid, Paper, Typography, withStyles} from "@material-ui/core";
 import {connect} from "dva";
 import OrderCard from "./components/OrderCard";
-import * as InfiniteScroll from 'react-infinite-scroller';
-import {denormalize} from "normalizr";
-import {getOrderGoods, orderEntity, orderGoodsEntity} from "../../utils/schema";
-import {StoreGameModel} from "../../store/model/Game";
-import {StoreOrderGood} from "../../store/model/OrderGood";
-import {any} from "prop-types";
+import {Order} from "../../services/model/order";
+import OrderFilter from "./components/Filter";
+import Pagination from "./components/Pagination";
 
-interface OrderCardModel {
-    id: number
-    goods?: Array<{
-        name: string,
-        price: number
-        gameGoodId: number,
-        game?: {
-            id?: number,
-            cover?: string,
-            name?: string
-        }
-    }>
+class OrdersPage extends React.Component<OrderPageProp, {}> {
+    componentDidMount(): void {
+        const {dispatch} = this.props;
+        dispatch({type: "order/fetchOrders"})
+    }
 
-    state: string
-}
+    renderOrderCards = () => {
+        const {orders} = this.props;
+        return orders.map(order => (
+            <Grid item xs={12} key={order.id}>
+                <OrderCard order={order}/>
+            </Grid>
+        ))
 
-class MyPage extends React.Component<OrderPageProp, OrderPageState> {
-    state = {
-        tabIndex: 0,
-        orderCards: [1, 2, 3, 4],
-        orderFilter: {
-            state: undefined
-        }
     };
-    scrollRel: RefObject<InfiniteScroll> = createRef();
-    onChangeTab = (event, value) => {
-        this.setState({tabIndex: value});
-        console.log(value);
-        switch (value) {
-            case 0:
-                this.setFilterState(undefined);
-                break;
-            case 1:
-                this.setFilterState("Created");
-                break;
-            case 2:
-                this.setFilterState("Done");
-                break;
-        }
-    };
-
-    onloadMore(page) {
-        this.fetchOrderList(false, page, 1)
-    };
-
-    setFilterState = (orderState: string) => {
-        this.props.dispatch({
-            type: "order/changeStateFilter",
-            payload: {
-                orderState
-            }
+    onFilterChange = (filter) => {
+        const {dispatch} = this.props;
+        dispatch({
+            type: "order/setState",
+            payload: {filter}
         });
-        this.fetchOrderList(true, 1, 1);
-        this.scrollRel.current.pageLoaded = 1;
-    };
-    fetchOrderList = (reload, page, pageSize) => {
-        console.log(this.state.orderFilter.state);
-        this.props.dispatch({
-            type: "order/fetchOrders",
-            payload: {
-                reload, page, pageSize
-            }
-        })
+        const {orderState} = filter;
+        const queryParam: any = {};
+        if (orderState && orderState !== 'all') {
+            queryParam.state = orderState
+        }
+        dispatch({type: "order/fetchOrders", payload: {...queryParam}})
     };
 
-    selectOrderList(): Array<any> {
-        const orderSchema = {orders: [orderEntity]};
-        let orderList = denormalize({orders: this.props.orderList.result}, orderSchema, this.props.orderList.entities).orders;
-        let orderCardModelList: Array<OrderCardModel> = [];
-        orderCardModelList = orderList.filter(order => {
-            if (this.props.filter.state) {
-                return order.state === this.props.filter.state
-            }
-            return true
-        }).map(order => ({
-            id: order.id,
-            goods: undefined,
-            state: order.state
-        }));
-        return orderCardModelList
-    }
-
-    loadGame() {
-        gameToRequest.forEach((_, gameId) => {
-            console.log(`request game by ${gameId}`);
-            this.props.dispatch({
-                type: "data/fetchGame",
-                payload: {
-                    gameId: gameId
-                }
-            })
-        });
-    }
-
-    loadOrderGoods(ordersList : Array<OrderCardModel>) {
-        // const orderGoods : Array<StoreOrderGood>  = getOrderGoods(this.props.orderGoods);
-        // ordersList.forEach(order => {
-        //     orderGoods.filter(orderGood => orderGood.orderId === order.id).forEach(orderGood => {
-        //         order.goods.push({
-        //             name:orderGood.name,
-        //             price:orderGood.price,
-        //             gameGoodId.
-        //         })
-        //     })
-        //
-        // });
-        //
-        // orderList.forEach(order => {
-        //     const orderModel: OrderCardModel = {
-        //         id: order.id,
-        //         state: order.state,
-        //         goods: []
-        //     };
-        //     const goods = orderGood.filter(good => good.orderId === order.id).map(good => ({
-        //         name: good.name,
-        //         price: good.price,
-        //         gameGoodId: good.goodId,
-        //         game: undefined
-        //     }));
-        //     orderModel.goods.push(...goods);
-        //
-        //     orderCardModelList.push(orderModel);
-        // });
-    }
-
-    loadGameGood(goods) {
-        goods.forEach(orderGood => {
-            const gameGoods = this.props.goods.entities.goods;
-            if (gameGoods[orderGood.gameGoodId]) {
-                const gameId = gameGoods[orderGood.gameGoodId].gameId;
-                const games = this.props.games.entities.games;
-                if (games[gameId]) {
-                    const game: StoreGameModel = games[gameId];
-                    console.log(game);
-                    orderGood.game = {
-                        id: gameId,
-                        cover: game.band,
-                        name: game.name
-                    }
-                } else {
-                    gameToRequest.add(gameId)
-                }
-            } else {
-                this.props.dispatch({
-                    type: "data/fetchGood",
-                    payload: {
-                        goodId: orderGood.gameGoodId
-                    }
-                })
-            }
-        });
-    }
 
     render() {
-        console.log(this.state);
-
-        const {classes} = this.props;
-        const {tabIndex} = this.state;
-        let orderCardCollection = [];
-        if (this.props.orderList) {
-            orderCardCollection = this.selectOrderList().map(order => {
-
-                return (
-                    <Grid item xs={12} key={order.id}>
-                        <OrderCard orderId={order.id} />
-                    </Grid>
-                )
-            });
-        }
-
-
-        const loader = <div>Loading ...</div>;
+        const {classes, filter, dispatch, page, pageSize, count} = this.props;
         return (
             <div className={classes.container}>
-                <Grid container>
+                <Grid container spacing={24}>
                     <Grid item xs={12}>
                         <Typography variant={"h4"}>
                             订单
                         </Typography>
                     </Grid>
-                    <Grid item xs={12} style={{marginBottom: 16, backgroundColor: "#FFFFFF", marginTop: 16}}>
-                        <Paper>
-                            <Grid container>
-                                <Grid item xs={12}>
-                                    <Tabs
-                                        value={tabIndex}
-                                        onChange={this.onChangeTab}
-                                        indicatorColor="primary"
-                                        textColor="primary"
-                                    >
-                                        <Tab label="所有订单"/>
-                                        <Tab label="待付款"/>
-                                        <Tab label="已付款"/>
-                                    </Tabs>
-                                </Grid>
-                            </Grid>
-                        </Paper>
+                    <Grid item xs={9}>
+                        <Grid container style={{marginBottom: 16, marginTop: 16}}>
+                            {this.renderOrderCards()}
+                        </Grid>
                     </Grid>
-
+                    <Grid item xs={3}>
+                        <Grid container style={{marginBottom: 16, marginTop: 16}}>
+                            <Paper>
+                                <OrderFilter filter={filter} onFilterChange={this.onFilterChange}/>
+                            </Paper>
+                        </Grid>
+                    </Grid>
                     <Grid item xs={12}>
-                        <InfiniteScroll
-                            pageStart={2}
-                            loadMore={this.onloadMore.bind(this)}
-                            hasMore={this.props.hasMore}
-                            loader={loader}
-                            ref={this.scrollRel}
-                        >
-                            <Grid container style={{marginBottom: 16, marginTop: 16}}>
-                                {orderCardCollection}
-                            </Grid>
-                        </InfiniteScroll>
+                        <Grid container style={{marginBottom: 16, marginTop: 16}}>
+                            <Pagination
+                                page={page}
+                                count={count}
+                                pageSize={pageSize}
+                                onNextPage={() => dispatch({type: "order/setState", payload: {page: page + 1}})}
+                                onPreviousPage={() => dispatch({type: "order/setState", payload: {page: page - 1}})}
+                                onSelectPage={(page) => dispatch({type: "order/setState", payload: {page}}) }
+                            />
+                        </Grid>
                     </Grid>
                 </Grid>
             </div>
@@ -231,20 +79,13 @@ class MyPage extends React.Component<OrderPageProp, OrderPageState> {
 
 interface OrderPageProp extends BaseProps {
     dispatch: Function,
-    filter: {
-        state?: string
-    },
-    orders: Array<object>,
-    hasMore: boolean,
-    orderList: any
-    orderGoods: Array<object>,
-    goods: any,
-    games: any,
+    filter: any,
+    orders: Array<Order>,
+    page: number,
+    pageSize: number,
+    count: number
 }
 
-interface OrderPageState {
-    tabIndex: number
-}
 
 const styles = createStyles(theme => ({
     container: {
@@ -286,10 +127,6 @@ const styles = createStyles(theme => ({
 
 
 }));
-export default connect(({order, data}) => ({
-    ...order,
-    orderList: data.orders,
-    orderGoods: data.orderGoods,
-    goods: data.goods,
-    games: data.games
-}))(withStyles(styles)(MyPage))
+export default connect(({order}) => ({
+    ...order
+}))(withStyles(styles)(OrdersPage))

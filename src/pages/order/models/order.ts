@@ -1,109 +1,88 @@
-import {AxiosResponse} from "axios";
-import {PageResult} from "../../../services/model/base";
+import {ApiResponse, PageResult} from "../../../services/model/base";
 import {Order} from "../../../services/model/order";
 import {fetchOrderGood, fetchOrderList} from "../../../services/order";
-import * as lodash from "lodash";
-import router from "umi/router";
+import {uniq} from "ramda";
 import {OrderGood} from "../../../services/model/ordergood";
-import {getOrderGoods} from "../../../utils/schema";
-import {DataState} from "../../../models/data";
+import {fetchGoodList} from "../../../services/good";
+import {Good} from "../../../services/model/good";
+import {fetchGameList, getGameBand} from "../../../services/game";
 
 export default ({
     namespace: "order",
     state: {
-        filter: {
-            state: undefined
-        },
         orders: [],
-        hasMore: true
+        page: 1,
+        pageSize: 10,
+        count: 999,
     },
     subscriptions: {},
     effects: {
         * 'fetchOrders'({payload}, {select, call, put}) {
-            //get current user
-            const user: UserModel.User = yield select(state => (state.app.user));
-            //handle with filter
-            const filter = yield select(state => (state.order.filter));
-            const OrderFilter = lodash.pickBy(filter);
+            const fetchOrderListResponse: ApiResponse<PageResult<Order>> = yield call(fetchOrderList, {...payload});
+            // fetch order good
+            const orderIdToFetch = uniq(fetchOrderListResponse.data.result.map(order => (order.id)));
+            let orderList = fetchOrderListResponse.data.result;
+            const fetchOrderGoodListResponse: ApiResponse<PageResult<OrderGood>> = yield call(fetchOrderGood, {orderId: orderIdToFetch});
 
-            //get start page
-            const response: AxiosResponse<PageResult<Order>> = yield call(fetchOrderList, {
-                user: user.id, ...OrderFilter, page: payload.page, pageSize: payload.pageSize
-            });
-            const orders = response.data.result.map(order => ({
-                id: order.id,
-                state: order.state
+            //fetch good
+            const goodIdToFetch = uniq(fetchOrderGoodListResponse.data.result.map(orderGood => (orderGood.good_id)));
+            const fetchGoodListResponse: ApiResponse<PageResult<Good>> = yield  yield call(fetchGoodList, {id: goodIdToFetch});
+
+            //fetch game
+            const gameIdToFetch = uniq(fetchGoodListResponse.data.result.map(good => (good.game_id)));
+            const fetchGameListResponse: ApiResponse<PageResult<GameModel.Game>> = yield call(fetchGameList, {id: gameIdToFetch});
+
+            //fetchGameBand
+            const gameBands = [];
+            for (let idx in gameIdToFetch) {
+                gameBands[gameIdToFetch[idx]] = yield call(getGameBand, {gameId: gameIdToFetch[idx]})
+            }
+
+            //produce view data model
+
+            orderList = orderList.map(order => ({
+                ...order,
+                goods: fetchOrderGoodListResponse.data.result.map(orderGood => ({
+                    ...orderGood,
+                    gameGood: (good => ({
+                        ...good,
+                        game: {
+                            ...fetchGameListResponse.data.result.find(game => game.id === good.game_id),
+                            band: gameBands[good.game_id].data.path
+                        }
+                    }))(fetchGoodListResponse.data.result.find(good => good.id === orderGood.good_id))
+                }))
             }));
 
             yield put({
-                type: "data/storeOrder",
-                payload: {
-                    orders
-                }
-
-            });
-            if (payload.reload == undefined) {
-                payload.reload = true
-            }
-            yield put({
-                type: "fetchOrderListSuccess",
-                payload: {
-                    orders,
-                    reload: payload.reload,
+                type: "fetchOrderListSuccess", payload: {
+                    orders: orderList,
+                    page: fetchGoodListResponse.data.page,
+                    pageSize: fetchGoodListResponse.data.page_size,
+                    count:fetchGoodListResponse.data.count
                 }
             })
+
         },
         * fetchOrderGood({payload}, {select, call, put}) {
-            const orderGoods =  getOrderGoods(yield select(state => state.data.orderGoods));
-            if (orderGoods.filter(good => good.orderId === payload.orderId).length > 0) {
-                return
-            }
-            const fetchOrderGoodsResult: AxiosResponse<PageResult<OrderGood>> = yield call(fetchOrderGood, {id: payload.orderId});
-            yield put({
-                type: "data/storeOrderGood",
-                payload: {
-                    orderGoods: fetchOrderGoodsResult.data.result.map(orderGood => ({
-                        id: orderGood.id,
-                        price: orderGood.price,
-                        orderId: orderGood.order_id,
-                        goodId: orderGood.good_id,
-                        name: orderGood.name
-                    }))
-                }
 
-            });
         }
     },
     reducers: {
-        changeStateFilter(state, {payload: {orderState}}) {
-            console.log(orderState);
+        'setState'(state, {payload}) {
             return {
                 ...state,
-                filter: {
-                    ...state.filter,
-                    state: orderState
-                }
+                ...payload
             }
         },
-        fetchOrderListSuccess(state, {payload: {orders, reload}}) {
-            console.log(reload);
-            if (reload) {
-                return {
-                    ...state,
-                    orders: [...orders],
-                    hasMore: true
-                }
-            } else {
-                const ord = [];
-                ord.push(...state.orders);
-                ord.push(...orders);
-                return {
-                    ...state,
-                    orders: ord,
-                    hasMore: orders.length != 0
-                }
+        fetchOrderListSuccess(state, {payload: {orders, page, pageSize, count}}) {
+            return {
+                ...state,
+                orders,
+                pageSize,
+                page,
+                count
             }
-
         }
     },
 

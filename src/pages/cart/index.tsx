@@ -7,6 +7,11 @@ import {ReactNode} from "react";
 import {isWidthDown} from "@material-ui/core/withWidth";
 
 class ShoppingCartPage extends React.Component<ShoppingCartPageProp, {}> {
+    componentDidMount(): void {
+        const {dispatch} = this.props;
+        dispatch({type: "cart/fetchCartList", payload: {}})
+    }
+
     createGoodCard(): Array<ReactNode> {
         const {dispatch} = this.props;
         return this.props.cartItems.map(cartItem => {

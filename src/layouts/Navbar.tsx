@@ -30,7 +30,8 @@ import router from "umi/router";
 interface MainNavBarProps extends BaseProps {
     user?: UserModel.User,
     isDrawerOpen: boolean,
-    dispatch: any
+    dispatch: any,
+    cartItemCount: number
 }
 
 class MainNavBar extends React.Component<MainNavBarProps, {}> {
@@ -79,7 +80,7 @@ class MainNavBar extends React.Component<MainNavBarProps, {}> {
         if (user) {
             return (
                 <Button className={classes.rightButton}>
-                   {this.renderUserAvatar(this.props.user)}
+                    {this.renderUserAvatar(this.props.user)}
                     <span className={classes.username}>{user.profile.nickname}</span>
                     <MoreVertIcon/>
                 </Button>
@@ -115,7 +116,7 @@ class MainNavBar extends React.Component<MainNavBarProps, {}> {
 
     render(): React.ReactNode {
         console.log(this.props.user);
-        const {classes, isDrawerOpen} = this.props;
+        const {classes, isDrawerOpen, cartItemCount = 0} = this.props;
         return (
             <div className={classes.root}>
                 <AppBar>
@@ -147,8 +148,9 @@ class MainNavBar extends React.Component<MainNavBarProps, {}> {
                                 }}
                             />
                         </div>
-                        <IconButton color="inherit" className={classes.rightButton}>
-                            <Badge badgeContent={17} color="secondary">
+                        <IconButton color="inherit" className={classes.rightButton}
+                                    onClick={() => router.push("/cart")}>
+                            <Badge badgeContent={cartItemCount} color="secondary">
                                 <ShoppingCartIcon/>
                             </Badge>
                         </IconButton>

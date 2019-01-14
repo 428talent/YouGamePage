@@ -22,12 +22,12 @@ export function fetchOrderList(
     })
 }
 
-export function fetchOrderGood(option: { id: number }): Promise<AxiosResponse<PageResult<OrderGood>>> {
+export function fetchOrderGood({orderId}): Promise<AxiosResponse<PageResult<OrderGood>>> {
     return apiRequest({
         url: Api.fetchOrderGood,
         method: "get",
         queryParams: {
-            order: option.id
+            orderId
         },
     })
 }

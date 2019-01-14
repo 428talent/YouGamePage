@@ -1,6 +1,6 @@
 import {deleteCartItem, getUserCart} from "../../../services/cart";
 import {ApiResponse, PageResult} from "../../../services/model/base";
-import {uniq} from 'ramda'
+import {uniq,eqBy,uniqWith} from 'ramda'
 import {fetchGoodList} from "../../../services/good";
 import {Good} from "../../../services/model/good";
 import {fetchGameList, getGameBand} from "../../../services/game";
@@ -14,15 +14,7 @@ export default ({
         totalPrice: 0
     },
     subscriptions: {
-        setup({dispatch, history}: { dispatch: any; history: any }) {
-            const {location} = history;
-            if (location.pathname === '/cart') {
-                dispatch({
-                    type: 'fetchCartList',
-                    payload: {},
-                })
-            }
-        }
+
     },
     effects: {
         * 'fetchCartList'({payload}, {select, call, put}) {
@@ -93,7 +85,7 @@ export default ({
         'fetchGoodListSuccess'(state, {payload}) {
             return {
                 ...state,
-                cartItems: [...state.cartItems, ...payload.cartItems],
+                cartItems: uniqWith((a:any,b:any)=> (a.id === b.id),[...state.cartItems, ...payload.cartItems]),
                 totalPrice: payload.totalPrice
 
             }
