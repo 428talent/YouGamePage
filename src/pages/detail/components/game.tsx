@@ -7,11 +7,11 @@ import {
     Chip,
     createStyles,
     Divider,
-    Grid,
+    Grid, IconButton,
     List,
     ListItem,
     ListItemText,
-    Paper,
+    Paper, Tooltip,
     Typography,
     withStyles
 } from "@material-ui/core";
@@ -23,6 +23,8 @@ import {Image} from "../../../services/model/image";
 import {Good} from "../../../services/model/good";
 import Tag = GameModel.Tag;
 import {parseDate} from "../../../utils/time";
+import CommentIcon from '@material-ui/icons/Comment'
+import moment = require("moment");
 
 class Game extends React.Component<GameProps, {}> {
 
@@ -60,18 +62,71 @@ class Game extends React.Component<GameProps, {}> {
 
     }
 
+    renderComments() {
+        const {comments} = this.props;
+        return (
+            <List>
+                {comments.map(comment => (
+                    <div key={comment.id}>
+                    <ListItem >
+                        <div>
+                            <div style={{display: "block"}}>
+                                <Avatar style={{float: "left"}}
+                                        src={`${ServerUrl}/${comment.user.avatar}`}/>
+                                <div style={{marginLeft: 50}}>
+                                    <div>{comment.user.nickname}</div>
+                                    <div>{moment(comment.update_at).format("YYYY-MM-DD")}</div>
+                                </div>
+                            </div>
+                            <div style={{display: "block", marginTop: 15, marginLeft: 50}}>
+                                <p>
+                                    {comment.content}
+
+                                </p>
+                                <Chip style={{marginTop: 8}} label={comment.good.name}/>
+                            </div>
+
+                        </div>
+
+                    </ListItem>
+                        <Divider/>
+                    </div>
+                ))}
+            </List>
+        );
+
+    }
+
     renderGoods(): Array<ReactNode> {
-        const {classes, goods, dispatch} = this.props;
+        const {classes, goods, dispatch, inventory} = this.props;
+        const renderGoodAction = good => {
+            if (inventory.find(item => item.good_id === good.id)) {
+                return (
+                    <div>
+                        <Tooltip title="写评论">
+                            <IconButton>
+                                <CommentIcon/>
+                            </IconButton>
+                        </Tooltip>
+                    </div>
+                )
+            } else {
+                return (
+                    <Button variant="outlined"
+                            onClick={(e) => dispatch({
+                                type: "detail/addToCart",
+                                payload: {id: good.id}
+                            })}>加入购物车</Button>
+                )
+            }
+        };
         return goods.map(good => {
             return (
                 <div key={good.id}>
                     <ListItem>
                         <ListItemText primary={good.name} secondary={`￥${good.price}`}/>
                         <div style={{float: "right"}}>
-                            <Button variant="outlined" onClick={(e) => dispatch({
-                                type: "detail/addToCart",
-                                payload: {id: good.id}
-                            })}>加入购物车</Button>
+                            {renderGoodAction(good)}
                         </div>
 
                     </ListItem>
@@ -194,114 +249,7 @@ class Game extends React.Component<GameProps, {}> {
                         <Grid item xs={12} sm={12} md={12} lg={9} xl={9}>
                             <Paper>
                                 <div>
-                                    <List>
-                                        <ListItem>
-                                            <div>
-                                                <div style={{display: "block"}}>
-                                                    <Avatar style={{float: "left"}}
-                                                            src="https://randomuser.me/api/portraits/med/men/65.jpg"/>
-                                                    <div style={{marginLeft: 50}}>
-                                                        <div>ArenTakayama</div>
-                                                        <div>2018-11-16</div>
-                                                    </div>
-                                                </div>
-                                                <div style={{display: "block", marginTop: 15, marginLeft: 50}}>
-                                                    <p>
-                                                        游戏是好游戏我激活之后才发现steam20%off小杉果只有10%emmm我觉得我被套路了
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </ListItem>
-                                        <Divider/>
-                                        <ListItem>
-                                            <div>
-                                                <div style={{display: "block"}}>
-                                                    <Avatar style={{float: "left"}}
-                                                            src="https://randomuser.me/api/portraits/med/men/65.jpg"/>
-                                                    <div style={{marginLeft: 50}}>
-                                                        <div>ArenTakayama</div>
-                                                        <div>2018-11-16</div>
-                                                    </div>
-                                                </div>
-                                                <div style={{display: "block", marginTop: 15, marginLeft: 50}}>
-                                                    <p>
-                                                        游戏是好游戏我激活之后才发现steam20%off小杉果只有10%emmm我觉得我被套路了
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </ListItem>
-                                        <Divider/>
-                                        <ListItem>
-                                            <div>
-                                                <div style={{display: "block"}}>
-                                                    <Avatar style={{float: "left"}}
-                                                            src="https://randomuser.me/api/portraits/med/men/65.jpg"/>
-                                                    <div style={{marginLeft: 50}}>
-                                                        <div>ArenTakayama</div>
-                                                        <div>2018-11-16</div>
-                                                    </div>
-                                                </div>
-                                                <div style={{display: "block", marginTop: 15, marginLeft: 50}}>
-                                                    <p>
-                                                        游戏是好游戏我激活之后才发现steam20%off小杉果只有10%emmm我觉得我被套路了
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </ListItem>
-                                        <Divider/>
-                                        <ListItem>
-                                            <div>
-                                                <div style={{display: "block"}}>
-                                                    <Avatar style={{float: "left"}}
-                                                            src="https://randomuser.me/api/portraits/med/men/65.jpg"/>
-                                                    <div style={{marginLeft: 50}}>
-                                                        <div>ArenTakayama</div>
-                                                        <div>2018-11-16</div>
-                                                    </div>
-                                                </div>
-                                                <div style={{display: "block", marginTop: 15, marginLeft: 50}}>
-                                                    <p>
-                                                        游戏是好游戏我激活之后才发现steam20%off小杉果只有10%emmm我觉得我被套路了
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </ListItem>
-                                        <Divider/><ListItem>
-                                        <div>
-                                            <div style={{display: "block"}}>
-                                                <Avatar style={{float: "left"}}
-                                                        src="https://randomuser.me/api/portraits/med/men/65.jpg"/>
-                                                <div style={{marginLeft: 50}}>
-                                                    <div>ArenTakayama</div>
-                                                    <div>2018-11-16</div>
-                                                </div>
-                                            </div>
-                                            <div style={{display: "block", marginTop: 15, marginLeft: 50}}>
-                                                <p>
-                                                    游戏是好游戏我激活之后才发现steam20%off小杉果只有10%emmm我觉得我被套路了
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </ListItem>
-                                        <Divider/>
-                                        <ListItem>
-                                            <div>
-                                                <div style={{display: "block"}}>
-                                                    <Avatar style={{float: "left"}}
-                                                            src="https://randomuser.me/api/portraits/med/men/65.jpg"/>
-                                                    <div style={{marginLeft: 50}}>
-                                                        <div>ArenTakayama</div>
-                                                        <div>2018-11-16</div>
-                                                    </div>
-                                                </div>
-                                                <div style={{display: "block", marginTop: 15, marginLeft: 50}}>
-                                                    <p>
-                                                        游戏是好游戏我激活之后才发现steam20%off小杉果只有10%emmm我觉得我被套路了
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </ListItem>
-                                    </List>
+                                    {this.renderComments()}
                                     <Button color="primary" style={{marginBottom: 16, marginLeft: 16}}>
                                         查看更多
                                     </Button>
@@ -372,6 +320,8 @@ interface GameProps extends BaseProps {
     tags?: Array<Tag>
     wishlist?: any
     dispatch?: any
+    inventory?: Array<any>
+    comments?: Array<any>
 }
 
 

@@ -1,15 +1,20 @@
-import {AxiosResponse} from "axios";
-import router from "umi/router";
 import {fetchGame, getGameBand, getGamePreview, getGameTag} from "../../../services/game";
-import pathToRegexp = require("path-to-regexp");
 import {ApiResponse, PageResult} from "../../../services/model/base";
 import {Image} from "../../../services/model/image";
 import {Good} from "../../../services/model/good";
+import {Comment} from "../../../services/model/comment";
 import {fetchGoodList} from "../../../services/good";
-import Tag = GameModel.Tag;
 import {WishListItem} from "../../../services/model/wishlist";
-import {deleteWishlistItem, fetchWishList, AddToWishList} from "../../../services/wishlist";
+import {AddToWishList, deleteWishlistItem, fetchWishList} from "../../../services/wishlist";
 import {addToCart} from "../../../services/cart";
+import {InventoryItem} from "../../../services/model/inventory";
+import {GetInventoryItemList} from "../../../services/inventory";
+import {GetCommentList} from "../../../services/comment";
+import pathToRegexp = require("path-to-regexp");
+import Tag = GameModel.Tag;
+import {any, dropWhile, uniq} from "ramda";
+import {getGoodList} from "../../../utils/schema";
+import {GetProfileList} from "../../../services/user";
 
 export default ({
     namespace: "detail",
@@ -19,7 +24,9 @@ export default ({
         preview: [],
         goods: [],
         tags: [],
-        wishlist: undefined
+        wishlist: undefined,
+        inventory: [],
+        comments: []
     },
     subscriptions: {
         'setup'({dispatch, history}) {
@@ -62,13 +69,26 @@ export default ({
                 yield put({
                     type: 'checkGameInWishlist',
                     id: fetchGameResponse.data.id
+                });
+                yield put({
+                    type: 'fetchComments'
                 })
 
             }
 
 
         },
-
+        * 'checkInventory'({ids}, {select, call, put}) {
+            const getInventoryItemListResponse: ApiResponse<PageResult<InventoryItem>> = yield call(GetInventoryItemList, {good: ids});
+            if (getInventoryItemListResponse.requestSuccess) {
+                yield put({
+                    type: 'setState',
+                    payload: {
+                        inventory: getInventoryItemListResponse.data.result
+                    },
+                });
+            }
+        },
         * 'fetchGameBand'({id}, {select, call, put}) {
             const getGameBandResponse: ApiResponse<Image> = yield call(getGameBand, {gameId: id});
             console.log(getGameBandResponse);
@@ -119,7 +139,8 @@ export default ({
                     payload: {
                         goods: fetchGameGoodResponse.data.result
                     },
-                })
+                });
+                yield put({type: 'checkInventory', ids: fetchGameGoodResponse.data.result.map(good => (good.id))})
             }
         },
         * 'fetchGameTag'({id}, {select, call, put}) {
@@ -158,6 +179,33 @@ export default ({
                 }
             }
 
+        },
+        * 'fetchComments'({payload}, {select, call, put}) {
+            const game = yield select(state => (state.detail.game));
+            const fetchCommentListResponse: ApiResponse<PageResult<Comment>> = yield call(GetCommentList, {game: game.id});
+            if (fetchCommentListResponse.requestSuccess) {
+                const goods: Array<Good> = yield select(state => (state.detail.goods));
+                const goodIdToFetch = dropWhile(
+                    (commentGoodId: number) => any((goodId: number) => goodId === commentGoodId, goods.map(good => (good.id))),
+                    fetchCommentListResponse.data.result.map(comment => (comment.good_id)));
+
+                const fetchCommentGoodListResponse: ApiResponse<PageResult<Good>> = yield call(fetchGoodList, {id: goodIdToFetch});
+                const commentGood = [...goods, ...fetchCommentGoodListResponse.data.result];
+                // fetch profile
+                const userIdToFetch = uniq(fetchCommentListResponse.data.result.map(profile => (profile.user_id)));
+                const fetchCommentUserProfileResponse: ApiResponse<PageResult<Profile>> = yield call(GetProfileList, {user: userIdToFetch});
+
+                yield put({
+                    type: "setState", payload: {
+                        comments: fetchCommentListResponse.data.result.map(comment => ({
+                            ...comment,
+                            good: commentGood.find(good => comment.good_id === good.id),
+                            user:fetchCommentUserProfileResponse.data.result.find(profile=>profile.user_id === comment.user_id)
+                        }))
+                    }
+                })
+
+            }
         },
         * 'addToCart'({payload: {id}}, {select, call, put}) {
             const addCartResponse = yield call(addToCart, {id});

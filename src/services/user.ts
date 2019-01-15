@@ -1,7 +1,7 @@
 import {apiRequest} from "../utils/request";
 import {Api} from "../config/api";
 import {AxiosResponse} from "axios";
-import {ApiResponse} from "./model/base";
+import {ApiResponse, PageResult} from "./model/base";
 
 export function UserLogin({username, password}): Promise<AxiosResponse<UserModel.UserAuth>> {
     return apiRequest({
@@ -67,5 +67,16 @@ export const CreateUser = ({username, password}): Promise<ApiResponse<any>> => {
         data: {
             username, password
         }
+    })
+};
+
+export const GetProfileList = ({page, ...param}): Promise<ApiResponse<PageResult<Profile>>> => {
+    return apiRequest({
+        url: Api.profileList,
+        method: "get",
+        queryParams: {
+            ...param
+        },
+        page
     })
 };

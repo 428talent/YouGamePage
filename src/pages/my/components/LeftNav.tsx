@@ -64,9 +64,9 @@ const LeftNav = (props: LeftNavProps) => {
             <List component="nav">
                 <ListItem
                     button
-
+                    onClick={(e) => router.push("/order")}
                 >
-                    <ListItemText primary="Trash"/>
+                    <ListItemText primary="我的订单"/>
                 </ListItem>
                 <ListItem
                     button
