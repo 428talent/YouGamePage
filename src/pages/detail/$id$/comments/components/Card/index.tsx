@@ -98,14 +98,14 @@ class CommentCard extends React.Component<CommentCardProps, any> {
                     </Typography>
                     <Chip label={goodName} className={classes.goodName}/>
                 </CardContent>
-                <CardActions className={classes.actions} disableActionSpacing>
-                    <IconButton aria-label="Add to favorites">
-                        <FavoriteIcon/>
-                    </IconButton>
-                    <IconButton aria-label="Share">
-                        <ShareIcon/>
-                    </IconButton>
-                </CardActions>
+                {/*<CardActions className={classes.actions} disableActionSpacing>*/}
+                    {/*<IconButton aria-label="Add to favorites">*/}
+                        {/*<FavoriteIcon/>*/}
+                    {/*</IconButton>*/}
+                    {/*<IconButton aria-label="Share">*/}
+                        {/*<ShareIcon/>*/}
+                    {/*</IconButton>*/}
+                {/*</CardActions>*/}
             </Card>
         );
     }

@@ -6,3 +6,10 @@ export interface Comment {
     rating: number
     update_at: Date
 }
+
+export interface CommentSummary {
+    rating_count: Array<{
+        rating: number
+        count: number
+    }>
+}

@@ -1,7 +1,7 @@
 import {ApiResponse, PageResult} from "./model/base";
 import {apiRequest} from "../utils/request";
 import {Api} from "../config/api";
-import {Comment} from "./model/comment";
+import {Comment, CommentSummary} from "./model/comment";
 
 export function GetCommentList({page, ...param}): Promise<PageResult<ApiResponse<Comment>>> {
     return apiRequest({
@@ -12,4 +12,15 @@ export function GetCommentList({page, ...param}): Promise<PageResult<ApiResponse
         },
         page,
     })
+}
+
+export function GetGameCommentSummary({gameId}): Promise<ApiResponse<CommentSummary>> {
+    return apiRequest({
+        url: Api.gameCommentSummary,
+        method: "get",
+        pathParams: {
+            id: gameId
+        }
+    })
+
 }

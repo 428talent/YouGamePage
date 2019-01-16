@@ -2,8 +2,8 @@ import {ApiResponse, PageResult} from "../../../../../services/model/base";
 import {fetchGame, getGameBand} from "../../../../../services/game";
 import Game = GameModel.Game;
 import {Image} from "../../../../../services/model/image";
-import {Comment} from "../../../../../services/model/comment";
-import {GetCommentList} from "../../../../../services/comment";
+import {Comment, CommentSummary} from "../../../../../services/model/comment";
+import {GetCommentList, GetGameCommentSummary} from "../../../../../services/comment";
 import {Good} from "../../../../../services/model/good";
 import {any, dropWhile, uniq} from "ramda";
 import {fetchGoodList} from "../../../../../services/good";
@@ -44,9 +44,20 @@ export default ({
 
                     }
                 })
+                yield put({
+                    type: "fetchCommentSummary", payload: {
+                        gameId: fetchGameResponse.data.id
+                    }
+                })
 
             }
 
+        },
+        * 'fetchCommentSummary'({payload: {gameId}}, {select, call, put}) {
+            const fetSummaryResponse: ApiResponse<CommentSummary> = yield call(GetGameCommentSummary, {gameId})
+            if (fetSummaryResponse.requestSuccess) {
+                yield put({type: "setState", payload: {summary: fetSummaryResponse.data}})
+            }
         },
         * 'fetchComments'({payload: {page, gameId, ...filter}}, {select, call, put}) {
             const fetchCommentListResponse: ApiResponse<PageResult<Comment>> = yield call(GetCommentList, {

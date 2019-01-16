@@ -17,6 +17,7 @@ interface CommentPageProps extends BaseProps {
     match: any
     dispatch: any
     game?: any
+    summary?:any
 }
 
 
@@ -49,7 +50,7 @@ class CommentPage extends Component<CommentPageProps, {}> {
     }
 
     render(): React.ReactNode {
-        const {classes, count, page, pageSize, game, dispatch} = this.props;
+        const {classes, count, page, pageSize, game, dispatch,summary} = this.props;
         return (
             <div className={classes.container}>
                 <CommentHeader band={game ? `${ServerUrl}/${game.band}` : ""}
@@ -101,7 +102,7 @@ class CommentPage extends Component<CommentPageProps, {}> {
                         </Grid>
                     </Grid>
                     <Grid item xs={3}>
-                        <CommentFilter/>
+                        <CommentFilter summary={summary}/>
                     </Grid>
                 </Grid>
             </div>
