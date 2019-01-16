@@ -80,3 +80,23 @@ export const GetProfileList = ({page, ...param}): Promise<ApiResponse<PageResult
         page
     })
 };
+
+export const SendResetPasswordEmail = ({username}): Promise<ApiResponse<any>> => {
+    return apiRequest({
+        url: Api.sendResetPasswordMail,
+        method: "post",
+        data: {
+            username
+        }
+    })
+};
+
+export const ResetPassword = ({code, password}): Promise<ApiResponse<any>> => {
+    return apiRequest({
+        url: Api.resetPassword,
+        method: "post",
+        data: {
+            code, password
+        }
+    })
+};

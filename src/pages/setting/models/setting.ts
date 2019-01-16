@@ -1,6 +1,6 @@
 import Axios, {AxiosResponse} from "axios";
 import {UserSectionProps} from "../components/UserSection";
-import {ChangeProfile, UploadUserAvatar} from "../../../services/user";
+import {ChangeProfile, ResetPassword, SendResetPasswordEmail, UploadUserAvatar} from "../../../services/user";
 import {ApiResponse} from "../../../services/model/base";
 
 
@@ -35,7 +35,7 @@ export default ({
             const uploadResult: ApiResponse<Profile> = yield call(ChangeProfile, {
                 nickname: payload.nickname,
                 email: user.profile.email,
-                userId:user.id
+                userId: user.id
             });
             if (uploadResult.requestSuccess) {
                 yield put({
@@ -44,6 +44,22 @@ export default ({
                 });
             }
 
+        },
+        * sendResetPasswordMail({}, {select, call, put}) {
+            const user = yield select(state => (state.app.user));
+            if (user == null){
+                return
+            }
+            const sendMailResponse  : ApiResponse<any> = yield call(SendResetPasswordEmail,{username:user.username});
+            if (sendMailResponse.requestSuccess){
+
+            }
+        },
+        * resetPassword({password,code}, {select, call, put}) {
+            const resetPasswordResponse : ApiResponse<any> = yield call(ResetPassword,{password,code});
+            if (resetPasswordResponse.requestSuccess){
+
+            }
         }
 
     },

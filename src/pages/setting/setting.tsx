@@ -4,6 +4,7 @@ import {createStyles, Grid, withStyles} from '@material-ui/core'
 import BaseProps from "../../base/props";
 import UserSection from "./components/UserSection";
 import {connect} from "dva";
+import SecuritySection from "./components/SecuritySection";
 
 class Setting extends React.Component<SettingProps, {}> {
     showChangeNicknameDialog = (isShow: boolean) => {
@@ -32,7 +33,7 @@ class Setting extends React.Component<SettingProps, {}> {
     };
 
     render(): React.ReactNode {
-        const {classes} = this.props;
+        const {classes,dispatch} = this.props;
         return (
             <div>
                 <div className={classes.container}>
@@ -42,6 +43,9 @@ class Setting extends React.Component<SettingProps, {}> {
                                          onUploadAvatar={this.uploadAvatar}
                                          onChangeUserNickname={this.changeNickname}
                                          showChangeNicknameDialog={this.showChangeNicknameDialog}/>
+                            <SecuritySection
+                                sendResetPasswordEmail={() => dispatch({type:"setting/sendResetPasswordMail"})}
+                            />
                         </Grid>
                     </Grid>
                 </div>

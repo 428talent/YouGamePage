@@ -23,5 +23,7 @@ export const Api = {
     wishlist: `${ServerUrl}/api/wishlist/:id`,
     inventors: `${ServerUrl}/api/inventors`,
     comments: `${ServerUrl}/api/comments`,
-    profileList: `${ServerUrl}/api/profile`
+    profileList: `${ServerUrl}/api/profile`,
+    sendResetPasswordMail: `${ServerUrl}/api/user/reset`,
+    resetPassword: `${ServerUrl}/api/user/password`,
 };
