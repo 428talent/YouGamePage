@@ -1,9 +1,8 @@
 import * as React from "react";
-import '../../assets/css/index.css'
+import '../../../assets/css/index.css'
 
 import Game from "./components/game";
 import "./game.css"
-import Page from "../../layouts/Page";
 import {connect} from "dva";
 
 class DetailPage extends React.Component<{},{}>{

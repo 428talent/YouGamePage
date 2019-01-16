@@ -2,20 +2,21 @@ import {
     AppBar,
     Avatar,
     Badge,
-    Button,
-    createStyles,
+    Button, ClickAwayListener,
+    createStyles, Divider,
     IconButton,
     InputBase,
     List,
     ListItem,
     ListItemIcon,
-    ListItemText,
+    ListItemText, Menu, MenuItem, MenuList, Paper, Popover,
     SwipeableDrawer,
     Toolbar,
     Typography,
     withStyles
 } from "@material-ui/core";
 import * as React from "react";
+import {createRef, Ref} from "react";
 import SearchIcon from '@material-ui/icons/Search';
 import MenuIcon from '@material-ui/icons/Menu';
 import MoreVertIcon from '@material-ui/icons/ExpandMore';
@@ -34,9 +35,13 @@ interface MainNavBarProps extends BaseProps {
     cartItemCount: number
 }
 
-class MainNavBar extends React.Component<MainNavBarProps, {}> {
+class MainNavBar extends React.Component<MainNavBarProps, {
+    userMenuOpen: boolean
+}> {
 
-
+    state = {
+        userMenuOpen: false
+    };
     renderUserAvatar = (user) => {
         if (user != null) {
             const {profile} = user;
@@ -65,7 +70,45 @@ class MainNavBar extends React.Component<MainNavBarProps, {}> {
             )
         }
 
+
+
     };
+
+    renderMenuUserAvatar = (user) => {
+        if (user != null) {
+            const {profile} = user;
+            if (profile.avatar.length > 0) {
+                return (
+                    <Avatar
+                        style={{width:96,height:96}}
+                        alt="avatar"
+                        src={`${ServerUrl}/${profile.avatar}`}
+                    />
+                )
+            } else {
+
+                return (
+                    <Avatar
+                        style={{width:96,height:96}}
+                        alt="avatar"
+                    >
+                        {profile.nickname[0]}
+                    </Avatar>
+                )
+            }
+        } else {
+            return (
+                <Avatar style={{width:96,height:96}}>
+                    <PersonIcon style={{width: 64, height: 64}}/>
+                </Avatar>
+            )
+        }
+
+
+
+    };
+
+
 
     switchDrawer = (isOpen: boolean) => {
         this.props.dispatch({
@@ -75,24 +118,7 @@ class MainNavBar extends React.Component<MainNavBarProps, {}> {
             }
         })
     };
-
-    userButton = (user: UserModel.User, classes) => {
-        if (user) {
-            return (
-                <Button className={classes.rightButton}>
-                    {this.renderUserAvatar(this.props.user)}
-                    <span className={classes.username}>{user.profile.nickname}</span>
-                    <MoreVertIcon/>
-                </Button>
-            )
-        } else {
-            return (
-                <Button className={classes.rightButton} href={"/login"}>
-                    <span className={classes.username}>登录</span>
-                </Button>
-            )
-        }
-    };
+    userMenuRef: Ref<HTMLElement> = createRef();
 
 
     fullList = () => (
@@ -113,9 +139,75 @@ class MainNavBar extends React.Component<MainNavBarProps, {}> {
         </div>
     );
 
-
     render(): React.ReactNode {
-        console.log(this.props.user);
+        const userButton = (user: UserModel.User, classes) => {
+            if (user) {
+                return (
+                    <ClickAwayListener onClickAway={(e) => this.setState({userMenuOpen: false})}>
+                        <div>
+                            <Button
+                                className={classes.rightButton}
+                                onClick={() => this.setState({userMenuOpen: true})}
+                            >
+                                {this.renderUserAvatar(this.props.user)}
+                            </Button>
+                            {this.state.userMenuOpen ? <Paper style={{position: "absolute", right: 26}}>
+                                <div style={{width: 320}}>
+                                    <div style={{padding:16,display:"flex",alignItems:"flex-start"}}>
+                                        <div>
+                                        {this.renderMenuUserAvatar(this.props.user)}
+                                        </div>
+                                        <div style={{marginLeft:12}}>
+                                            <Typography variant={"h6"}>
+                                                {user.profile.nickname}
+                                            </Typography>
+                                            <Typography variant={"subtitle2"}>
+                                                @{user.username}
+                                            </Typography>
+
+                                        </div>
+                                    </div>
+                                    <Divider />
+                                    <MenuList>
+                                        <MenuItem
+                                            onClick={() => {
+                                                this.setState({userMenuOpen: false});
+                                                router.push("/my/home")
+                                            }}
+                                        >个人中心
+                                        </MenuItem>
+                                        <MenuItem
+                                            onClick={() => {
+                                                this.setState({userMenuOpen: false});
+                                                router.push("/cart")
+                                            }}
+                                        >购物车
+                                        </MenuItem>
+                                        <MenuItem
+                                            onClick={() => {
+                                                this.setState({userMenuOpen: false});
+                                                router.push("/setting")
+                                            }}
+                                        >账户设置
+                                        </MenuItem>
+                                        <MenuItem>登出</MenuItem>
+                                    </MenuList>
+                                </div>
+                            </Paper> : undefined}
+
+
+                        </div>
+                    </ClickAwayListener>
+
+                )
+            } else {
+                return (
+                    <Button className={classes.rightButton} href={"/login"}>
+                        <span className={classes.username}>登录</span>
+                    </Button>
+                )
+            }
+        };
         const {classes, isDrawerOpen, cartItemCount = 0} = this.props;
         return (
             <div className={classes.root}>
@@ -125,7 +217,8 @@ class MainNavBar extends React.Component<MainNavBarProps, {}> {
                                     color="inherit" aria-label="Menu">
                             <MenuIcon/>
                         </IconButton>
-                        <Typography className={classes.title} variant="h6" color="inherit" noWrap>
+                        <Typography onClick={() => router.push("/")} className={classes.title} variant="h6"
+                                    color="inherit" noWrap>
                             YouGame
                         </Typography>
                         <Button
@@ -154,7 +247,7 @@ class MainNavBar extends React.Component<MainNavBarProps, {}> {
                                 <ShoppingCartIcon/>
                             </Badge>
                         </IconButton>
-                        {this.userButton(this.props.user, classes)}
+                        {userButton(this.props.user, classes)}
                     </Toolbar>
                 </AppBar>
                 <SwipeableDrawer

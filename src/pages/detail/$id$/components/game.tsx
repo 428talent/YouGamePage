@@ -15,14 +15,14 @@ import {
     Typography,
     withStyles
 } from "@material-ui/core";
-import BaseProps from "../../../base/props";
+import BaseProps from "../../../../base/props";
 import ImageGallery from 'react-image-gallery';
-import {ServerUrl} from "../../../config/api";
+import {ServerUrl} from "../../../../config/api";
 import "react-image-gallery/styles/css/image-gallery.css";
-import {Image} from "../../../services/model/image";
-import {Good} from "../../../services/model/good";
+import {Image} from "../../../../services/model/image";
+import {Good} from "../../../../services/model/good";
 import Tag = GameModel.Tag;
-import {parseDate} from "../../../utils/time";
+import {parseDate} from "../../../../utils/time";
 import CommentIcon from '@material-ui/icons/Comment'
 import moment = require("moment");
 
