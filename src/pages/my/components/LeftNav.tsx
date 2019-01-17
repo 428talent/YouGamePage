@@ -59,6 +59,19 @@ const LeftNav = (props: LeftNavProps) => {
                     </ListItemIcon>
                     <ListItemText primary="愿望单"/>
                 </ListItem>
+                <ListItem
+                    button
+                    selected={tabIndex === 'inventory'}
+                    onClick={() => {
+                        onTabChange('inventory');
+                        router.push("/my/inventory")
+                    }}
+                >
+                    <ListItemIcon>
+                        <DraftsIcon/>
+                    </ListItemIcon>
+                    <ListItemText primary="仓库"/>
+                </ListItem>
             </List>
             <Divider/>
             <List component="nav">
