@@ -38,6 +38,7 @@ export const apiRequest = <MT extends any>(init: ApiRequestInit): Promise<any> =
         })
     }
     method = method.toLowerCase();
+    console.log(url)
     const sendRequest = () => {
         if (form) {
             return axios.request({

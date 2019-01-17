@@ -51,8 +51,8 @@
     "redux-form-material-ui": "^4.3.4",
     "reselect": "^4.0.0",
     "tslint-config-airbnb": "^5.11.0",
-    "umi": "^2.2.7",
-    "umi-plugin-react": "^1.2.3",
+    "umi": "^2.4.3",
+    "umi-plugin-react": "^1.4.1",
     "winston": "^3.1.0"
   }
 }

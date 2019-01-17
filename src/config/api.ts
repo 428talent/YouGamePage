@@ -26,5 +26,6 @@ export const Api = {
     profileList: `${ServerUrl}/api/profile`,
     sendResetPasswordMail: `${ServerUrl}/api/user/reset`,
     resetPassword: `${ServerUrl}/api/user/password`,
-    gameCommentSummary: `${ServerUrl}/api/game/:id/comments/summary`
+    gameCommentSummary: `${ServerUrl}/api/game/:id/comments/summary`,
+    userImventoryGame: `${ServerUrl}/api/user/:id/inventory/game`
 };

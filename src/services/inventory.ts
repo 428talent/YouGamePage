@@ -8,7 +8,7 @@ export function GetInventoryItemList({page, ...param}): Promise<ApiResponse<Page
         url: Api.inventors,
         method: "get",
         queryParams: {
-            param
+            ...param
         },
         page
     })

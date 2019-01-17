@@ -2,7 +2,7 @@ import {apiRequest} from "../utils/request";
 import {Api} from "../config/api";
 import {AxiosResponse} from "axios";
 import Game = GameModel.Game;
-import {ApiResponse} from "./model/base";
+import {ApiResponse, PageResult} from "./model/base";
 import {Image} from "./model/image";
 import {Good} from "./model/good";
 import Tag = GameModel.Tag;
@@ -60,4 +60,15 @@ export function getGameTag({gameId}): Promise<ApiResponse<Tag>> {
         }
     })
 
+}
+
+export function GetUserInventoryGameList({userId, ...param}): Promise<ApiResponse<PageResult<Game>>> {
+    return apiRequest({
+        url: Api.userImventoryGame,
+        method: "get",
+        pathParams: {
+            id: userId
+        },
+        queryParams: param
+    })
 }

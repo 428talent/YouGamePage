@@ -13,7 +13,8 @@ import {
     SwipeableDrawer,
     Toolbar,
     Typography,
-    withStyles
+    withStyles,
+
 } from "@material-ui/core";
 import * as React from "react";
 import {createRef, Ref} from "react";
@@ -27,6 +28,7 @@ import {ServerUrl} from "../config/api";
 import HomeIcon from '@material-ui/icons/Home';
 import PersonIcon from '@material-ui/icons/Person';
 import router from "umi/router";
+import Link from '@material-ui/core/Link';
 
 interface MainNavBarProps extends BaseProps {
     user?: UserModel.User,
@@ -213,13 +215,14 @@ class MainNavBar extends React.Component<MainNavBarProps, {
             <div className={classes.root}>
                 <AppBar>
                     <Toolbar>
-                        <IconButton onClick={() => this.switchDrawer(true)} className={classes.menuButton}
-                                    color="inherit" aria-label="Menu">
-                            <MenuIcon/>
-                        </IconButton>
-                        <Typography onClick={() => router.push("/")} className={classes.title} variant="h6"
-                                    color="inherit" noWrap>
-                            YouGame
+                        {/*<IconButton onClick={() => this.switchDrawer(true)} className={classes.menuButton}*/}
+                                    {/*color="inherit" aria-label="Menu">*/}
+                            {/*<MenuIcon/>*/}
+                        {/*</IconButton>*/}
+                        <Typography className={classes.title} variant="h6" color="inherit" noWrap>
+                            <Link href={"/"} underline={"none"} style={{color:"white"}}>
+                                You Game
+                            </Link>
                         </Typography>
                         <Button
                             aria-haspopup="true"
