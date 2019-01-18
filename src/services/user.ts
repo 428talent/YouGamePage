@@ -2,6 +2,7 @@ import {apiRequest} from "../utils/request";
 import {Api} from "../config/api";
 import {AxiosResponse} from "axios";
 import {ApiResponse, PageResult} from "./model/base";
+import {Wallet} from "./model/wallet";
 
 export function UserLogin({username, password}): Promise<AxiosResponse<UserModel.UserAuth>> {
     return apiRequest({
@@ -97,6 +98,16 @@ export const ResetPassword = ({code, password}): Promise<ApiResponse<any>> => {
         method: "post",
         data: {
             code, password
+        }
+    })
+};
+
+export const GetUserWallet = ({userId}): Promise<ApiResponse<Wallet>> => {
+    return apiRequest({
+        url: Api.userWallet,
+        method: "get",
+        pathParams: {
+            id: userId
         }
     })
 };

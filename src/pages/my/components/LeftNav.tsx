@@ -23,7 +23,7 @@ const LeftNav = (props: LeftNavProps) => {
         <Paper>
             <div className={classes.header}>
                 <div style={{textAlign: "center"}}>
-                    <Avatar className={classes.avatar} src={profile?`${ServerUrl}/${profile.avatar}`:""}/>
+                    <Avatar className={classes.avatar} src={profile ? `${ServerUrl}/${profile.avatar}` : ""}/>
                     <Typography variant={"h6"}>
                         {profile ? profile.nickname : "Unknown"}
                     </Typography>
@@ -71,6 +71,19 @@ const LeftNav = (props: LeftNavProps) => {
                         <DraftsIcon/>
                     </ListItemIcon>
                     <ListItemText primary="仓库"/>
+                </ListItem>
+                <ListItem
+                    button
+                    selected={tabIndex === 'wallet'}
+                    onClick={() => {
+                        onTabChange('wallet');
+                        router.push("/my/wallet")
+                    }}
+                >
+                    <ListItemIcon>
+                        <DraftsIcon/>
+                    </ListItemIcon>
+                    <ListItemText primary="钱包"/>
                 </ListItem>
             </List>
             <Divider/>
