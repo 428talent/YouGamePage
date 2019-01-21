@@ -18,7 +18,7 @@ export function fetchGame({gameId}): Promise<ApiResponse<Game>> {
     })
 }
 
-export function fetchGameList({param}): Promise<ApiResponse<Game>> {
+export function fetchGameList({...param}): Promise<ApiResponse<Game>> {
     return apiRequest({
         url: Api.games,
         method: "get",

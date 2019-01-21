@@ -30,4 +30,5 @@ export const Api = {
     userImventoryGame: `${ServerUrl}/api/user/:id/inventory/game`,
     userWallet: `${ServerUrl}/api/user/:id/wallet`,
     userTransactionList: `${ServerUrl}/api/user/:id/transactions`,
+    gameCollections: `${ServerUrl}/api/collections`,
 };

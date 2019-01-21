@@ -4,11 +4,48 @@ import Banner from "./components/banner";
 import SaleGameSection from "./components/sale-game";
 import GameList from "./components/game-rank";
 import withRouter from "umi/withRouter";
-import {Paper, TextField} from "@material-ui/core";
-import SearchIcon from '@material-ui/icons/Search'
+import {connect} from "dva";
+import BaseProps from "../base/props";
+import {ServerUrl} from "../config/api";
 
-class Home extends React.Component {
+interface HomePageProps extends BaseProps {
+    collections: any
+}
+
+class Home extends React.Component<HomePageProps, {}> {
+    renderNewGame() {
+        const newGameCollection = this.props.collections.find(collection => collection.name === "newgame");
+        if (newGameCollection) {
+            return (
+                <SaleGameSection
+                    title={"新游戏"}
+                    games={newGameCollection.games.map(game => ({
+                        cover: `${ServerUrl}/${game.band}`,
+                        price: game.price,
+                        name: game.name
+                    }))}/>
+            )
+        }
+    }
+
+    renderRecommend() {
+        const newGameCollection = this.props.collections.find(collection => collection.name === "recommend");
+        if (newGameCollection) {
+            return (
+                <SaleGameSection
+                    title={"特别推荐"}
+                    games={newGameCollection.games.map(game => ({
+                        cover: `${ServerUrl}/${game.band}`,
+                        price: game.price,
+                        name: game.name
+                    }))}/>
+            )
+        }
+    }
+
     render(): React.ReactNode {
+        const {collections} = this.props;
+        console.log(collections)
         return (
             <div>
                 <div style={{
@@ -23,11 +60,13 @@ class Home extends React.Component {
                 </div>
                 <Banner/>
 
-                <SaleGameSection/>
-                <GameList/>
+                {this.renderNewGame()}
+                {this.renderRecommend()}
+                {/*<GameList/>*/}
             </div>
         )
     }
 }
 
-export default withRouter(Home)
+// @ts-ignore
+export default connect(({home}) => ({...home}))(withRouter(Home))

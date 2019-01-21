@@ -5,24 +5,18 @@ import GameCard from "./game-card";
 import {NewGameList} from "../../mock/mock";
 
 interface SaleGameSectionProps extends BaseProps {
-
+    games: Array<{
+        cover: string
+        price: number
+        name: string
+    }>
+    title: string
 }
 
-interface SaleGameSectionState {
-
-}
-
-class SaleGameSection extends React.Component<SaleGameSectionProps, SaleGameSectionState> {
-    props: SaleGameSectionProps;
-
-    constructor(props: Readonly<SaleGameSectionProps>) {
-        super(props);
-        this.props = props
-    }
-
+class SaleGameSection extends React.Component<SaleGameSectionProps, {}> {
     render(): React.ReactNode {
-        const {classes} = this.props;
-        const gameCardCollection = NewGameList.map((game, key) => {
+        const {classes, games, title} = this.props;
+        const gameCardCollection = games.map((game, key) => {
             return (
                 <Grid item xs={12} sm={6} md={4} lg={3} xl={2} key={key} className={classes.root}>
                     <GameCard
@@ -36,7 +30,7 @@ class SaleGameSection extends React.Component<SaleGameSectionProps, SaleGameSect
         return (
             <div className={classes.container}>
                 <Typography variant="h4" gutterBottom>
-                    正在热卖
+                    {title}
                 </Typography>
                 <div className={classes.root}>
                     <Grid container spacing={24}>
@@ -48,7 +42,7 @@ class SaleGameSection extends React.Component<SaleGameSectionProps, SaleGameSect
     }
 }
 
-const styles =  createStyles(theme => ({
+const styles = createStyles(theme => ({
     container: {
         paddingLeft: 100,
         paddingRight: 100,
@@ -61,13 +55,10 @@ const styles =  createStyles(theme => ({
     root: {
         flexGrow: 1,
     },
-    card: {
-
-    },
+    card: {},
     media: {
         objectFit: 'cover',
     },
 
 }));
-// @ts-ignore
 export default withStyles(styles)(SaleGameSection)

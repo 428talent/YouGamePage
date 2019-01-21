@@ -26,7 +26,7 @@ class GameCard extends React.Component<GameCardProps, {}> {
                         title="Contemplative Reptile"
                     />
                     <CardContent>
-                        <Typography gutterBottom variant="subtitle2" component="h2">
+                        <Typography gutterBottom variant="subtitle2" component="h2" className={classes.name}>
                             {gameName}
                         </Typography>
                         <Typography variant="subtitle2" gutterBottom>
@@ -53,6 +53,11 @@ const styles = theme => ({
         // ⚠️ object-fit is not supported by IE 11.
         objectFit: 'cover' as ObjectFitProperty,
     },
+    name:{
+        whiteSpace:"noWrap",
+        overflow:"hidden",
+        textOverflow:"ellipsis"
+    }
 
 });
 
