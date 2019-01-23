@@ -1,8 +1,9 @@
-import {Button, createStyles, withStyles, IconButton, Input, Paper} from "@material-ui/core";
+import {Button, createStyles, withStyles, IconButton, Input, Paper, InputBase} from "@material-ui/core";
 import * as React from "react";
 import {ObjectFitProperty} from "csstype";
 import BaseProps from "../../../../base/props";
 import SearchIcon from "@material-ui/icons/Search"
+import router from "umi/router";
 
 class SearchInput extends React.Component<SearchInputProps, SearchInputState> {
     state = {
@@ -27,6 +28,11 @@ class SearchInput extends React.Component<SearchInputProps, SearchInputState> {
                     onBlur={() => this.setState({inputFocus: false})}
                     onChange={(e) => onInput(e.target.value)}
                     value={value}
+                    onKeyPress={(e) => {
+                        if (e.nativeEvent.key === "Enter") {
+                            onSearch()
+                        }
+                    }}
                 />
                 <div style={{width: 48, height: 48}}>
 

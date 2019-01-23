@@ -41,11 +41,13 @@ interface MainNavBarProps extends BaseProps {
 class MainNavBar extends React.Component<MainNavBarProps, {
     userMenuOpen: boolean
     categoryMenuOpen: boolean
+    searchContent: string
 }> {
 
     state = {
         userMenuOpen: false,
         categoryMenuOpen: false,
+        searchContent: ""
     };
     renderUserAvatar = (user) => {
         if (user != null) {
@@ -233,7 +235,10 @@ class MainNavBar extends React.Component<MainNavBarProps, {
                                         style={{height: 64}}
 
                                     >
-                                        <Typography variant={"subtitle1"} style={{color: this.state.categoryMenuOpen?"#FFFFFF":"#CCCCCC", height: "100%"}}>
+                                        <Typography variant={"subtitle1"} style={{
+                                            color: this.state.categoryMenuOpen ? "#FFFFFF" : "#CCCCCC",
+                                            height: "100%"
+                                        }}>
                                             分类
                                         </Typography>
                                     </Button>
@@ -260,6 +265,13 @@ class MainNavBar extends React.Component<MainNavBarProps, {
                                     root: classes.inputRoot,
                                     input: classes.inputInput,
                                 }}
+                                onChange={(e) => this.setState({searchContent: e.target.value})}
+                                onKeyPress={(e) => {
+                                    if (e.nativeEvent.key === "Enter" && this.state.searchContent.length > 0) {
+                                        router.push(`/games?search=${this.state.searchContent}`)
+                                    }
+                                }}
+
                             />
                         </div>
                         <IconButton color="inherit" className={classes.rightButton}

@@ -1,25 +1,24 @@
-import {Component, ReactNode} from "react";
 import * as React from "react";
+import {Component, ReactNode} from "react";
 import {connect} from "dva";
 import {
+    Chip,
     createStyles,
-    withStyles,
-    Typography,
-    Grid,
     Divider,
     FormControl,
-    InputLabel,
-    MenuItem, Select
+    Grid,
+    MenuItem,
+    Select,
+    Typography,
+    withStyles
 } from "@material-ui/core";
 import BaseProps from "../../base/props";
 import SearchInput from "./components/SearchInput";
 import Filter from "./components/Filter";
 import GameCard from "./components/GameCard";
 import Pagination from "./components/Pagination";
-import moment = require("moment");
 import router from "umi/router";
 import {buildUrlQueryParams} from "../../utils/url";
-import {routerRedux} from 'dva/router'
 
 interface GamesProps extends BaseProps {
     dispatch: any
@@ -83,6 +82,67 @@ class Games extends Component<GamesProps, {}> {
         router.push(buildUrlQueryParams("/games", queryParams));
     }
 
+    deleteFilterItem(name) {
+        const {query} = this.props.location;
+        delete query[name];
+        router.push(buildUrlQueryParams("/games", query));
+    }
+
+    renderFilterChip() {
+        const chips = [];
+        const {price,releaseTime,search} = this.props.location.query;
+        const {classes} = this.props;
+        if (price && price != "all") {
+            let chipLabel = "";
+            if (price === "u12") {
+                chipLabel = "¥12以内"
+            } else if (price === "u24") {
+                chipLabel = "¥24以内"
+            } else if (price === "u40") {
+                chipLabel = "¥40以内"
+            } else if (price === "other") {
+                chipLabel = "¥40以上"
+            }
+            chips.push(<Chip
+                label={chipLabel}
+                onDelete={() => this.deleteFilterItem("price")}
+                color="primary"
+                className={classes.chip}
+                key={price}
+            />)
+        }
+        if (releaseTime && releaseTime !== "all"){
+            let chipLabel = "";
+            if (releaseTime === "year"){
+                chipLabel = "一年内"
+            }else if (releaseTime === "month"){
+                chipLabel = "一月内"
+            }else if (releaseTime === "season"){
+                chipLabel = "近三月"
+            }else if (releaseTime === "week"){
+                chipLabel = "一周内"
+            }
+            chips.push(<Chip
+                label={chipLabel}
+                onDelete={() => this.deleteFilterItem("releaseTime")}
+                color="primary"
+                className={classes.chip}
+                key={releaseTime}
+            />)
+
+        }
+        if (search && search.length > 0){
+            chips.push(<Chip
+                label={search}
+                onDelete={() => this.deleteFilterItem("search")}
+                color="primary"
+                className={classes.chip}
+                key={search}
+            />)
+        }
+        return chips
+    }
+
 
     render(): ReactNode {
         const {classes, filter, tags, dispatch, pageSize, page, count, location, search} = this.props;
@@ -142,6 +202,9 @@ class Games extends Component<GamesProps, {}> {
 
 
                     <Grid item xs={3}>
+                        <div className={classes.chipContainer}>
+                            {this.renderFilterChip()}
+                        </div>
                         <Filter
                             filter={{price, releaseTime, tags: []}}
                             onFilterChange={(filter) => {
@@ -194,6 +257,12 @@ const styles = createStyles(theme => ({
         display: "flex",
         justifyContent: "center",
         marginTop: 24
+    },
+    chipContainer: {
+        marginBottom: 12
+    },
+    chip: {
+        marginLeft: 8
     }
 }));
 export default connect(({gamesPage}) => ({...gamesPage}))(withStyles(styles)(Games))
