@@ -22,7 +22,8 @@ class Home extends React.Component<HomePageProps, {}> {
                     games={newGameCollection.games.map(game => ({
                         cover: `${ServerUrl}/${game.band}`,
                         price: game.price,
-                        name: game.name
+                        name: game.name,
+                        id:game.id
                     }))}/>
             )
         }
@@ -37,7 +38,8 @@ class Home extends React.Component<HomePageProps, {}> {
                     games={newGameCollection.games.map(game => ({
                         cover: `${ServerUrl}/${game.band}`,
                         price: game.price,
-                        name: game.name
+                        name: game.name,
+                        id:game.id
                     }))}/>
             )
         }

@@ -123,7 +123,7 @@ export default ({
         * 'fetchOrders'({payload}, {select, call, put}) {
             //get current user
             const user: UserModel.User = yield select(state => (state.app.user));
-            //handle with filter
+            //handle with Filter
             const filter = yield select(state => (state.order.filter));
             const OrderFilter = lodash.pickBy(filter);
 

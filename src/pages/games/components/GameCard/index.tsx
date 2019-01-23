@@ -1,8 +1,8 @@
 import {Card, CardActionArea, CardContent, CardMedia, createStyles, Typography, withStyles} from "@material-ui/core";
 import * as React from "react";
-import BaseProps from "../../base/props";
 import {ObjectFitProperty} from "csstype";
 import router from "umi/router";
+import BaseProps from "../../../../base/props";
 
 class GameCard extends React.Component<GameCardProps, {}> {
 
@@ -51,7 +51,6 @@ interface GameCardProps extends BaseProps {
 const styles = createStyles(theme => ({
     card: {},
     media: {
-        // ⚠️ object-fit is not supported by IE 11.
         objectFit: 'cover' as ObjectFitProperty,
     },
     name: {

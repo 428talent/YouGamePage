@@ -7,11 +7,13 @@ import {
     Chip,
     createStyles,
     Divider,
-    Grid, IconButton,
+    Grid,
+    IconButton,
     List,
     ListItem,
     ListItemText,
-    Paper, Tooltip,
+    Paper,
+    Tooltip,
     Typography,
     withStyles
 } from "@material-ui/core";
@@ -21,35 +23,22 @@ import {ServerUrl} from "../../../../config/api";
 import "react-image-gallery/styles/css/image-gallery.css";
 import {Image} from "../../../../services/model/image";
 import {Good} from "../../../../services/model/good";
-import Tag = GameModel.Tag;
-import {parseDate} from "../../../../utils/time";
 import CommentIcon from '@material-ui/icons/Comment'
 import moment = require("moment");
+import Tag = GameModel.Tag;
 
 class Game extends React.Component<GameProps, {}> {
 
-
-    game: {
-        name: "Unknown",
-        coverUrl: "https://media.st.dl.bscstorage.net/steam/apps/779340/header.jpg?t=1540461393",
-        previewImages: [
-            {
-                original: 'https://media.st.dl.bscstorage.net/steam/apps/779340/ss_dc4f976ceff589858591110621e9e7c2d1b27a6f.600x338.jpg?t=1540461393',
-            },
-            {
-                original: 'https://media.st.dl.bscstorage.net/steam/apps/779340/ss_886550807546b6cf97f826b29e91a99baedba2b4.600x338.jpg?t=1540461393',
-            },
-            {
-                original: 'https://media.st.dl.bscstorage.net/steam/apps/779340/ss_7e4d7bfc11db6a6b35482263bde4b9caa69f06a6.600x338.jpg?t=1540461393',
-            }
-            ],
-        tags: [],
-        goods: [],
-        intro: "",
-        releaseTime: "",
-        publisher: ""
-    };
-
+    componentDidMount(): void {
+        const {match,dispatch} = this.props;
+        console.log(this.props)
+        if (match.params["id"]) {
+            dispatch({
+                type: "detail/fetchGame",
+                payload: {gameId: match.params["id"]}
+            })
+        }
+    }
 
     createTags(): Array<ReactNode> {
         const {classes, tags} = this.props;
@@ -68,27 +57,27 @@ class Game extends React.Component<GameProps, {}> {
             <List>
                 {comments.map(comment => (
                     <div key={comment.id}>
-                    <ListItem >
-                        <div>
-                            <div style={{display: "block"}}>
-                                <Avatar style={{float: "left"}}
-                                        src={`${ServerUrl}/${comment.user.avatar}`}/>
-                                <div style={{marginLeft: 50}}>
-                                    <div>{comment.user.nickname}</div>
-                                    <div>{moment(comment.update_at).format("YYYY-MM-DD")}</div>
+                        <ListItem>
+                            <div>
+                                <div style={{display: "block"}}>
+                                    <Avatar style={{float: "left"}}
+                                            src={`${ServerUrl}/${comment.user.avatar}`}/>
+                                    <div style={{marginLeft: 50}}>
+                                        <div>{comment.user.nickname}</div>
+                                        <div>{moment(comment.update_at).format("YYYY-MM-DD")}</div>
+                                    </div>
                                 </div>
+                                <div style={{display: "block", marginTop: 15, marginLeft: 50}}>
+                                    <p>
+                                        {comment.content}
+
+                                    </p>
+                                    <Chip style={{marginTop: 8}} label={comment.good.name}/>
+                                </div>
+
                             </div>
-                            <div style={{display: "block", marginTop: 15, marginLeft: 50}}>
-                                <p>
-                                    {comment.content}
 
-                                </p>
-                                <Chip style={{marginTop: 8}} label={comment.good.name}/>
-                            </div>
-
-                        </div>
-
-                    </ListItem>
+                        </ListItem>
                         <Divider/>
                     </div>
                 ))}
@@ -267,30 +256,7 @@ class Game extends React.Component<GameProps, {}> {
                                 </div>
                                 <Divider/>
                                 <div style={{marginTop: 12, paddingLeft: 8, paddingRight: 8}}>
-                                    <Badge badgeContent={4} color="primary" style={{marginRight: 12, marginBottom: 12}}>
-                                        <Chip
-
-                                            label="全部"
-                                            component="a"
-                                            clickable
-                                        />
-                                    </Badge>
-                                    <Badge badgeContent={4} color="primary" style={{marginRight: 12, marginBottom: 12}}>
-                                        <Chip
-
-                                            label="全部"
-                                            component="a"
-                                            clickable
-                                        />
-                                    </Badge>
-                                    <Badge badgeContent={4} color="primary" style={{marginRight: 12, marginBottom: 12}}>
-                                        <Chip
-
-                                            label="全部"
-                                            component="a"
-                                            clickable
-                                        />
-                                    </Badge>
+                                   
                                 </div>
                             </Paper>
                         </Grid>
@@ -322,6 +288,7 @@ interface GameProps extends BaseProps {
     dispatch?: any
     inventory?: Array<any>
     comments?: Array<any>
+    match:any
 }
 
 

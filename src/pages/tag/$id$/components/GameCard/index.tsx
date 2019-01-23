@@ -1,10 +1,10 @@
 import {Card, CardActionArea, CardContent, CardMedia, createStyles, Typography, withStyles} from "@material-ui/core";
 import * as React from "react";
-import BaseProps from "../../base/props";
 import {ObjectFitProperty} from "csstype";
 import router from "umi/router";
+import BaseProps from "../../../../../base/props";
 
-class GameCard extends React.Component<GameCardProps, {}> {
+class Index extends React.Component<GameCardProps, {}> {
 
     constructor(props: Readonly<GameCardProps>) {
         super(props);
@@ -62,4 +62,4 @@ const styles = createStyles(theme => ({
 
 }));
 
-export default withStyles(styles)(GameCard)
+export default withStyles(styles)(Index)

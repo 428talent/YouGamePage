@@ -29,6 +29,7 @@ import HomeIcon from '@material-ui/icons/Home';
 import PersonIcon from '@material-ui/icons/Person';
 import router from "umi/router";
 import Link from '@material-ui/core/Link';
+import CategoryMenu from "./components/CategoryMenu";
 
 interface MainNavBarProps extends BaseProps {
     user?: UserModel.User,
@@ -39,10 +40,12 @@ interface MainNavBarProps extends BaseProps {
 
 class MainNavBar extends React.Component<MainNavBarProps, {
     userMenuOpen: boolean
+    categoryMenuOpen: boolean
 }> {
 
     state = {
-        userMenuOpen: false
+        userMenuOpen: false,
+        categoryMenuOpen: false,
     };
     renderUserAvatar = (user) => {
         if (user != null) {
@@ -73,7 +76,6 @@ class MainNavBar extends React.Component<MainNavBarProps, {
         }
 
 
-
     };
 
     renderMenuUserAvatar = (user) => {
@@ -82,7 +84,7 @@ class MainNavBar extends React.Component<MainNavBarProps, {
             if (profile.avatar.length > 0) {
                 return (
                     <Avatar
-                        style={{width:96,height:96}}
+                        style={{width: 96, height: 96}}
                         alt="avatar"
                         src={`${ServerUrl}/${profile.avatar}`}
                     />
@@ -91,7 +93,7 @@ class MainNavBar extends React.Component<MainNavBarProps, {
 
                 return (
                     <Avatar
-                        style={{width:96,height:96}}
+                        style={{width: 96, height: 96}}
                         alt="avatar"
                     >
                         {profile.nickname[0]}
@@ -100,16 +102,14 @@ class MainNavBar extends React.Component<MainNavBarProps, {
             }
         } else {
             return (
-                <Avatar style={{width:96,height:96}}>
+                <Avatar style={{width: 96, height: 96}}>
                     <PersonIcon style={{width: 64, height: 64}}/>
                 </Avatar>
             )
         }
 
 
-
     };
-
 
 
     switchDrawer = (isOpen: boolean) => {
@@ -155,11 +155,11 @@ class MainNavBar extends React.Component<MainNavBarProps, {
                             </Button>
                             {this.state.userMenuOpen ? <Paper style={{position: "absolute", right: 26}}>
                                 <div style={{width: 320}}>
-                                    <div style={{padding:16,display:"flex",alignItems:"flex-start"}}>
+                                    <div style={{padding: 16, display: "flex", alignItems: "flex-start"}}>
                                         <div>
-                                        {this.renderMenuUserAvatar(this.props.user)}
+                                            {this.renderMenuUserAvatar(this.props.user)}
                                         </div>
-                                        <div style={{marginLeft:12}}>
+                                        <div style={{marginLeft: 12}}>
                                             <Typography variant={"h6"}>
                                                 {user.profile.nickname}
                                             </Typography>
@@ -169,7 +169,7 @@ class MainNavBar extends React.Component<MainNavBarProps, {
 
                                         </div>
                                     </div>
-                                    <Divider />
+                                    <Divider/>
                                     <MenuList>
                                         <MenuItem
                                             onClick={() => {
@@ -216,14 +216,32 @@ class MainNavBar extends React.Component<MainNavBarProps, {
                 <AppBar>
                     <Toolbar>
                         {/*<IconButton onClick={() => this.switchDrawer(true)} className={classes.menuButton}*/}
-                                    {/*color="inherit" aria-label="Menu">*/}
-                            {/*<MenuIcon/>*/}
+                        {/*color="inherit" aria-label="Menu">*/}
+                        {/*<MenuIcon/>*/}
                         {/*</IconButton>*/}
                         <Typography className={classes.title} variant="h6" color="inherit" noWrap>
-                            <Link href={"/"} underline={"none"} style={{color:"white"}}>
-                                You Game
-                            </Link>
+                            You Game
                         </Typography>
+                        <div style={{marginLeft: 64}}>
+
+                            <ClickAwayListener onClickAway={(e) => this.setState({categoryMenuOpen: false})}>
+                                <div
+                                    onMouseOver={(e) => this.setState({categoryMenuOpen: true})}
+                                    onMouseOut={(e) => this.setState({categoryMenuOpen: false})}
+                                >
+                                    <Button
+                                        style={{height: 64}}
+
+                                    >
+                                        <Typography variant={"subtitle1"} style={{color: this.state.categoryMenuOpen?"#FFFFFF":"#CCCCCC", height: "100%"}}>
+                                            分类
+                                        </Typography>
+                                    </Button>
+                                    <CategoryMenu open={this.state.categoryMenuOpen}/>
+                                </div>
+                            </ClickAwayListener>
+
+                        </div>
                         <Button
                             aria-haspopup="true"
                             style={{height: 60, color: "#FFFFFF", display: 'none'}}

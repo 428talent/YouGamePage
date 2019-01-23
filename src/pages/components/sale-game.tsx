@@ -9,6 +9,7 @@ interface SaleGameSectionProps extends BaseProps {
         cover: string
         price: number
         name: string
+        id:number
     }>
     title: string
 }
@@ -23,6 +24,7 @@ class SaleGameSection extends React.Component<SaleGameSectionProps, {}> {
                         gamePicUrl={game.cover}
                         gamePrice={game.price}
                         gameName={game.name}
+                        gameId={game.id}
                     />
                 </Grid>
             )
