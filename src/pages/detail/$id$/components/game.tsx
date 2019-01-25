@@ -26,19 +26,11 @@ import {Good} from "../../../../services/model/good";
 import CommentIcon from '@material-ui/icons/Comment'
 import moment = require("moment");
 import Tag = GameModel.Tag;
+import router from "umi/router";
 
 class Game extends React.Component<GameProps, {}> {
 
-    componentDidMount(): void {
-        const {match,dispatch} = this.props;
-        console.log(this.props)
-        if (match.params["id"]) {
-            dispatch({
-                type: "detail/fetchGame",
-                payload: {gameId: match.params["id"]}
-            })
-        }
-    }
+
 
     createTags(): Array<ReactNode> {
         const {classes, tags} = this.props;
@@ -176,11 +168,11 @@ class Game extends React.Component<GameProps, {}> {
 
                     <Grid container spacing={24}>
                         <Grid item xs={12}>
-                            <Paper style={{padding: 16}}>
-                                <Typography variant="h4">
+                            <div style={{padding: 16}}>
+                                <Typography variant="h4" style={{color:"#FFFFFF"}}>
                                     {game ? game.name : ""}
                                 </Typography>
-                            </Paper>
+                            </div>
                         </Grid>
                     </Grid>
                     <Grid container spacing={24}>
@@ -188,6 +180,7 @@ class Game extends React.Component<GameProps, {}> {
                         <Grid item xs={12} sm={12} md={12} lg={8} xl={8}>
                             <Paper>
                                 <ImageGallery
+
                                     items={preview.map(image => ({original: `${ServerUrl}/${image.path}`}))}
                                     showThumbnails={false}
                                     showPlayButton={false}
@@ -239,7 +232,11 @@ class Game extends React.Component<GameProps, {}> {
                             <Paper>
                                 <div>
                                     {this.renderComments()}
-                                    <Button color="primary" style={{marginBottom: 16, marginLeft: 16}}>
+                                    <Button
+                                        color="primary"
+                                        style={{marginBottom: 16, marginLeft: 16}}
+                                        onClick={(e) => !game || router.push(`/detail/${game.id}/comments`) }
+                                    >
                                         查看更多
                                     </Button>
                                 </div>
@@ -256,7 +253,7 @@ class Game extends React.Component<GameProps, {}> {
                                 </div>
                                 <Divider/>
                                 <div style={{marginTop: 12, paddingLeft: 8, paddingRight: 8}}>
-                                   
+
                                 </div>
                             </Paper>
                         </Grid>

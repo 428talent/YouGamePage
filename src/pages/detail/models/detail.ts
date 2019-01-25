@@ -30,13 +30,16 @@ export default ({
     },
     subscriptions: {
         'setup'({dispatch, history}) {
-            const match = pathToRegexp('/detail/:gameId').exec(history.location.pathname);
-            if (match) {
-                dispatch({
-                    type: "fetchGame",
-                    payload: {gameId: match[1]}
-                })
-            }
+            history.listen((location) => {
+                const match = pathToRegexp('/detail/:gameId').exec(location.pathname);
+                if (match) {
+                    dispatch({
+                        type: "fetchGame",
+                        payload: {gameId: match[1]}
+                    })
+                }
+            })
+
         }
     },
     effects: {
@@ -200,7 +203,7 @@ export default ({
                         comments: fetchCommentListResponse.data.result.map(comment => ({
                             ...comment,
                             good: commentGood.find(good => comment.good_id === good.id),
-                            user:fetchCommentUserProfileResponse.data.result.find(profile=>profile.user_id === comment.user_id)
+                            user: fetchCommentUserProfileResponse.data.result.find(profile => profile.user_id === comment.user_id)
                         }))
                     }
                 })

@@ -8,6 +8,9 @@ import CommentCard from "./components/Card";
 import CommentFilter from "./components/Filter";
 import Pagination from "../../../order/components/Pagination";
 import {ServerUrl} from "../../../../config/api";
+import router from "umi/router";
+import {buildUrlQueryParams} from "../../../../utils/url";
+import {Good} from "../../../../services/model/good";
 
 interface CommentPageProps extends BaseProps {
     data: Array<any>
@@ -17,16 +20,13 @@ interface CommentPageProps extends BaseProps {
     match: any
     dispatch: any
     game?: any
-    summary?:any
+    summary?: any
+    location?: any,
+    goods: Array<Good>
 }
 
 
 class CommentPage extends Component<CommentPageProps, {}> {
-    componentDidMount(): void {
-        const {dispatch} = this.props;
-        const gameId = Number(this.props.match.params.id);
-        dispatch({type: "comments/fetchGame", payload: {gameId}})
-    }
 
     renderCommentCards() {
         const {data, classes} = this.props;
@@ -45,66 +45,76 @@ class CommentPage extends Component<CommentPageProps, {}> {
 
     }
 
-    handleRefreshData({page, pageSize, ...filter}) {
+    onPageChange(page) {
+        const {location, game} = this.props;
+        router.push(buildUrlQueryParams(`/detail/${game.id}/comments`, {
+            ...location.query,
+            page,
+        }))
+    }
+
+    onFilterChange(filter) {
+        const {location, game} = this.props;
+        console.log(filter);
+        router.push(buildUrlQueryParams(`/detail/${game.id}/comments`, {
+            ...location.query,
+            rating: filter.rating,
+            good: filter.goods
+        }))
 
     }
 
     render(): React.ReactNode {
-        const {classes, count, page, pageSize, game, dispatch,summary} = this.props;
+        const {classes, count, game, dispatch, summary, location, goods} = this.props;
+
+        //combie filter
+        let {
+            page = 1,
+            pageSize = 10,
+            rating = [],
+            good = []
+        } = location.query;
+        if (!Array.isArray(rating)) {
+            rating = [rating]
+        }
+        if (!Array.isArray(good)) {
+            good = [good]
+        }
+        good = good.map(goodId => (Number(goodId)))
+
         return (
-            <div className={classes.container}>
-                <CommentHeader band={game ? `${ServerUrl}/${game.band}` : ""}
-                               name={game ? game.name : "Unknown"}/>
-                <Grid container spacing={24} className={classes.commentContainer}>
-                    <Grid item xs={9}>
-                        <Grid container spacing={24}>
-                            {this.renderCommentCards()}
-                            <Grid item xs={12}>
-                                <Pagination
-                                    onSelectPage={(page) => dispatch({
-                                        type: "comments/fetchComments",
-                                        payload: {
-                                            page: {
-                                                page: page,
-                                                pageSize: pageSize,
+            <div>
+                <img className={classes.bgImg} src={game ? `${ServerUrl}/${game.band}` : ""}/>
+                <img className={classes.bgOverlay}/>
+                <div className={classes.container}>
 
-                                            },
-                                            gameId: game.id
 
-                                        }
-                                    })}
-                                    onPreviousPage={() => dispatch({
-                                        type: "comments/fetchComments",
-                                        payload: {
-                                            page: {
-                                                page: page - 1,
-                                                pageSize: pageSize,
-
-                                            },
-                                            gameId: game.id
-
-                                        }
-                                    })}
-                                    onNextPage={() => dispatch({
-                                        type: "comments/fetchComments",
-                                        payload: {
-                                            page: {
-                                                page: page + 1,
-                                                pageSize: pageSize,
-
-                                            },
-                                            gameId: game.id
-
-                                        }
-                                    })}
-                                    {...{count, page, pageSize}}/>
+                    <CommentHeader band={game ? `${ServerUrl}/${game.band}` : ""}
+                                   name={game ? game.name : "Unknown"}/>
+                    <Grid container spacing={24} className={classes.commentContainer}>
+                        <Grid item xs={9}>
+                            <Grid container spacing={24}>
+                                {this.renderCommentCards()}
+                                <Grid item xs={12}>
+                                    <Pagination
+                                        onSelectPage={(page) => this.onPageChange(page)}
+                                        onPreviousPage={() => this.onPageChange(page - 1)}
+                                        onNextPage={() => this.onPageChange(page + 1)}
+                                        {...{count, page: Number(page), pageSize: Number(pageSize)}}
+                                    />
+                                </Grid>
                             </Grid>
                         </Grid>
+                        <Grid item xs={3}>
+                            <CommentFilter
+                                summary={summary}
+                                filter={{rating, goods: good}}
+                                goodFilter={goods.map(good => ({id: good.id, name: good.name}))}
+                                onFilterChange={(filter) => this.onFilterChange(filter)}
+                            />
+                        </Grid>
                     </Grid>
-                    <Grid item xs={3}>
-                        <CommentFilter summary={summary}/>
-                    </Grid>
-                </Grid>
+                </div>
             </div>
         )
     }
@@ -121,6 +131,26 @@ const styles = createStyles(theme => ({
     commentContainer: {
         marginTop: 26,
 
+    },
+    bgImg: {
+        position: "fixed",
+        zIndex: -100,
+        marginLeft: -96,
+        width: "120%",
+        filter: "blur(20px)",
+        objectFit: "cover"
+    },
+    bgOverlay: {
+        position: "fixed",
+        zIndex: -50,
+        height: 1024,
+        marginLeft: -96,
+        marginTop: -55,
+        width: "120%",
+        opacity: 0.7,
+        filter: "blur(20px)",
+        backgroundColor: "#000000"
     }
+
 }));
 export default connect(({comments}) => ({...comments}))(withStyles(styles)(CommentPage));

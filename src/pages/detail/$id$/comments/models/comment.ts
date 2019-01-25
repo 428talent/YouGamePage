@@ -8,6 +8,7 @@ import {Good} from "../../../../../services/model/good";
 import {any, dropWhile, uniq} from "ramda";
 import {fetchGoodList} from "../../../../../services/good";
 import {GetProfileList} from "../../../../../services/user";
+import pathToRegexp = require("path-to-regexp");
 
 export default ({
     namespace: "comments",
@@ -16,16 +17,37 @@ export default ({
         page: 1,
         pageSize: 10,
         count: 200,
+        goods: []
     },
     subscriptions: {
         'setup'({dispatch, history}) {
-
+            history.listen((location) => {
+                const match = pathToRegexp('/detail/:gameId/comments').exec(location.pathname);
+                const {
+                    page = 1,
+                    pageSize = 10,
+                    good,
+                    rating
+                } = history.location.query;
+                if (match) {
+                    dispatch({
+                        type: "fetchGameComments", payload: {
+                            gameId: match[1],
+                            page,
+                            pageSize,
+                            good, rating
+                        }
+                    })
+                }
+            })
         }
     },
     effects: {
-        * 'fetchGame'({payload: {gameId}}, {call, select, put}) {
-            const fetchGameResponse: ApiResponse<Game> = yield call(fetchGame, {gameId});
-            if (fetchGameResponse.requestSuccess) {
+        * 'fetchGameComments'({payload: {gameId, ...params}}, {call, select, put}) {
+            let {game} = yield select(state => (state.comments));
+            if (!(game && game.id === gameId)) {
+                const fetchGameResponse: ApiResponse<Game> = yield call(fetchGame, {gameId});
+
                 const getGameBandResponse: ApiResponse<Image> = yield call(getGameBand, {gameId: fetchGameResponse.data.id});
                 yield put({
                     type: "setState", payload: {
@@ -35,23 +57,39 @@ export default ({
                         }
                     }
                 });
-                yield put({
-                    type: "fetchComments", payload: {
-                        page: {
-                            pageSize: 10, page: 1
-                        },
-                        gameId: fetchGameResponse.data.id
 
-                    }
-                })
                 yield put({
                     type: "fetchCommentSummary", payload: {
                         gameId: fetchGameResponse.data.id
                     }
                 })
-
             }
+            yield put({
+                type: "fetchGoodFilter", payload: {
+                    gameId: gameId
 
+                }
+            });
+            const {page, pageSize, good, rating} = params;
+            yield put({
+                type: "fetchComments", payload: {
+                    ...params,
+                    page: {
+                        page, pageSize
+                    },
+                    gameId: gameId,
+                    order:"-id"
+
+                }
+            });
+
+
+        },
+        * 'fetchGoodFilter'({payload: {gameId}}, {select, call, put}) {
+            const fetchGoodListResponse: ApiResponse<PageResult<Good>> = yield call(fetchGoodList, {gameComment: gameId})
+            if (fetchGoodListResponse.requestSuccess) {
+                yield put({type: "setState", payload: {goods: fetchGoodListResponse.data.result}})
+            }
         },
         * 'fetchCommentSummary'({payload: {gameId}}, {select, call, put}) {
             const fetSummaryResponse: ApiResponse<CommentSummary> = yield call(GetGameCommentSummary, {gameId})

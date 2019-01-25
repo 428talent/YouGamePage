@@ -25,8 +25,8 @@ export const apiRequest = <MT extends any>(init: ApiRequestInit): Promise<any> =
         queryParams["pageSize"] = page.pageSize;
     }
     if (queryParams) {
-        url = url + "?" + Object.getOwnPropertyNames(queryParams).map(queryParam => {
-            if (Array.isArray(queryParams[queryParam])){
+        url = url + "?" + Object.getOwnPropertyNames(queryParams).filter(queryName => queryParams[queryName] !== undefined).map(queryParam => {
+            if (Array.isArray(queryParams[queryParam])) {
                 return queryParams[queryParam].map(queryParamValue => (`${queryParam}=${queryParamValue}`)).join("&")
             }
             return `${queryParam}=${queryParams[queryParam]}`
