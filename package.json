@@ -33,6 +33,7 @@
     "lodash": "^4.17.11",
     "material-ui": "^0.20.2",
     "material-ui-pagination": "^1.1.6",
+    "mockjs": "^1.0.1-beta3",
     "moment": "^2.23.0",
     "normalizr": "^3.3.0",
     "path-to-regexp": "^2.4.0",

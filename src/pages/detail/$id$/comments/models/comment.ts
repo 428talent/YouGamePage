@@ -9,6 +9,10 @@ import {any, dropWhile, uniq} from "ramda";
 import {fetchGoodList} from "../../../../../services/good";
 import {GetProfileList} from "../../../../../services/user";
 import pathToRegexp = require("path-to-regexp");
+import {readCookieJWTPayload} from "../../../../../utils/auth";
+import {GetInventoryItemList} from "../../../../../services/inventory";
+import {InventoryItem} from "../../../../../services/model/inventory";
+import inventory from "../../../../my/inventory/models/inventory";
 
 export default ({
     namespace: "comments",
@@ -17,7 +21,8 @@ export default ({
         page: 1,
         pageSize: 10,
         count: 200,
-        goods: []
+        goods: [],
+        userComments: []
     },
     subscriptions: {
         'setup'({dispatch, history}) {
@@ -62,14 +67,22 @@ export default ({
                     type: "fetchCommentSummary", payload: {
                         gameId: fetchGameResponse.data.id
                     }
-                })
-            }
-            yield put({
-                type: "fetchGoodFilter", payload: {
-                    gameId: gameId
+                });
+                yield put({
+                    type: "fetchMyComment", payload: {
+                        gameId: gameId
 
-                }
-            });
+                    }
+                });
+                yield put({
+                    type: "fetchGoodFilter", payload: {
+                        gameId: gameId
+
+                    }
+                });
+            }
+
+
             const {page, pageSize, good, rating} = params;
             yield put({
                 type: "fetchComments", payload: {
@@ -78,21 +91,49 @@ export default ({
                         page, pageSize
                     },
                     gameId: gameId,
-                    order:"-id"
+                    order: "-id"
 
                 }
             });
 
 
         },
+        * 'fetchMyComment'({payload: {gameId}}, {select, call, put}) {
+            const jwtPayload = readCookieJWTPayload();
+            if (jwtPayload == null)
+                return;
+            const fetchGoodListResponse: ApiResponse<PageResult<Good>> = yield call(fetchGoodList, {gameComment: gameId});
+            if (fetchGoodListResponse.requestSuccess) {
+                const fetchUserInventory: ApiResponse<PageResult<InventoryItem>> = yield call(GetInventoryItemList, {
+                    page: {
+                        page: 1,
+                        pageSize: fetchGoodListResponse.data.count
+                    },
+                    good: fetchGoodListResponse.data.result.map(good => (good.id)),
+                    user: jwtPayload.UserId
+                });
+                // fetchComments
+                const fetchCommentListResponse: ApiResponse<PageResult<Comment>> = yield call(GetCommentList, {
+                    page: {
+                        page: 1,
+                        pageSize: fetchGoodListResponse.data.count
+                    },
+                    user: jwtPayload.UserId,
+                    good: fetchUserInventory.data.result.map(inventoryItem => (inventoryItem.good_id))
+                });
+                if (fetchCommentListResponse.requestSuccess) {
+                    yield put({type: "setState", payload: {userComments: fetchCommentListResponse.data.result}})
+                }
+            }
+        },
         * 'fetchGoodFilter'({payload: {gameId}}, {select, call, put}) {
-            const fetchGoodListResponse: ApiResponse<PageResult<Good>> = yield call(fetchGoodList, {gameComment: gameId})
+            const fetchGoodListResponse: ApiResponse<PageResult<Good>> = yield call(fetchGoodList, {gameComment: gameId});
             if (fetchGoodListResponse.requestSuccess) {
                 yield put({type: "setState", payload: {goods: fetchGoodListResponse.data.result}})
             }
         },
         * 'fetchCommentSummary'({payload: {gameId}}, {select, call, put}) {
-            const fetSummaryResponse: ApiResponse<CommentSummary> = yield call(GetGameCommentSummary, {gameId})
+            const fetSummaryResponse: ApiResponse<CommentSummary> = yield call(GetGameCommentSummary, {gameId});
             if (fetSummaryResponse.requestSuccess) {
                 yield put({type: "setState", payload: {summary: fetSummaryResponse.data}})
             }

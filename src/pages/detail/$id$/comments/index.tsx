@@ -11,6 +11,7 @@ import {ServerUrl} from "../../../../config/api";
 import router from "umi/router";
 import {buildUrlQueryParams} from "../../../../utils/url";
 import {Good} from "../../../../services/model/good";
+import EditCommentPanel from "./components/EditCommentPanel";
 
 interface CommentPageProps extends BaseProps {
     data: Array<any>
@@ -22,7 +23,8 @@ interface CommentPageProps extends BaseProps {
     game?: any
     summary?: any
     location?: any,
-    goods: Array<Good>
+    goods: Array<Good>,
+    userComments: Array<Comment>
 }
 
 
@@ -65,7 +67,7 @@ class CommentPage extends Component<CommentPageProps, {}> {
     }
 
     render(): React.ReactNode {
-        const {classes, count, game, dispatch, summary, location, goods} = this.props;
+        const {classes, count, game, dispatch, summary, location, goods, userComments} = this.props;
 
         //combie filter
         let {
@@ -94,6 +96,17 @@ class CommentPage extends Component<CommentPageProps, {}> {
                     <Grid container spacing={24} className={classes.commentContainer}>
                         <Grid item xs={9}>
                             <Grid container spacing={24}>
+                                <Grid item xs={12}>
+                                    <EditCommentPanel
+                                        goods={goods}
+                                        comments={
+                                            userComments.map((comment: any) => ({
+                                                goodId: comment.good_id,
+                                                content: comment.content,
+                                                rating: comment.rating
+                                            }))}
+                                    />
+                                </Grid>
                                 {this.renderCommentCards()}
                                 <Grid item xs={12}>
                                     <Pagination
