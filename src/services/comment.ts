@@ -24,3 +24,25 @@ export function GetGameCommentSummary({gameId}): Promise<ApiResponse<CommentSumm
     })
 
 }
+
+export function CreateComment({goodId, content, rating}): Promise<ApiResponse<Comment>> {
+    return apiRequest({
+        url: Api.comments,
+        method: "post",
+        data: {
+            good_id: goodId, content, rating
+        }
+    })
+
+}
+
+export function UpdateComment({commentId, data}): Promise<ApiResponse<Comment>> {
+    return apiRequest({
+        url: Api.comment,
+        method: "patch",
+        pathParams: {
+            id: commentId
+        },
+        data
+    })
+}

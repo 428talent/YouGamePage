@@ -24,7 +24,11 @@ interface EditCommentPanelProps extends BaseProps {
         goodId: number,
         content: string,
         rating: number
-    }>
+    }>,
+
+    onUpdateComment(goodId, content, rating, callback)
+
+    onCreateComment(goodId, content, rating, callback)
 }
 
 const EditCommentPanel = (props: EditCommentPanelProps) => {
@@ -43,7 +47,7 @@ const EditCommentPanel = (props: EditCommentPanelProps) => {
                 color={good.id === activeGoodChip ? "secondary" : undefined}
                 className={classes.chip}
                 onClick={() => {
-                    setActiveGoodChip(good.id)
+                    setActiveGoodChip(good.id);
                     setEditMode(false)
                 }}
             />
@@ -87,7 +91,7 @@ const EditCommentPanel = (props: EditCommentPanelProps) => {
 
     const onCommentUpdate = (goodId, {content, rating}) => {
         const updateInput = {...inputComment};
-        if (content) {
+        if (content !== undefined) {
             updateInput[goodId] = {
                 ...updateInput[goodId],
                 inputContent: content
@@ -99,8 +103,34 @@ const EditCommentPanel = (props: EditCommentPanelProps) => {
                 inputRating: rating
             }
         }
-        console.log(updateInput)
+        console.log(updateInput);
         setInputComment(updateInput)
+
+    };
+
+    const onComplete = (goodId) => {
+        const {comments, onUpdateComment, onCreateComment} = props;
+        const input = inputComment[activeGoodChip];
+        if (!input) {
+            return
+        }
+        const comment = comments.find(comment => comment.goodId === activeGoodChip);
+        if (!comment) {
+            const {
+                inputContent,
+                inputRating
+            } = input;
+            if (inputRating && inputContent && inputContent.length > 0) {
+                onCreateComment(activeGoodChip, inputContent, inputRating, setEditMode)
+            }
+        } else {
+            // update
+            const {
+                inputContent = comment.content,
+                inputRating = comment.rating
+            } = input;
+            onUpdateComment(activeGoodChip, inputContent, inputRating, setEditMode)
+        }
 
     };
     const renderEditMode = () => {
@@ -114,14 +144,16 @@ const EditCommentPanel = (props: EditCommentPanelProps) => {
         }
         // get value
         const input = inputComment[activeGoodChip];
-        if (input) {
-            if (input.inputContent) {
+        if (input !== undefined) {
+            if (input.inputContent !== undefined) {
                 inputContent = input.inputContent
             }
             if (input.inputRating) {
                 inputRating = input.inputRating
             }
         }
+
+
         return (
             <div>
                 <TextField
@@ -143,7 +175,7 @@ const EditCommentPanel = (props: EditCommentPanelProps) => {
                     value={inputRating}
                     onChange={(e) => onCommentUpdate(activeGoodChip, {rating: e.target.value, content: undefined})}
                 >
-                    {[1, 2, 3, 4].map(option => (
+                    {[1, 2, 3, 4, 5].map(option => (
                         <MenuItem key={option} value={option}>
                             {option}
                         </MenuItem>
@@ -154,6 +186,7 @@ const EditCommentPanel = (props: EditCommentPanelProps) => {
                         variant={"contained"}
                         color={"primary"}
                         className={classes.actionButton}
+                        onClick={() => onComplete(activeGoodChip)}
                     >
                         完成
                     </Button>

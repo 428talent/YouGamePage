@@ -41,6 +41,7 @@ class CommentPage extends Component<CommentPageProps, {}> {
                     name={comment.user.nickname}
                     goodName={comment.good.name}
                     rating={comment.rating}
+                    key={comment.id}
                 />
             </Grid>
         ))
@@ -82,7 +83,7 @@ class CommentPage extends Component<CommentPageProps, {}> {
         if (!Array.isArray(good)) {
             good = [good]
         }
-        good = good.map(goodId => (Number(goodId)))
+        good = good.map(goodId => (Number(goodId)));
 
         return (
             <div>
@@ -96,7 +97,7 @@ class CommentPage extends Component<CommentPageProps, {}> {
                     <Grid container spacing={24} className={classes.commentContainer}>
                         <Grid item xs={9}>
                             <Grid container spacing={24}>
-                                <Grid item xs={12}>
+                                <Grid item xs={12} key={"-1"}>
                                     <EditCommentPanel
                                         goods={goods}
                                         comments={
@@ -105,6 +106,16 @@ class CommentPage extends Component<CommentPageProps, {}> {
                                                 content: comment.content,
                                                 rating: comment.rating
                                             }))}
+                                        onUpdateComment={(goodId, content, rating,callback) => dispatch({
+                                            type: "comments/updateComment",
+                                            payload: {goodId, content, rating,callback}
+                                        })}
+                                        onCreateComment={(goodId, content, rating, callback) => dispatch({
+                                            type: "comments/createComment",
+                                            payload: {
+                                                goodId, content, rating, callback
+                                            }
+                                        })}
                                     />
                                 </Grid>
                                 {this.renderCommentCards()}

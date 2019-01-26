@@ -3,7 +3,7 @@ import {fetchGame, getGameBand} from "../../../../../services/game";
 import Game = GameModel.Game;
 import {Image} from "../../../../../services/model/image";
 import {Comment, CommentSummary} from "../../../../../services/model/comment";
-import {GetCommentList, GetGameCommentSummary} from "../../../../../services/comment";
+import {CreateComment, GetCommentList, GetGameCommentSummary, UpdateComment} from "../../../../../services/comment";
 import {Good} from "../../../../../services/model/good";
 import {any, dropWhile, uniq} from "ramda";
 import {fetchGoodList} from "../../../../../services/good";
@@ -124,6 +124,65 @@ export default ({
                 if (fetchCommentListResponse.requestSuccess) {
                     yield put({type: "setState", payload: {userComments: fetchCommentListResponse.data.result}})
                 }
+            }
+        },
+        * 'updateComment'({payload: {goodId, content, rating, callback}}, {select, call, put}) {
+            const jwtPayload = readCookieJWTPayload();
+            if (jwtPayload == null)
+                return;
+            const {userComments} = yield select(state => (state.comments));
+            const comment = userComments.find(comment => comment.good_id === goodId && comment.user_id === Number(jwtPayload.UserId))
+            if (!comment)
+                return;
+
+            const updateCommentResponse: ApiResponse<Comment> = yield call(UpdateComment, {
+                commentId: comment.id,
+                data: {content, rating}
+            });
+            if (updateCommentResponse.requestSuccess) {
+                callback(false);
+                // update my comment
+                const game = yield select(state => (state.comments.game));
+                yield put({
+                    type: "fetchMyComment", payload: {
+                        gameId: game.id
+
+                    }
+                });
+                yield put({
+                    type: "fetchComments", payload: {
+                        page: {
+                            page: 1, pageSize: 10
+                        },
+                        gameId: game.id,
+                        order: "-id"
+
+                    }
+                });
+            }
+
+        },
+        * 'createComment'({payload: {goodId, content, rating, callback}}, {select, call, put}) {
+            const createCommentResponse: ApiResponse<Comment> = yield call(CreateComment, {goodId, content, rating});
+            if (createCommentResponse.requestSuccess) {
+                callback();
+                const game = yield select(state => (state.comments.game));
+                yield put({
+                    type: "fetchMyComment", payload: {
+                        gameId: game.id
+
+                    }
+                });
+                yield put({
+                    type: "fetchComments", payload: {
+                        page: {
+                            page: 1, pageSize: 10
+                        },
+                        gameId: game.id,
+                        order: "-id"
+
+                    }
+                });
             }
         },
         * 'fetchGoodFilter'({payload: {gameId}}, {select, call, put}) {
