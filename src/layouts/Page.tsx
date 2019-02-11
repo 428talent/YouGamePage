@@ -5,22 +5,35 @@ import theme from "../config/theme";
 import {MuiThemeProvider} from "@material-ui/core";
 import {connect} from "dva";
 import "./page.css"
+import {SnackbarProvider, withSnackbar} from 'notistack';
+import SnackBarOverlay from "./components/SnackBarOverlay";
 
 class Page extends React.Component<PageProps, {}> {
     render(): React.ReactNode {
         console.log(this.props);
+        const content = (
+            <div>
+                <MainNavBar
+                    user={this.props.user}
+                    isDrawerOpen={this.props.isDrawerOpen}
+                    dispatch={this.props.dispatch}
+                    cartItemCount={this.props.cartCount}
+                />
+                {this.props.children}
+                <Footer/>
+            </div>
+        )
         return (
             <div>
+
                 <MuiThemeProvider theme={theme}>
-                    <MainNavBar
-                        user={this.props.user}
-                        isDrawerOpen={this.props.isDrawerOpen}
-                        dispatch={this.props.dispatch}
-                        cartItemCount={this.props.cartCount}
-                    />
-                    {this.props.children}
-                    <Footer/>
+                    <SnackbarProvider maxSnack={5}>
+                        <SnackBarOverlay>
+                            {content}
+                        </SnackBarOverlay>
+                    </SnackbarProvider>
                 </MuiThemeProvider>
+
             </div>
         )
     }

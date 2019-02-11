@@ -13,6 +13,7 @@ export const Api = {
     cart: ServerUrl + "/api/cart/:id",
     getOrderList: ServerUrl + "/api/orders",
     payOrder: ServerUrl + "/api/order/:id/pay",
+    order:ServerUrl + "/api/order/:id",
     profile: ServerUrl + "/api/user/:id/profile",
     fetchGame: ServerUrl + "/api/game/:id",
     uploadUserAvatar: ServerUrl + "/api/user/:id/avatar/upload",

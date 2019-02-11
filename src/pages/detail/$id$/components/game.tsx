@@ -2,7 +2,6 @@ import * as React from "react";
 import {ReactNode} from "react";
 import {
     Avatar,
-    Badge,
     Button,
     Chip,
     createStyles,
@@ -15,7 +14,7 @@ import {
     Paper,
     Tooltip,
     Typography,
-    withStyles
+    withStyles,
 } from "@material-ui/core";
 import BaseProps from "../../../../base/props";
 import ImageGallery from 'react-image-gallery';
@@ -23,23 +22,20 @@ import {ServerUrl} from "../../../../config/api";
 import "react-image-gallery/styles/css/image-gallery.css";
 import {Image} from "../../../../services/model/image";
 import {Good} from "../../../../services/model/good";
-import CommentIcon from '@material-ui/icons/Comment'
+import CommentIcon from '@material-ui/icons/Comment';
+import router from "umi/router";
 import moment = require("moment");
 import Tag = GameModel.Tag;
-import router from "umi/router";
 
 class Game extends React.Component<GameProps, {}> {
-
-
 
     createTags(): Array<ReactNode> {
         const {classes, tags} = this.props;
         return tags.map(tag => {
             return (
                 <Chip className={classes.tag} label={tag.name} key={tag.id}/>
-            )
-        })
-
+            );
+        });
 
     }
 
@@ -78,9 +74,9 @@ class Game extends React.Component<GameProps, {}> {
 
     }
 
-    renderGoods(): Array<ReactNode> {
+    renderGoods(): ReactNode[] {
         const {classes, goods, dispatch, inventory} = this.props;
-        const renderGoodAction = good => {
+        const renderGoodAction = ( good ) => {
             if (inventory.find(item => item.good_id === good.id)) {
                 return (
                     <div>
@@ -90,15 +86,15 @@ class Game extends React.Component<GameProps, {}> {
                             </IconButton>
                         </Tooltip>
                     </div>
-                )
+                );
             } else {
                 return (
                     <Button variant="outlined"
                             onClick={(e) => dispatch({
                                 type: "detail/addToCart",
-                                payload: {id: good.id}
+                                payload: {id: good.id},
                             })}>加入购物车</Button>
-                )
+                );
             }
         };
         return goods.map(good => {
@@ -112,8 +108,8 @@ class Game extends React.Component<GameProps, {}> {
 
                     </ListItem>
                 </div>
-            )
-        })
+            );
+        });
 
     }
 
@@ -123,19 +119,18 @@ class Game extends React.Component<GameProps, {}> {
             dispatch({
                 type: 'detail/removeFromWishlist',
                 payload: {
-                    id: wishlist.id
+                    id: wishlist.id,
                 },
 
-            })
+            });
         } else {
             dispatch({
                 type: 'detail/addToWishlist',
                 payload: {},
 
-            })
+            });
         }
     }
-
 
     render() {
         const {classes, game, band, preview, dispatch, wishlist} = this.props;
@@ -149,7 +144,7 @@ class Game extends React.Component<GameProps, {}> {
                     width: "120%",
                     filter: "blur(20px)",
                     marginLeft: -30,
-                    marginRight: -20
+                    marginRight: -20,
                 }}
                      src={preview.length > 0 ? `${ServerUrl}/${preview[0].path}` : ""}/>
                 <img style={{
@@ -162,7 +157,7 @@ class Game extends React.Component<GameProps, {}> {
                     filter: "blur(20px)",
                     marginLeft: -30,
                     marginRight: -20,
-                    backgroundColor: "#000000"
+                    backgroundColor: "#000000",
                 }}/>
                 <div className={classes.root}>
 
@@ -274,20 +269,19 @@ interface GameProps extends BaseProps {
         preview: string
         content: string
         tag: string,
-        tagContainer: string
-    }
-    game?: GameModel.Game
-    band?: string
-    preview?: Array<Image>
-    goods?: Array<Good>
-    tags?: Array<Tag>
-    wishlist?: any
-    dispatch?: any
-    inventory?: Array<any>
-    comments?: Array<any>
-    match:any
+        tagContainer: string,
+    };
+    game?: GameModel.Game;
+    band?: string;
+    preview?: Array<Image>;
+    goods?: Array<Good>;
+    tags?: Array<Tag>;
+    wishlist?: any;
+    dispatch?: any;
+    inventory?: Array<any>;
+    comments?: Array<any>;
+    match:any;
 }
-
 
 const styles = createStyles(theme => ({
     root: {
@@ -309,34 +303,33 @@ const styles = createStyles(theme => ({
         [theme.breakpoints.down('md')]: {
             marginLeft: 16,
             marginRight: 16,
-        }
+        },
 
     },
     title: {
-        height: 200
+        height: 200,
     },
     band: {
         width: "100%",
-        float: "left"
+        float: "left",
     },
     gameInfo: {
-        marginLeft: 310
+        marginLeft: 310,
     },
     preview: {
-        height: 200
+        height: 200,
     },
     content: {
-        padding: 20
+        padding: 20,
     },
     tagContainer: {
         marginTop: 8,
-        marginBottom: 8
+        marginBottom: 8,
     },
     tag: {
         marginRight: 8,
-        height: 15
+        height: 15,
     },
 
-
 }));
-export default (withStyles(styles)(Game))
+export default (withStyles(styles)(Game));

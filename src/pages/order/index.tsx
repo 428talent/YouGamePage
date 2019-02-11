@@ -8,11 +8,6 @@ import OrderFilter from "./components/Filter";
 import Pagination from "./components/Pagination";
 
 class OrdersPage extends React.Component<OrderPageProp, {}> {
-    componentDidMount(): void {
-        const {dispatch} = this.props;
-        dispatch({type: "order/fetchOrders"})
-    }
-
     renderOrderCards = () => {
         const {orders} = this.props;
         return orders.map(order => (

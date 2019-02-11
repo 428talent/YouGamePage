@@ -74,29 +74,29 @@ export const apiRequest = <MT extends any>(init: ApiRequestInit): Promise<any> =
     }
 
     return sendRequest().then(response => {
-        const {statusText, status} = response
-        console.log(response.data)
+        const {statusText, status} = response;
         return Promise.resolve({
             requestSuccess: true,
             message: statusText,
             statusCode: status,
             data: response.data
         })
-    }).catch(error => {
-        const {response} = error;
+    }).catch(requestError => {
+        const {response} = requestError;
         let msg;
         let statusCode;
+        const {error, detail, code} = response.data;
         if (response && response instanceof Object) {
-            const {data, statusText} = response;
+            const {statusText} = response;
             statusCode = response.status;
-            msg = data.message || statusText
+            msg = error || statusText
         } else {
             statusCode = 600;
             msg = error.message || 'Network Error'
         }
 
         /* eslint-disable */
-        return Promise.reject({success: false, statusCode, message: msg, error: data})
+        return Promise.reject({success: false, statusCode, message: msg, error: data, detail: detail, code})
     })
 
 

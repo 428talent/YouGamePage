@@ -1,5 +1,6 @@
 import * as React from "react";
-import '../assets/css/index.css'
+import {Component} from 'react'
+import '../assets/css/index.css';
 import Banner from "./components/banner";
 import SaleGameSection from "./components/sale-game";
 import GameList from "./components/game-rank";
@@ -9,13 +10,13 @@ import BaseProps from "../base/props";
 import {ServerUrl} from "../config/api";
 
 interface HomePageProps extends BaseProps {
-    collections: any
+    collections: any;
 }
 
-class Home extends React.Component<HomePageProps, {}> {
+class Home extends Component<HomePageProps, {}> {
     renderNewGame() {
         const newGameCollection = this.props.collections.find(collection => collection.name === "newgame");
-        if (newGameCollection) {
+        if(newGameCollection) {
             return (
                 <SaleGameSection
                     title={"新游戏"}
@@ -23,15 +24,17 @@ class Home extends React.Component<HomePageProps, {}> {
                         cover: `${ServerUrl}/${game.band}`,
                         price: game.price,
                         name: game.name,
-                        id:game.id
+                        id:game.id,
                     }))}/>
-            )
+            );
         }
     }
 
     renderRecommend() {
-        const newGameCollection = this.props.collections.find(collection => collection.name === "recommend");
-        if (newGameCollection) {
+        const newGameCollection = this.props.collections.find(
+            collection => collection.name === "recommend",
+        );
+        if(newGameCollection) {
             return (
                 <SaleGameSection
                     title={"特别推荐"}
@@ -39,15 +42,15 @@ class Home extends React.Component<HomePageProps, {}> {
                         cover: `${ServerUrl}/${game.band}`,
                         price: game.price,
                         name: game.name,
-                        id:game.id
+                        id:game.id,
                     }))}/>
-            )
+            );
         }
     }
 
     render(): React.ReactNode {
         const {collections} = this.props;
-        console.log(collections)
+        console.log(collections);
         return (
             <div>
                 <div style={{
@@ -57,7 +60,7 @@ class Home extends React.Component<HomePageProps, {}> {
                     width: "100%",
                     display: "flex",
                     alignItems: "center",
-                    justifyContent: "center"
+                    justifyContent: "center",
                 }}>
                 </div>
                 <Banner/>
@@ -66,9 +69,9 @@ class Home extends React.Component<HomePageProps, {}> {
                 {this.renderRecommend()}
                 {/*<GameList/>*/}
             </div>
-        )
+        );
     }
 }
 
 // @ts-ignore
-export default connect(({home}) => ({...home}))(withRouter(Home))
+export default connect(({ home }) => ({...home}))(withRouter(Home));

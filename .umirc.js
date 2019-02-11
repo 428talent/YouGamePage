@@ -9,7 +9,7 @@ export default {
             },
             dynamicImport: false,
             title: 'yougame',
-            dll: true,
+            dll: false,
             routes: {
 
                 exclude: [],

@@ -26,7 +26,7 @@ export default ({
         tags: [],
         wishlist: undefined,
         inventory: [],
-        comments: []
+        comments: [],
     },
     subscriptions: {
         'setup'({dispatch, history}) {
@@ -35,12 +35,12 @@ export default ({
                 if (match) {
                     dispatch({
                         type: "fetchGame",
-                        payload: {gameId: match[1]}
-                    })
+                        payload: {gameId: match[1]},
+                    });
                 }
-            })
+            });
 
-        }
+        },
     },
     effects: {
         * 'fetchGame'({payload}, {select, call, put}) {
@@ -50,35 +50,34 @@ export default ({
                 yield put({
                     type: "fetchGameSuccess",
                     payload: {
-                        game: fetchGameResponse.data
-                    }
+                        game: fetchGameResponse.data,
+                    },
                 });
                 yield put({
                     type: 'fetchGameBand',
-                    id: fetchGameResponse.data.id
+                    id: fetchGameResponse.data.id,
                 });
                 yield put({
                     type: 'fetchGamePreview',
-                    id: fetchGameResponse.data.id
+                    id: fetchGameResponse.data.id,
                 });
                 yield put({
                     type: 'fetchGameGood',
-                    id: fetchGameResponse.data.id
+                    id: fetchGameResponse.data.id,
                 });
                 yield put({
                     type: 'fetchGameTag',
-                    id: fetchGameResponse.data.id
+                    id: fetchGameResponse.data.id,
                 });
                 yield put({
                     type: 'checkGameInWishlist',
-                    id: fetchGameResponse.data.id
+                    id: fetchGameResponse.data.id,
                 });
                 yield put({
-                    type: 'fetchComments'
-                })
+                    type: 'fetchComments',
+                });
 
             }
-
 
         },
         * 'checkInventory'({ids}, {select, call, put}) {
@@ -87,7 +86,7 @@ export default ({
                 yield put({
                     type: 'setState',
                     payload: {
-                        inventory: getInventoryItemListResponse.data.result
+                        inventory: getInventoryItemListResponse.data.result,
                     },
                 });
             }
@@ -99,24 +98,24 @@ export default ({
                 yield put({
                     type: 'fetchGameBandSuccess',
                     payload: {
-                        path: getGameBandResponse.data.path
+                        path: getGameBandResponse.data.path,
                     },
-                })
+                });
             }
         },
         * 'checkGameInWishlist'({id}, {select, call, put}) {
             const fetchWishlistResponse: ApiResponse<PageResult<WishListItem>> = yield call(fetchWishList, {
                 option: {
                     game: id,
-                    page: {page: 1, pageSize: 1}
-                }
+                    page: {page: 1, pageSize: 1},
+                },
             });
             if (fetchWishlistResponse.requestSuccess) {
                 if (fetchWishlistResponse.data.count == 1) {
                     yield put({
                         type: 'setState',
                         payload: {
-                            wishlist: fetchWishlistResponse.data.result[0]
+                            wishlist: fetchWishlistResponse.data.result[0],
                         },
                     });
                 }
@@ -129,32 +128,32 @@ export default ({
                 yield put({
                     type: 'fetchGamePreviewSuccess',
                     payload: {
-                        preview: getGamePreviewResponse.data.result
+                        preview: getGamePreviewResponse.data.result,
                     },
-                })
+                });
             }
         },
         * 'fetchGameGood'({id}, {select, call, put}) {
-            const fetchGameGoodResponse: ApiResponse<PageResult<Good>> = yield call(fetchGoodList, {game: id})
+            const fetchGameGoodResponse: ApiResponse<PageResult<Good>> = yield call(fetchGoodList, {game: id});
             if (fetchGameGoodResponse.requestSuccess) {
                 yield put({
                     type: 'fetchGameGoodListSuccess',
                     payload: {
-                        goods: fetchGameGoodResponse.data.result
+                        goods: fetchGameGoodResponse.data.result,
                     },
                 });
-                yield put({type: 'checkInventory', ids: fetchGameGoodResponse.data.result.map(good => (good.id))})
+                yield put({type: 'checkInventory', ids: fetchGameGoodResponse.data.result.map(good => (good.id))});
             }
         },
         * 'fetchGameTag'({id}, {select, call, put}) {
-            const fetchGameTagResponse: ApiResponse<PageResult<Tag>> = yield call(getGameTag, {gameId: id})
+            const fetchGameTagResponse: ApiResponse<PageResult<Tag>> = yield call(getGameTag, {gameId: id});
             if (fetchGameTagResponse.requestSuccess) {
                 yield put({
                     type: 'fetchGameTagListSuccess',
                     payload: {
-                        tags: fetchGameTagResponse.data.result
+                        tags: fetchGameTagResponse.data.result,
                     },
-                })
+                });
             }
         },
         * 'removeFromWishlist'({payload: {id}}, {select, call, put}) {
@@ -163,7 +162,7 @@ export default ({
                 yield put({
                     type: 'setState',
                     payload: {
-                        wishlist: undefined
+                        wishlist: undefined,
                     },
                 });
             }
@@ -176,14 +175,14 @@ export default ({
                     yield put({
                         type: 'setState',
                         payload: {
-                            wishlist: addWishlistResponse.data
+                            wishlist: addWishlistResponse.data,
                         },
                     });
                 }
             }
 
         },
-        * 'fetchComments'({payload}, {select, call, put}) {
+        * fetchComments({payload}, {select, call, put}) {
             const game = yield select(state => (state.detail.game));
             const fetchCommentListResponse: ApiResponse<PageResult<Comment>> = yield call(GetCommentList, {game: game.id});
             if (fetchCommentListResponse.requestSuccess) {
@@ -203,58 +202,58 @@ export default ({
                         comments: fetchCommentListResponse.data.result.map(comment => ({
                             ...comment,
                             good: commentGood.find(good => comment.good_id === good.id),
-                            user: fetchCommentUserProfileResponse.data.result.find(profile => profile.user_id === comment.user_id)
-                        }))
-                    }
-                })
+                            user: fetchCommentUserProfileResponse.data.result.find(profile => profile.user_id === comment.user_id),
+                        })),
+                    },
+                });
 
             }
         },
         * 'addToCart'({payload: {id}}, {select, call, put}) {
             const addCartResponse = yield call(addToCart, {id});
             if (addCartResponse) {
-                console.log(addCartResponse.data)
+                console.log(addCartResponse.data);
             }
-        }
+        },
     },
     reducers: {
         'fetchGameSuccess'(state, {payload}) {
             return {
                 ...state,
-                game: payload.game
-            }
+                game: payload.game,
+            };
         },
         'fetchGameBandSuccess'(state, {payload: {path}}) {
             return {
                 ...state,
-                band: path
-            }
+                band: path,
+            };
         },
         'fetchGamePreviewSuccess'(state, {payload: {preview}}) {
 
             return {
                 ...state,
-                preview
-            }
+                preview,
+            };
         },
         'fetchGameGoodListSuccess'(state, {payload: {goods}}) {
             return {
                 ...state,
-                goods
-            }
+                goods,
+            };
         },
         'fetchGameTagListSuccess'(state, {payload: {tags}}) {
             return {
                 ...state,
-                tags
-            }
+                tags,
+            };
         },
         'setState'(state, {payload}) {
             return {
                 ...state,
-                ...payload
-            }
-        }
+                ...payload,
+            };
+        },
     },
 
-})
+});

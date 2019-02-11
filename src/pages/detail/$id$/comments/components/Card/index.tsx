@@ -1,26 +1,17 @@
 import * as React from 'react';
 import {createStyles, withStyles} from '@material-ui/core/styles';
-import classnames from 'classnames';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
-import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
-import CardActions from '@material-ui/core/CardActions';
-import Collapse from '@material-ui/core/Collapse';
 import Avatar from '@material-ui/core/Avatar';
-import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import red from '@material-ui/core/colors/red';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import ShareIcon from '@material-ui/icons/Share';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
 import {Chip} from "@material-ui/core";
 import BaseProps from "../../../../../../base/props";
-import * as moment from 'moment'
+import * as moment from 'moment';
 import {ServerUrl} from "../../../../../../config/api";
 
-const styles = createStyles(theme => ({
+const styles = createStyles((theme) => ({
     card: {},
     media: {
         height: 0,
@@ -47,38 +38,38 @@ const styles = createStyles(theme => ({
     },
     ratingText:{
         margin:8,
-        marginRight:16
-    }
+        marginRight:16,
+    },
 }));
 
 interface CommentCardProps extends BaseProps {
-    content: string
-    avatar?: string
-    name: string
-    goodName: string
-    time: Date
-    rating:number
+    content: string;
+    avatar?: string;
+    name: string;
+    goodName: string;
+    time: Date;
+    rating:number;
 }
 
 class CommentCard extends React.Component<CommentCardProps, any> {
     renderUserAvatar = () => {
         const {avatar, name, classes} = this.props;
-        if (avatar && avatar.length != 0) {
+        if(avatar && avatar.length != 0) {
             return (
                 <Avatar aria-label="Recipe" className={classes.avatar} src={`${ServerUrl}/${avatar}`}/>
-            )
+            );
         } else {
             return (
                 <Avatar aria-label="Recipe" className={classes.avatar}>
                     {name.charAt(0)}
                 </Avatar>
-            )
+            );
 
         }
-    };
+    }
 
     render() {
-        const {classes, content, time, goodName, name,rating} = this.props;
+        const {classes, content, time, goodName, name, rating} = this.props;
 
         return (
             <Card className={classes.card}>
@@ -110,6 +101,5 @@ class CommentCard extends React.Component<CommentCardProps, any> {
         );
     }
 }
-
 
 export default withStyles(styles)(CommentCard);

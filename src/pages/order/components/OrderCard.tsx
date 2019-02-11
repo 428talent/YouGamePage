@@ -3,6 +3,7 @@ import BaseProps from "../../../base/props";
 import {Button, createStyles, Divider, Paper, Typography, withStyles} from "@material-ui/core";
 import {sum} from 'ramda'
 import {ServerUrl} from "../../../config/api";
+import router from "umi/router";
 
 class OrderCard extends React.Component<OrderCardProp, {}> {
 
@@ -36,20 +37,36 @@ class OrderCard extends React.Component<OrderCardProp, {}> {
         const {classes, order} = this.props;
         return (
             <Paper className={classes.orderCard}>
-                <Typography variant={"subtitle1"}>
-                    订单号:{order.id}
-                </Typography>
+                <div className={classes.header}>
+                    <Typography variant={"subtitle1"}>
+                        订单号:{order.id}
+                    </Typography>
+                    <Typography variant={"subtitle1"}>
+                        {order.state}
+                    </Typography>
+                </div>
                 <Divider/>
                 {this.renderOrderGoods(order.goods)}
                 <Divider/>
-                <div style={{textAlign: "right"}}>
-                    <Typography variant={"h6"}>
-                        总计:￥{sum(order.goods.map(good => (good.price)))}
-                    </Typography>
-                    <Button variant="contained" color={"primary"}>
-                        付款
-                    </Button>
+                <div className={classes.totalPrice}>
+                    <div>
+                        <Typography variant={"subtitle2"}>
+                            总计
+                        </Typography>
+                    </div>
+                    <div>
+                        <Typography variant={"h6"}>
+                            ￥{sum(order.goods.map(good => (good.price)))}
+                        </Typography>
+                    </div>
+
+
                 </div>
+                {order.state !== "Created" || <Button
+                    variant="contained"
+                    color={"primary"}
+                    onClick={() => router.push(`/order/${order.id}/pay`)}
+                >付款</Button>}
             </Paper>
         )
     }
@@ -82,6 +99,25 @@ const styles = createStyles(theme => ({
         justifyContent: "space-between",
         marginBottom: 16,
         marginTop: 16
+    },
+    totalPrice: {
+        textAlign: "right",
+        marginTop: 16,
+        marginBottom: 16,
+        marginRight: 24,
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center"
+    },
+    priceLabel: {
+        color: "#555"
+    },
+    header: {
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        paddingRight: 24,
+        marginBottom: 12
     }
 }));
 export default withStyles(styles)(OrderCard)

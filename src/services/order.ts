@@ -4,6 +4,7 @@ import {Api} from "../config/api";
 import {PageResult} from "./model/base";
 import {Order} from "./model/order";
 import {OrderGood} from "./model/ordergood";
+import order from "../pages/order/models/order";
 
 export function fetchOrderList(
     option: {
@@ -22,6 +23,17 @@ export function fetchOrderList(
     })
 }
 
+export function fetchOrder({orderId}): Promise<AxiosResponse<Order>> {
+    return apiRequest<Order>({
+        url: Api.order,
+        method: "get",
+        pathParams: {
+            id: orderId
+        }
+    })
+
+}
+
 export function fetchOrderGood({orderId}): Promise<AxiosResponse<PageResult<OrderGood>>> {
     return apiRequest({
         url: Api.fetchOrderGood,
@@ -29,5 +41,15 @@ export function fetchOrderGood({orderId}): Promise<AxiosResponse<PageResult<Orde
         queryParams: {
             orderId
         },
+    })
+}
+
+export function payOrder({orderId}): Promise<AxiosResponse<any>> {
+    return apiRequest({
+        url: Api.payOrder,
+        method: "post",
+        pathParams: {
+            id: orderId
+        }
     })
 }

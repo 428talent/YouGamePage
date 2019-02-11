@@ -13,15 +13,24 @@ export default ({
         orders: [],
         page: 1,
         pageSize: 10,
-        count: 999,
+        count: 0,
     },
-    subscriptions: {},
+    subscriptions: {
+        'setup'({dispatch, history}) {
+            return history.listen((location) => {
+                if (location.pathname === '/order') {
+                    dispatch({type: "fetchOrders"})
+                }
+            });
+        },
+    },
     effects: {
         * 'fetchOrders'({payload}, {select, call, put}) {
             const fetchOrderListResponse: ApiResponse<PageResult<Order>> = yield call(fetchOrderList, {...payload});
             // fetch order good
             const orderIdToFetch = uniq(fetchOrderListResponse.data.result.map(order => (order.id)));
             let orderList = fetchOrderListResponse.data.result;
+
             const fetchOrderGoodListResponse: ApiResponse<PageResult<OrderGood>> = yield call(fetchOrderGood, {orderId: orderIdToFetch});
 
             //fetch good
@@ -39,10 +48,9 @@ export default ({
             }
 
             //produce view data model
-
             orderList = orderList.map(order => ({
                 ...order,
-                goods: fetchOrderGoodListResponse.data.result.map(orderGood => ({
+                goods: fetchOrderGoodListResponse.data.result.filter(orderGood => orderGood.order_id === order.id).map(orderGood => ({
                     ...orderGood,
                     gameGood: (good => ({
                         ...good,
@@ -53,13 +61,12 @@ export default ({
                     }))(fetchGoodListResponse.data.result.find(good => good.id === orderGood.good_id))
                 }))
             }));
-
             yield put({
                 type: "fetchOrderListSuccess", payload: {
                     orders: orderList,
-                    page: fetchGoodListResponse.data.page,
-                    pageSize: fetchGoodListResponse.data.page_size,
-                    count:fetchGoodListResponse.data.count
+                    page: fetchOrderListResponse.data.page,
+                    pageSize: fetchOrderListResponse.data.page_size,
+                    count: fetchOrderListResponse.data.count
                 }
             })
 
