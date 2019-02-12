@@ -1,6 +1,7 @@
 export const ServerUrl = "http://localhost:8888";
 export const WebServer = "http://127.0.0.1:8888";
 export const MockServer = "http://127.0.0.1:8888";
+export const SearchServer = "http://localhost:8899";
 export const Api = {
     getUser: ServerUrl + "/api/user/:id",
     users: ServerUrl + "/api/users",
@@ -33,4 +34,5 @@ export const Api = {
     userWallet: `${ServerUrl}/api/user/:id/wallet`,
     userTransactionList: `${ServerUrl}/api/user/:id/transactions`,
     gameCollections: `${ServerUrl}/api/collections`,
+    searchGame: `${SearchServer}/search`,
 };

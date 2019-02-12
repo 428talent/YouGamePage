@@ -190,7 +190,7 @@ class Games extends Component<GamesProps, {}> {
                                     value={order}
                                     onChange={(e) => this.onOrderChange(e.target.value)}
                                 >
-                                    <MenuItem value={"-id"}>默认顺序</MenuItem>
+                                    <MenuItem value={"-release_time"}>默认顺序</MenuItem>
                                     <MenuItem value={"-release_time"}>发售日期</MenuItem>
                                     <MenuItem value={"price"}>价格低至高</MenuItem>
                                     <MenuItem value={"-price"}>价格高至低</MenuItem>

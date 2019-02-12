@@ -26,6 +26,13 @@ export function fetchGameList({...param}): Promise<ApiResponse<Game>> {
     })
 }
 
+export function searchGame({...param}): Promise<ApiResponse<PageResult<Game>>> {
+    return apiRequest({
+        url: Api.searchGame,
+        method: "get",
+        queryParams: param
+    })
+}
 export function getGameBand({gameId}): Promise<ApiResponse<Image>> {
     return apiRequest<Image>({
         url: `${Api.fetchGame}/band`,

@@ -1,5 +1,5 @@
 import {ApiResponse, PageResult} from "../../../services/model/base";
-import {fetchGameList, getGameBand} from "../../../services/game";
+import {fetchGameList, getGameBand, searchGame} from "../../../services/game";
 import {ServerUrl} from "../../../config/api";
 import Game = GameModel.Game;
 import moment = require("moment");
@@ -19,7 +19,7 @@ export default ({
                     const {
                         page = 1,
                         pageSize = 20,
-                        order = "-id",
+                        order = "-release_time",
                         price = "all",
                         releaseTime = "all",
                         search = ""
@@ -80,15 +80,11 @@ export default ({
                 }));
 
             }
-
-
             const {page, pageSize} = pageOption;
-
-            const fetchGameListResponse: ApiResponse<PageResult<Game>> = yield call(fetchGameList, {
+            const fetchGameListResponse: ApiResponse<PageResult<Game>> = yield call(searchGame, {
                 page,
                 pageSize,
-                ...param,
-                enable: "visit"
+                ...param
             });
 
             const gameBands = [];
