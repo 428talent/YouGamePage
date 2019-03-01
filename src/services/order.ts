@@ -53,3 +53,13 @@ export function payOrder({orderId}): Promise<AxiosResponse<any>> {
         }
     })
 }
+
+export function createOrder({goodIds}) {
+    return apiRequest({
+        url: Api.orders,
+        method: "post",
+        data: {
+            goods: goodIds
+        }
+    })
+}

@@ -17,4 +17,13 @@ export default {
             hardSource: false,
         }],
     ],
+    urlLoaderExcludes: [
+        /\.svg$/,
+    ],
+    chainWebpack(config) {
+        config.module.rule('svg')
+            .test(/\.svg$/i)
+            .use('svg-sprite-loader')
+            .loader(require.resolve('svg-sprite-loader'));
+    },
 }

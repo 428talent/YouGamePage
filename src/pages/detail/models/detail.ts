@@ -2,19 +2,20 @@ import {fetchGame, getGameBand, getGamePreview, getGameTag} from "../../../servi
 import {ApiResponse, PageResult} from "../../../services/model/base";
 import {Image} from "../../../services/model/image";
 import {Good} from "../../../services/model/good";
-import {Comment} from "../../../services/model/comment";
+import {Comment, CommentSummary} from "../../../services/model/comment";
 import {fetchGoodList} from "../../../services/good";
 import {WishListItem} from "../../../services/model/wishlist";
 import {AddToWishList, deleteWishlistItem, fetchWishList} from "../../../services/wishlist";
 import {addToCart} from "../../../services/cart";
 import {InventoryItem} from "../../../services/model/inventory";
 import {GetInventoryItemList} from "../../../services/inventory";
-import {GetCommentList} from "../../../services/comment";
+import {GetCommentList, GetGameCommentSummary} from "../../../services/comment";
 import pathToRegexp = require("path-to-regexp");
 import Tag = GameModel.Tag;
-import {any, dropWhile, uniq} from "ramda";
+import {any, dropWhile, sum, uniq} from "ramda";
 import {getGoodList} from "../../../utils/schema";
 import {GetProfileList} from "../../../services/user";
+import {getRatingText} from "../../../utils/rating";
 
 export default ({
     namespace: "detail",
@@ -34,9 +35,19 @@ export default ({
                 const match = pathToRegexp('/detail/:gameId').exec(location.pathname);
                 if (match) {
                     dispatch({
+                        type: "setState",
+                        payload: {
+                            gameId: Number(match[1])
+                        }
+                    });
+                    dispatch({
                         type: "fetchGame",
                         payload: {gameId: match[1]},
                     });
+                    dispatch({
+                        type: "fetchCommentSummary",
+                        gameId: Number(match[1])
+                    })
                 }
             });
 
@@ -89,6 +100,24 @@ export default ({
                         inventory: getInventoryItemListResponse.data.result,
                     },
                 });
+            }
+        },
+        * 'fetchCommentSummary'({gameId}, {select, call, put}) {
+            const fetSummaryResponse: ApiResponse<CommentSummary> = yield call(GetGameCommentSummary, {gameId});
+            let ratingText = "无数据";
+            const totalCount = sum(fetSummaryResponse.data.rating_count.map(item => item.count));
+            let ratingAvg = 0;
+            if (totalCount > 0) {
+                ratingAvg = sum(fetSummaryResponse.data.rating_count.map(item => item.count * item.rating)) / totalCount;
+                ratingText = getRatingText(ratingAvg)
+            }
+            if (fetSummaryResponse.requestSuccess) {
+                yield put({
+                    type: "setState", payload: {
+                        summary: fetSummaryResponse.data,
+                        ratingAvg, ratingText
+                    }
+                })
             }
         },
         * 'fetchGameBand'({id}, {select, call, put}) {
@@ -206,7 +235,6 @@ export default ({
                         })),
                     },
                 });
-
             }
         },
         * 'addToCart'({payload: {id}}, {select, call, put}) {

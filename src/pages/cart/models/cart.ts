@@ -1,11 +1,14 @@
 import {deleteCartItem, getUserCart} from "../../../services/cart";
 import {ApiResponse, PageResult} from "../../../services/model/base";
-import {uniq,eqBy,uniqWith} from 'ramda'
+import {uniq, eqBy, uniqWith} from 'ramda'
 import {fetchGoodList} from "../../../services/good";
 import {Good} from "../../../services/model/good";
 import {fetchGameList, getGameBand} from "../../../services/game";
 import * as Cookies from 'js-cookie'
 import Game = GameModel.Game;
+import {Order} from "../../../services/model/order";
+import {createOrder} from "../../../services/order";
+import router from "umi/router";
 
 export default ({
     namespace: "cart",
@@ -14,7 +17,13 @@ export default ({
         totalPrice: 0
     },
     subscriptions: {
-
+        setup({dispatch, history}: { dispatch: any; history: any }) {
+            history.listen((location) => {
+                if (location.pathname === '/cart') {
+                    dispatch({type: "cart/fetchCartList", payload: {}})
+                }
+            })
+        }
     },
     effects: {
         * 'fetchCartList'({payload}, {select, call, put}) {
@@ -79,13 +88,18 @@ export default ({
                     },
                 })
             }
+        },
+        * createOrder({}, {select, call, put}) {
+            const goods = yield select(state => (state.cart.cartItems));
+            const response : ApiResponse<Order> = yield call(createOrder,{goodIds:goods.map(item => item.good_id)});
+            router.push("/order")
         }
     },
     reducers: {
         'fetchGoodListSuccess'(state, {payload}) {
             return {
                 ...state,
-                cartItems: uniqWith((a:any,b:any)=> (a.id === b.id),[...state.cartItems, ...payload.cartItems]),
+                cartItems: uniqWith((a: any, b: any) => (a.id === b.id), [...state.cartItems, ...payload.cartItems]),
                 totalPrice: payload.totalPrice
 
             }

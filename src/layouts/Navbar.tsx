@@ -2,24 +2,27 @@ import {
     AppBar,
     Avatar,
     Badge,
-    Button, ClickAwayListener,
-    createStyles, Divider,
+    Button,
+    ClickAwayListener,
+    createStyles,
+    Divider,
     IconButton,
     InputBase,
     List,
     ListItem,
     ListItemIcon,
-    ListItemText, Menu, MenuItem, MenuList, Paper, Popover,
+    ListItemText,
+    MenuItem,
+    MenuList,
+    Paper,
     SwipeableDrawer,
     Toolbar,
     Typography,
     withStyles,
-
 } from "@material-ui/core";
 import * as React from "react";
 import {createRef, Ref} from "react";
 import SearchIcon from '@material-ui/icons/Search';
-import MenuIcon from '@material-ui/icons/Menu';
 import MoreVertIcon from '@material-ui/icons/ExpandMore';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart'
 import {fade} from '@material-ui/core/styles/colorManipulator';
@@ -28,7 +31,6 @@ import {ServerUrl} from "../config/api";
 import HomeIcon from '@material-ui/icons/Home';
 import PersonIcon from '@material-ui/icons/Person';
 import router from "umi/router";
-import Link from '@material-ui/core/Link';
 import CategoryMenu from "./components/CategoryMenu";
 
 interface MainNavBarProps extends BaseProps {
@@ -221,6 +223,8 @@ class MainNavBar extends React.Component<MainNavBarProps, {
                         {/*color="inherit" aria-label="Menu">*/}
                         {/*<MenuIcon/>*/}
                         {/*</IconButton>*/}
+
+                        <img src={"/public/logo_light.svg"} style={{width: 48}} onClick={() =>router.push("/")}/>
                         <Typography className={classes.title} variant="h6" color="inherit" noWrap>
                             You Game
                         </Typography>

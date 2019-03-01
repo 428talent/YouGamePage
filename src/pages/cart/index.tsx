@@ -7,10 +7,6 @@ import {ReactNode} from "react";
 import {isWidthDown} from "@material-ui/core/withWidth";
 
 class ShoppingCartPage extends React.Component<ShoppingCartPageProp, {}> {
-    componentDidMount(): void {
-        const {dispatch} = this.props;
-        dispatch({type: "cart/fetchCartList", payload: {}})
-    }
 
     createGoodCard(): Array<ReactNode> {
         const {dispatch} = this.props;
@@ -32,7 +28,7 @@ class ShoppingCartPage extends React.Component<ShoppingCartPageProp, {}> {
     }
 
     render() {
-        const {classes, totalPrice, width} = this.props;
+        const {classes, totalPrice, width, dispatch} = this.props;
         return (
             <div>
                 <div className={this.props.classes.container}>
@@ -46,8 +42,15 @@ class ShoppingCartPage extends React.Component<ShoppingCartPageProp, {}> {
                                 <Typography variant="h5">
                                     合计：￥{totalPrice}
                                 </Typography>
-                                <Button className={classes.createOrderButton} color="primary" variant="contained">
-                                    付款
+                                <Button
+                                    className={classes.createOrderButton}
+                                    color="primary"
+                                    variant="contained"
+                                    onClick={() => dispatch({
+                                        type: "cart/createOrder"
+                                    })}
+                                >
+                                    购买
                                 </Button>
                             </Grid>
 

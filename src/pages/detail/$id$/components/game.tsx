@@ -133,7 +133,7 @@ class Game extends React.Component<GameProps, {}> {
     }
 
     render() {
-        const {classes, game, band, preview, dispatch, wishlist} = this.props;
+        const {classes, game, band, preview, dispatch, wishlist,ratingText,ratingAvg,comments} = this.props;
         console.log(this.props);
         return (
             <div>
@@ -225,7 +225,7 @@ class Game extends React.Component<GameProps, {}> {
                         </Grid>
                         <Grid item xs={12} sm={12} md={12} lg={9} xl={9}>
                             <Paper>
-                                <div>
+                                {comments.length > 0?<div>
                                     {this.renderComments()}
                                     <Button
                                         color="primary"
@@ -234,7 +234,8 @@ class Game extends React.Component<GameProps, {}> {
                                     >
                                         查看更多
                                     </Button>
-                                </div>
+                                </div> : <div style={{padding:16}}><h4>暂无评论</h4></div> }
+
                             </Paper>
                         </Grid>
                         <Grid item xs={12} sm={12} md={12} lg={3} xl={3}>
@@ -242,7 +243,7 @@ class Game extends React.Component<GameProps, {}> {
                                 <div style={{padding: 8, height: 100, textAlign: "center"}}>
                                     <div style={{margin: "0 auto", marginTop: 20}}>
                                         <Typography variant="h4">
-                                            特别好评
+                                            {ratingText}
                                         </Typography>
                                     </div>
                                 </div>
@@ -280,7 +281,9 @@ interface GameProps extends BaseProps {
     dispatch?: any;
     inventory?: Array<any>;
     comments?: Array<any>;
-    match:any;
+    match:any,
+    ratingText:string,
+    ratingAvg:number
 }
 
 const styles = createStyles(theme => ({

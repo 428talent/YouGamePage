@@ -223,8 +223,8 @@ class Games extends Component<GamesProps, {}> {
                         <Divider/>
                         <div className={classes.pageContainer}>
                             <Pagination
-                                page={page}
-                                pageSize={pageSize}
+                                page={Number(page)}
+                                pageSize={Number(pageSize)}
                                 count={count}
                                 onNextPage={() => this.onChangePage(page + 1)}
                                 onPreviousPage={() => this.onChangePage(page - 1)}

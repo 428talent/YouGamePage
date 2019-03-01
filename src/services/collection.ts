@@ -7,6 +7,9 @@ export function GetGameCollectionList({page, ...param}): Promise<ApiResponse<Pag
     return apiRequest({
         url: Api.gameCollections,
         method: "get",
-        page: page
+        page: page,
+        queryParams:{
+            ...param
+        }
     })
 }

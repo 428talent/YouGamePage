@@ -31,7 +31,6 @@ export default ({
                 },
                 name: ["recommend", "newgame"],
             });
-
             const collectionGame = {};
             for(let collection of collectionResultReponse.data.result) {
                 const gameListResponse: ApiResponse<PageResult<Game>> = yield call(fetchGameList, {collection: collection.id});

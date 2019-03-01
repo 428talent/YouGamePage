@@ -15,6 +15,7 @@ export const Api = {
     getOrderList: ServerUrl + "/api/orders",
     payOrder: ServerUrl + "/api/order/:id/pay",
     order:ServerUrl + "/api/order/:id",
+    orders:ServerUrl + "/api/orders",
     profile: ServerUrl + "/api/user/:id/profile",
     fetchGame: ServerUrl + "/api/game/:id",
     uploadUserAvatar: ServerUrl + "/api/user/:id/avatar/upload",

@@ -31,7 +31,7 @@ export default ({
                         pageSize
                     };
                     if (search.length > 0) {
-                        param.name = search
+                        param.search = search
                     }
                     if (price === "u12") {
                         param.priceEnd = 12
@@ -57,6 +57,12 @@ export default ({
                         param.releaseTimeEnd = moment().format("YYYY-MM-DD");
 
                     }
+                    dispatch({
+                        type: "setState",
+                        payload: {
+                            search: search
+                        }
+                    })
                     dispatch({
                         type: "query",
                         payload: {
@@ -86,7 +92,6 @@ export default ({
                 pageSize,
                 ...param
             });
-
             const gameBands = [];
             const gameIdToFetch = fetchGameListResponse.data.result.map(game => (game.id));
             for (let idx in gameIdToFetch) {
@@ -98,9 +103,9 @@ export default ({
                         ...game,
                         cover: `${ServerUrl}/${gameBands[game.id].data.path}`
                     })),
-                    count: fetchGameListResponse.data.count,
-                    page: fetchGameListResponse.data.page,
-                    pageSize: fetchGameListResponse.data.page_size,
+                    count: Number(fetchGameListResponse.data.count),
+                    page: Number(fetchGameListResponse.data.page),
+                    pageSize: Number(fetchGameListResponse.data.page_size),
                 }
             })
 
