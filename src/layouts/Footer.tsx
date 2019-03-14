@@ -30,7 +30,6 @@ interface FooterProps extends BaseProps {
 const styles = theme => ({
     root: {
         display: "flex",
-        marginTop:55,
         textAlign: "center" as "center",
         height: 100,
         justifyContent:"center",

@@ -25,7 +25,6 @@ class OrderPayPage extends React.Component<OrderPayPageProp, {}> {
                 payConfirmDialogShow: isShow
             }
         });
-
     }
 
     closePayResultDialog() {

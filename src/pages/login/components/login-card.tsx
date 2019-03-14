@@ -5,6 +5,7 @@ import BaseProps from "../../../base/props";
 
 interface LoginCardProps extends BaseProps {
     onLoginHandler(username: string, password: string): void
+    onRegister:() => void
 }
 
 class LoginCard extends React.Component<LoginCardProps> {
@@ -14,7 +15,7 @@ class LoginCard extends React.Component<LoginCardProps> {
     };
 
     render(): React.ReactNode {
-        const {classes} = this.props;
+        const {classes,onRegister} = this.props;
         return (
             <div style={{
                 display: "flex",
@@ -22,10 +23,17 @@ class LoginCard extends React.Component<LoginCardProps> {
                 alignItems: "center"
             }}>
                 <Card className={classes.container}>
-                    <Typography variant="h6" gutterBottom>
-                        登陆YouGame
-                        <UserLoginForm onLoginSubmit={this.loginHandler}/>
-                    </Typography>
+                    <div style={{display:"flex",justifyContent:"center",alignItems: "center"}}>
+                        <img src={"/public/logo.svg"} style={{height:200}} />
+                        <div>
+                            <Typography variant="h6" gutterBottom>
+                                登陆YouGame
+                            </Typography>
+                            <UserLoginForm onLoginSubmit={this.loginHandler} onRegister={onRegister}/>
+                        </div>
+                    </div>
+
+
                 </Card>
             </div>
         )
@@ -36,9 +44,8 @@ class LoginCard extends React.Component<LoginCardProps> {
 
 const styles = createStyles({
     container: {
-        height: 300,
-        width: 400,
-        marginTop: 120,
+        minHeight: 300,
+        width: 600,
         paddingTop: 10,
         paddingBottom: 10,
         paddingLeft: 10,

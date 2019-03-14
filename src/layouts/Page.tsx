@@ -10,7 +10,6 @@ import SnackBarOverlay from "./components/SnackBarOverlay";
 
 class Page extends React.Component<PageProps, {}> {
     render(): React.ReactNode {
-        console.log(this.props);
         const content = (
             <div>
                 <MainNavBar
