@@ -11,6 +11,21 @@ interface RegisterPageProps extends BaseProps {
 
 const RegisterPage = (props: RegisterPageProps) => {
     const {classes, dispatch} = props;
+    const handleSummit = (username, password, email, rePassword) => {
+        if (password !== rePassword) {
+            dispatch({
+                type: "error/sendError",
+                message: "确认密码不一致"
+            });
+            return
+        }
+        dispatch({
+            type: 'register/createUser',
+            payload: {
+                username, password, email
+            },
+        })
+    };
     return (
         <div className={classes.container}>
             <Paper className={classes.registerCard}>
@@ -20,12 +35,7 @@ const RegisterPage = (props: RegisterPageProps) => {
                     </Typography>
                     <div style={{marginTop: 32}}>
                         <RegisterForm
-                            onLoginSubmit={(username, password) => dispatch({
-                                type: 'register/createUser',
-                                payload: {
-                                    username, password
-                                },
-                            })}
+                            onLoginSubmit={handleSummit}
                         />
                     </div>
                 </div>

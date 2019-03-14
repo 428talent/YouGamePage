@@ -6,6 +6,7 @@ import {createStyles, withStyles} from "@material-ui/core";
 import BaseProps from "../../base/props";
 import {connect} from "dva";
 import {url} from "inspector";
+import router from "umi/router";
 
 
 class Login extends React.Component<LoginProps, {}> {
@@ -20,10 +21,7 @@ class Login extends React.Component<LoginProps, {}> {
                             payload: {username, password}
                         })
                     }}
-                    onRegister={() => dispatch({
-                        type:"error/sendError",
-                        message:"test message"
-                    })}
+                    onRegister={() => router.push("/register")}
                 />
             </div>
         )
