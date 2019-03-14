@@ -6,13 +6,7 @@ import {Order} from "./model/order";
 import {OrderGood} from "./model/ordergood";
 import order from "../pages/order/models/order";
 
-export function fetchOrderList(
-    option: {
-        user: string,
-        state: string,
-        pageSize: number,
-        page: number
-    }): Promise<AxiosResponse<PageResult<Order>>> {
+export function fetchOrderList(option): Promise<AxiosResponse<PageResult<Order>>> {
 
     return apiRequest({
         url: Api.getOrderList,

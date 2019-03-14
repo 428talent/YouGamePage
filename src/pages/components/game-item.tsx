@@ -1,6 +1,6 @@
 import BaseProps from "../../base/props";
 import * as React from "react";
-import {Chip, Divider, Typography, withStyles} from "@material-ui/core";
+import {Chip, Divider, Link, Typography, withStyles} from "@material-ui/core";
 import ListItemText from '@material-ui/core/ListItemText';
 
 class GameItem extends React.Component<GameItemProp, {}> {
@@ -10,28 +10,28 @@ class GameItem extends React.Component<GameItemProp, {}> {
     }
 
     render(): React.ReactNode {
-        const {gameName, gamePrice, gameCover, classes} = this.props;
+        const {gameName, gamePrice, gameCover, classes, goodName, gameId} = this.props;
         return (
-            <div className={classes.root}>
-
-                <img src={gameCover} className={classes.pic}/>
-                <div className={classes.gameInfo}>
-                    <Typography variant="subtitle1">
-                        {gameName}
-                    </Typography>
+            <div>
+                <div className={classes.root}>
                     <div>
-
-                        <Chip label="冒险" className={classes.chip}/>
-                        <Chip label="奇幻" className={classes.chip}/>
-                        <Chip label="Basic Chip" className={classes.chip}/>
-
-
+                        <img src={gameCover} className={classes.pic}/>
+                        <div className={classes.gameInfo}>
+                            <Link href={`/detail/${gameId}`}>
+                                <Typography variant="subtitle1">
+                                    {goodName}
+                                </Typography>
+                            </Link>
+                            <Typography variant="subtitle2">
+                                {gameName}
+                            </Typography>
+                        </div>
                     </div>
                     <Typography variant="subtitle1" className={classes.gamePrice}>
                         ￥{gamePrice}
                     </Typography>
-
                 </div>
+                <Divider/>
             </div>
         )
     }
@@ -40,14 +40,21 @@ class GameItem extends React.Component<GameItemProp, {}> {
 interface GameItemProp extends BaseProps {
     gameName: string,
     gamePrice: number,
-    gameCover: string
+    gameCover: string,
+    goodName: string,
+    gameId: number
 }
 
 const styles = theme => ({
     root: {
         backgroundColor: "#FFFFFF",
         width: "100%",
-        height: 80
+        height: 80,
+        justifyContent: "space-between",
+        alignItems: "center",
+        display: "flex",
+        marginBottom: 12,
+        marginTop: 12
     },
     pic: {
         height: 80,
@@ -67,7 +74,7 @@ const styles = theme => ({
     chip: {
         marginRight: 8,
         fontSize: 10,
-        height:15
+        height: 15
     }
 });
 export default withStyles(styles)(GameItem)

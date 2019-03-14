@@ -38,6 +38,7 @@ interface MainNavBarProps extends BaseProps {
     isDrawerOpen: boolean,
     dispatch: any,
     cartItemCount: number
+    onUserLogOut: () => void
 }
 
 class MainNavBar extends React.Component<MainNavBarProps, {
@@ -178,7 +179,7 @@ class MainNavBar extends React.Component<MainNavBarProps, {
                                         <MenuItem
                                             onClick={() => {
                                                 this.setState({userMenuOpen: false});
-                                                router.push("/my/home")
+                                                router.push("/my/wishlist")
                                             }}
                                         >个人中心
                                         </MenuItem>
@@ -196,7 +197,11 @@ class MainNavBar extends React.Component<MainNavBarProps, {
                                             }}
                                         >账户设置
                                         </MenuItem>
-                                        <MenuItem>登出</MenuItem>
+                                        <MenuItem
+                                            onClick={() => this.props.dispatch({
+                                                type: "app/logOut"
+                                            })}
+                                        >登出</MenuItem>
                                     </MenuList>
                                 </div>
                             </Paper> : undefined}
@@ -224,7 +229,7 @@ class MainNavBar extends React.Component<MainNavBarProps, {
                         {/*<MenuIcon/>*/}
                         {/*</IconButton>*/}
 
-                        <img src={"/public/logo_light.svg"} style={{width: 48}} onClick={() =>router.push("/")}/>
+                        <img src={"/public/logo_light.svg"} style={{width: 48}} onClick={() => router.push("/")}/>
                         <Typography className={classes.title} variant="h6" color="inherit" noWrap>
                             You Game
                         </Typography>

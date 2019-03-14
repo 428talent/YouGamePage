@@ -8,6 +8,8 @@ import withRouter from "umi/withRouter";
 import {connect} from "dva";
 import BaseProps from "../base/props";
 import {ServerUrl} from "../config/api";
+import CustomizedTabs from "./components/game-rank";
+import {Typography} from "@material-ui/core";
 
 interface HomePageProps extends BaseProps {
     collections: any;
@@ -48,6 +50,20 @@ class Home extends Component<HomePageProps, {}> {
         }
     }
 
+    renderGameCollections(){
+        const collections : any[] = this.props.collections
+        return collections.map(collection => (
+            <SaleGameSection
+                title={collection.title}
+                games={collection.games.map(game => ({
+                    cover: `${ServerUrl}/${game.band}`,
+                    price: game.price,
+                    name: game.name,
+                    id:game.id,
+                }))}/>
+        ))
+    }
+
     render(): React.ReactNode {
         const {collections} = this.props;
         console.log(collections);
@@ -65,8 +81,13 @@ class Home extends Component<HomePageProps, {}> {
                 </div>
                 <Banner/>
 
-                {this.renderNewGame()}
-                {this.renderRecommend()}
+                {/*{this.renderNewGame()}*/}
+                {/*{this.renderRecommend()}*/}
+                {this.renderGameCollections()}
+                <Typography variant="h5" gutterBottom style={{marginTop:56,paddingLeft:300,paddingRight:300}}>
+                    探索
+                </Typography>
+                <CustomizedTabs/>
                 {/*<GameList/>*/}
             </div>
         );

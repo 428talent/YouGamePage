@@ -16,6 +16,8 @@ import {any, dropWhile, sum, uniq} from "ramda";
 import {getGoodList} from "../../../utils/schema";
 import {GetProfileList} from "../../../services/user";
 import {getRatingText} from "../../../utils/rating";
+import {readCookieJWTPayload} from "../../../utils/auth";
+import router from "umi/router";
 
 export default ({
     namespace: "detail",
@@ -197,6 +199,9 @@ export default ({
             }
         },
         * 'addToWishlist'({payload: {}}, {select, call, put}) {
+            if (readCookieJWTPayload() == null){
+                router.push("/login")
+            }
             const game = yield select(state => (state.detail.game));
             if (game) {
                 const addWishlistResponse: ApiResponse<WishListItem> = yield call(AddToWishList, {gameId: game.id});
@@ -238,6 +243,9 @@ export default ({
             }
         },
         * 'addToCart'({payload: {id}}, {select, call, put}) {
+            if (readCookieJWTPayload() == null){
+                router.push("/login")
+            }
             const addCartResponse = yield call(addToCart, {id});
             if (addCartResponse) {
                 console.log(addCartResponse.data);

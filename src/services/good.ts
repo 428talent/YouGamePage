@@ -25,3 +25,13 @@ export function fetchGoodList(param): Promise<ApiResponse<PageResult<Good>>> {
     })
 }
 
+export function getGoodSaleAna(param) {
+    return apiRequest({
+        url: Api.goodSaleAna,
+        method: "get",
+        queryParams: {
+            ...param
+        }
+    })
+}
+

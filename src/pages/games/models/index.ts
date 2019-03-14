@@ -18,7 +18,7 @@ export default ({
                 if (location.pathname === '/games') {
                     const {
                         page = 1,
-                        pageSize = 20,
+                        pageSize = 21,
                         order = "-release_time",
                         price = "all",
                         releaseTime = "all",
@@ -62,7 +62,7 @@ export default ({
                         payload: {
                             search: search
                         }
-                    })
+                    });
                     dispatch({
                         type: "query",
                         payload: {

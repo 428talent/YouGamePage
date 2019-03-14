@@ -9,6 +9,7 @@ import Game = GameModel.Game;
 import {Order} from "../../../services/model/order";
 import {createOrder} from "../../../services/order";
 import router from "umi/router";
+import {readCookieJWTPayload} from "../../../utils/auth";
 
 export default ({
     namespace: "cart",
@@ -20,6 +21,9 @@ export default ({
         setup({dispatch, history}: { dispatch: any; history: any }) {
             history.listen((location) => {
                 if (location.pathname === '/cart') {
+                    if (readCookieJWTPayload() == null){
+                        router.replace("/login")
+                    }
                     dispatch({type: "cart/fetchCartList", payload: {}})
                 }
             })

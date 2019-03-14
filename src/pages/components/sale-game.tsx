@@ -19,7 +19,7 @@ class SaleGameSection extends React.Component<SaleGameSectionProps, {}> {
         const {classes, games, title} = this.props;
         const gameCardCollection = games.map((game, key) => {
             return (
-                <Grid item xs={12} sm={6} md={4} lg={3} xl={2} key={key} className={classes.root}>
+                <Grid item xs={12} sm={6} md={4} lg={4} xl={3} key={key} className={classes.root}>
                     <GameCard
                         gamePicUrl={game.cover}
                         gamePrice={game.price}
@@ -31,7 +31,7 @@ class SaleGameSection extends React.Component<SaleGameSectionProps, {}> {
         });
         return (
             <div className={classes.container}>
-                <Typography variant="h4" gutterBottom>
+                <Typography variant="h5" gutterBottom>
                     {title}
                 </Typography>
                 <div className={classes.root}>
@@ -46,8 +46,8 @@ class SaleGameSection extends React.Component<SaleGameSectionProps, {}> {
 
 const styles = createStyles(theme => ({
     container: {
-        paddingLeft: 100,
-        paddingRight: 100,
+        paddingLeft: 300,
+        paddingRight: 300,
         marginTop: 60,
         [theme.breakpoints.only('xs')]: {
             paddingLeft: 16,

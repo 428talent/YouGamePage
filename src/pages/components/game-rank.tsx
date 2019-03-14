@@ -1,19 +1,61 @@
-import BaseProps from "../../base/props";
-import * as React from "react";
-import {AppBar, createStyles, Grid, List, ListItem, Paper, Tab, Tabs, Typography, withStyles} from "@material-ui/core";
-import SwipeableViews from 'react-swipeable-views';
-import {NewGameList} from "../../mock/mock";
-import GameItem from "./game-item";
+import * as React from 'react';
+import {withStyles} from '@material-ui/core/styles';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import TopSalePanel from "./TopSale/TopSalePanel";
+import NewGamePanel from "./NewGame/NewGamePanel";
 
-function TabContainer({children, dir}) {
-    return (
-        <div dir={dir} style={{paddingTop: 8}}>
-            {children}
-        </div>
-    );
-}
 
-class GameList extends React.Component<GameListProps, {}> {
+const styles = theme => ({
+    root: {
+        flexGrow: 1,
+        marginLeft: 300,
+        marginRight: 300,
+        marginTop: 24,
+        backgroundColor: theme.palette.background.paper,
+    },
+    tabsRoot: {
+        borderBottom: '1px solid #e8e8e8',
+    },
+    tabsIndicator: {
+        backgroundColor: '#1890ff',
+    },
+    tabRoot: {
+        textTransform: 'initial',
+        minWidth: 72,
+        fontWeight: theme.typography.fontWeightRegular,
+        marginRight: theme.spacing.unit * 4,
+        fontFamily: [
+            '-apple-system',
+            'BlinkMacSystemFont',
+            '"Segoe UI"',
+            'Roboto',
+            '"Helvetica Neue"',
+            'Arial',
+            'sans-serif',
+            '"Apple Color Emoji"',
+            '"Segoe UI Emoji"',
+            '"Segoe UI Symbol"',
+        ].join(','),
+        '&:hover': {
+            color: '#40a9ff',
+            opacity: 1,
+        },
+        '&$tabSelected': {
+            color: '#1890ff',
+            fontWeight: theme.typography.fontWeightMedium,
+        },
+        '&:focus': {
+            color: '#40a9ff',
+        },
+    },
+    tabSelected: {},
+    typography: {
+        padding: theme.spacing.unit * 3,
+    },
+});
+
+class CustomizedTabs extends React.Component<any, any> {
     state = {
         value: 0,
     };
@@ -22,84 +64,40 @@ class GameList extends React.Component<GameListProps, {}> {
         this.setState({value});
     };
 
-    handleChangeIndex = index => {
-        this.setState({value: index});
-    };
-
-
-    constructor(props: Readonly<GameListProps>) {
-        super(props);
-    }
-
-    render(): React.ReactNode {
-        const {classes, theme} = this.props;
-        const dailyRank = NewGameList.map((game, key) => {
-            return (
-
-                <ListItem key={key}>
-                    <GameItem gameCover={game.cover} gamePrice={game.price} gameName={game.name}/>
-                </ListItem>
-
-            )
-        });
+    render() {
+        const {classes} = this.props;
+        const {value} = this.state;
+        const renderContent = () => {
+            switch (value) {
+                case 0:
+                    return (<TopSalePanel/>)
+                case 1:
+                    return (<NewGamePanel/>)
+            }
+        }
         return (
             <div className={classes.root}>
-                <Typography variant="h4" gutterBottom>
-                    排行
-                </Typography>
-                <div className={classes.tab}>
-                    <Tabs
-                        value={this.state.value}
-                        onChange={this.handleChange}
-                        indicatorColor="primary"
-                        textColor="primary"
-                    >
-                        <Tab label="月排行"/>
-                        <Tab label="周排行"/>
-                        <Tab label="日排行"/>
-                    </Tabs>
-                </div>
-                <SwipeableViews
-                    className={classes.swipeContainer}
-                    axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-                    index={this.state.value}
-                    onChangeIndex={this.handleChangeIndex}
+                <Tabs
+                    value={value}
+                    onChange={this.handleChange}
+                    classes={{root: classes.tabsRoot, indicator: classes.tabsIndicator}}
                 >
-                    <TabContainer dir={theme.direction}>
-                        <List>
-                            {dailyRank}
-                        </List>
-                    </TabContainer>
-                    <TabContainer dir={theme.direction}>Item Two</TabContainer>
-                    <TabContainer dir={theme.direction}>Item Three</TabContainer>
-                </SwipeableViews>
+                    <Tab
+                        disableRipple
+                        classes={{root: classes.tabRoot, selected: classes.tabSelected}}
+                        label="热门"
+                    />
+                    <Tab
+                        disableRipple
+                        classes={{root: classes.tabRoot, selected: classes.tabSelected}}
+                        label="最近发售"
+                    />
+                </Tabs>
+                {renderContent()}
             </div>
-        )
+        );
     }
 }
 
-const styles = createStyles(theme => ({
-        root: {
-            marginTop: 60,
-            marginLeft: 100,
-            marginRight: 100,
-            [theme.breakpoints.only('xs')]: {
-                marginLeft: 16,
-                marginRight: 16,
-            },
-        },
-        tab: {
-            backgroundColor: theme.palette.background.paper,
-        },
-        swipeContainer: {
-            backgroundColor: "#FFFFFF"
-        }
 
-    })
-);
-
-interface GameListProps extends BaseProps {
-    theme?: any
-}
-
-export default withStyles(styles, {withTheme: true})(GameList)
+export default withStyles(styles)(CustomizedTabs);

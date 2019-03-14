@@ -49,9 +49,7 @@ class OrdersPage extends React.Component<OrderPageProp, {}> {
                     </Grid>
                     <Grid item xs={3}>
                         <Grid container style={{marginBottom: 16, marginTop: 16}}>
-                            <Paper>
-                                <OrderFilter filter={filter} onFilterChange={this.onFilterChange}/>
-                            </Paper>
+                            <OrderFilter filter={filter} onFilterChange={this.onFilterChange}/>
                         </Grid>
                     </Grid>
                     <Grid item xs={12}>
@@ -62,7 +60,7 @@ class OrdersPage extends React.Component<OrderPageProp, {}> {
                                 pageSize={pageSize}
                                 onNextPage={() => dispatch({type: "order/setState", payload: {page: page + 1}})}
                                 onPreviousPage={() => dispatch({type: "order/setState", payload: {page: page - 1}})}
-                                onSelectPage={(page) => dispatch({type: "order/setState", payload: {page}}) }
+                                onSelectPage={(page) => dispatch({type: "order/setState", payload: {page}})}
                             />
                         </Grid>
                     </Grid>

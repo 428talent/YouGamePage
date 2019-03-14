@@ -102,8 +102,10 @@ export default ({
             const jwtPayload = readCookieJWTPayload();
             if (jwtPayload == null)
                 return;
-            const fetchGoodListResponse: ApiResponse<PageResult<Good>> = yield call(fetchGoodList, {gameComment: gameId});
+            //可评论
+            const fetchGoodListResponse: ApiResponse<PageResult<Good>> = yield call(fetchGoodList, {game: gameId});
             if (fetchGoodListResponse.requestSuccess) {
+                //仓库中的产品
                 const fetchUserInventory: ApiResponse<PageResult<InventoryItem>> = yield call(GetInventoryItemList, {
                     page: {
                         page: 1,
@@ -112,14 +114,14 @@ export default ({
                     good: fetchGoodListResponse.data.result.map(good => (good.id)),
                     user: jwtPayload.UserId
                 });
-                // fetchComments
+                // 用户的评论
                 const fetchCommentListResponse: ApiResponse<PageResult<Comment>> = yield call(GetCommentList, {
                     page: {
                         page: 1,
                         pageSize: fetchGoodListResponse.data.count
                     },
                     user: jwtPayload.UserId,
-                    good: fetchUserInventory.data.result.map(inventoryItem => (inventoryItem.good_id))
+                    good: fetchGoodListResponse.data.result.map(good => (good.id))
                 });
                 if (fetchCommentListResponse.requestSuccess) {
                     yield put({type: "setState", payload: {userComments: fetchCommentListResponse.data.result}})
@@ -186,7 +188,7 @@ export default ({
             }
         },
         * 'fetchGoodFilter'({payload: {gameId}}, {select, call, put}) {
-            const fetchGoodListResponse: ApiResponse<PageResult<Good>> = yield call(fetchGoodList, {gameComment: gameId});
+            const fetchGoodListResponse: ApiResponse<PageResult<Good>> = yield call(fetchGoodList, {game: gameId});
             if (fetchGoodListResponse.requestSuccess) {
                 yield put({type: "setState", payload: {goods: fetchGoodListResponse.data.result}})
             }

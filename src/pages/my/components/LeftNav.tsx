@@ -35,19 +35,6 @@ const LeftNav = (props: LeftNavProps) => {
             <List component="nav">
                 <ListItem
                     button
-                    selected={tabIndex === 'home'}
-                    onClick={() => {
-                        onTabChange('home');
-                        router.push("/my/home")
-                    }}
-                >
-                    <ListItemIcon>
-                        <InboxIcon/>
-                    </ListItemIcon>
-                    <ListItemText primary="主页"/>
-                </ListItem>
-                <ListItem
-                    button
                     selected={tabIndex === 'wishlist'}
                     onClick={() => {
                         onTabChange('wishlist');
@@ -93,12 +80,6 @@ const LeftNav = (props: LeftNavProps) => {
                     onClick={(e) => router.push("/order")}
                 >
                     <ListItemText primary="我的订单"/>
-                </ListItem>
-                <ListItem
-                    button
-
-                >
-                    <ListItemText primary="Spam"/>
                 </ListItem>
             </List>
         </Paper>

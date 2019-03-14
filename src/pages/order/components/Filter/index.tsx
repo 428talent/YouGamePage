@@ -1,18 +1,19 @@
 import * as React from "react";
 import {
-    Divider,
-    List,
+    Chip,
+    ExpansionPanel,
+    ExpansionPanelDetails,
+    ExpansionPanelSummary,
+    FormControlLabel,
     ListItem,
-    ListItemIcon,
-    ListItemText,
-    ListSubheader,
-    withStyles,
+    Paper,
+    Radio,
+    RadioGroup,
     Typography,
-    Chip
+    withStyles
 } from "@material-ui/core";
 import BaseProps from "../../../../base/props";
-import InboxIcon from '@material-ui/icons/Inbox';
-import DraftsIcon from '@material-ui/icons/Drafts';
+import ExpandMoreIcon from "@material-ui/core/SvgIcon/SvgIcon";
 
 function ListItemLink(props) {
     return <ListItem button component="a" {...props} />;
@@ -40,33 +41,37 @@ const OrderFilter = (props: OrderFilterProps) => {
         onFilterChange({...filter, orderState})
     };
     return (
-        <div className={classes.root}>
-            <Typography variant={"h6"}>
-                订单状态
-            </Typography>
-            <div className={classes.filterContainer}>
-                <Chip
-                    className={classes.stateChip}
-                    color={orderState === 'all' ? "primary" : undefined}
-                    label="所有"
-                    clickable={orderState !== 'all'}
-                    onClick={(e) => handleOrderStateClick("all")}
-                />
-                <Chip
-                    className={classes.stateChip}
-                    color={orderState === 'created' ? "primary" : undefined}
-                    label="未付款"
-                    clickable={orderState !== 'Created'}
-                    onClick={(e) => handleOrderStateClick("created")}
-                />
-                <Chip
-                    className={classes.stateChip}
-                    color={orderState === 'done' ? "primary" : undefined}
-                    label="已付款"
-                    clickable={orderState !== 'Done'}
-                    onClick={(e) => handleOrderStateClick("done")}
-                />
-            </div>
+        <div>
+            <Paper>
+                <div className={classes.root}>
+                    <Typography variant={"h6"}>
+                        订单状态
+                    </Typography>
+                    <div className={classes.filterContainer}>
+                        <Chip
+                            className={classes.stateChip}
+                            color={orderState === 'all' ? "primary" : undefined}
+                            label="所有"
+                            clickable={orderState !== 'all'}
+                            onClick={(e) => handleOrderStateClick("all")}
+                        />
+                        <Chip
+                            className={classes.stateChip}
+                            color={orderState === 'created' ? "primary" : undefined}
+                            label="未付款"
+                            clickable={orderState !== 'Created'}
+                            onClick={(e) => handleOrderStateClick("created")}
+                        />
+                        <Chip
+                            className={classes.stateChip}
+                            color={orderState === 'done' ? "primary" : undefined}
+                            label="已付款"
+                            clickable={orderState !== 'Done'}
+                            onClick={(e) => handleOrderStateClick("done")}
+                        />
+                    </div>
+                </div>
+            </Paper>
         </div>
     );
 };

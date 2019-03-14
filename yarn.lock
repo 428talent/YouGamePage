@@ -1142,6 +1142,11 @@
   resolved "http://registry.npm.taobao.org/@types/isomorphic-fetch/download/@types/isomorphic-fetch-0.0.34.tgz#3c3483e606c041378438e951464f00e4e60706d6"
   integrity sha1-PDSD5gbAQTeEOOlRRk8A5OYHBtY=
 
+"@types/js-cookie@^2.2.1":
+  version "2.2.1"
+  resolved "http://registry.npm.taobao.org/@types/js-cookie/download/@types/js-cookie-2.2.1.tgz#aa6f6d5e5aaf7d97959e9fa938ac2501cf1a76f4"
+  integrity sha1-qm9tXlqvfZeVnp+pOKwlAc8advQ=
+
 "@types/jss@^9.5.6":
   version "9.5.7"
   resolved "http://registry.npm.taobao.org/@types/jss/download/@types/jss-9.5.7.tgz#fa57a6d0b38a3abef8a425e3eb6a53495cb9d5a0"
