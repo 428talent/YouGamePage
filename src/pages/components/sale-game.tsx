@@ -1,4 +1,4 @@
-import {createStyles, Grid, Typography, withStyles} from "@material-ui/core";
+import {createStyles, Grid, Link, Typography, withStyles} from "@material-ui/core";
 import * as React from "react";
 import BaseProps from "../../base/props";
 import GameCard from "./game-card";
@@ -9,14 +9,15 @@ interface SaleGameSectionProps extends BaseProps {
         cover: string
         price: number
         name: string
-        id:number
+        id: number
     }>
-    title: string
+    title: string,
+    id: number
 }
 
 class SaleGameSection extends React.Component<SaleGameSectionProps, {}> {
     render(): React.ReactNode {
-        const {classes, games, title} = this.props;
+        const {classes, games, title, id} = this.props;
         const gameCardCollection = games.map((game, key) => {
             return (
                 <Grid item xs={12} sm={6} md={4} lg={4} xl={3} key={key} className={classes.root}>
@@ -32,7 +33,7 @@ class SaleGameSection extends React.Component<SaleGameSectionProps, {}> {
         return (
             <div className={classes.container}>
                 <Typography variant="h5" gutterBottom>
-                    {title}
+                    <Link href={`/collection/${id}`}>{title}</Link>
                 </Typography>
                 <div className={classes.root}>
                     <Grid container spacing={24}>

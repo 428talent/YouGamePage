@@ -19,16 +19,6 @@ const CategoryMenu = (props: CategoryMenuProps) => {
                         onClick={() => router.push("/games?releaseTime=week")}
                     />
                 </ListItem>
-                <ListItem button>
-                    <ListItemText primary={"推荐"}/>
-                </ListItem>
-                <Divider/>
-                <ListItem button>
-                    <ListItemText primary={"射击"}/>
-                </ListItem>
-                <ListItem button>
-                    <ListItemText primary={"动作冒险"}/>
-                </ListItem>
                 <Divider/>
                 <ListItem button>
                     <ListItemText

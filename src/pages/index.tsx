@@ -16,44 +16,11 @@ interface HomePageProps extends BaseProps {
 }
 
 class Home extends Component<HomePageProps, {}> {
-    renderNewGame() {
-        const newGameCollection = this.props.collections.find(collection => collection.name === "newgame");
-        if (newGameCollection) {
-            return (
-                <SaleGameSection
-                    title={"新游戏"}
-                    games={newGameCollection.games.map(game => ({
-                        cover: `${ServerUrl}/${game.band}`,
-                        price: game.price,
-                        name: game.name,
-                        id: game.id,
-                    }))}/>
-            );
-        }
-    }
-
-    renderRecommend() {
-        const newGameCollection = this.props.collections.find(
-            collection => collection.name === "recommend",
-        );
-        if (newGameCollection) {
-            return (
-                <SaleGameSection
-                    title={"特别推荐"}
-                    games={newGameCollection.games.map(game => ({
-                        cover: `${ServerUrl}/${game.band}`,
-                        price: game.price,
-                        name: game.name,
-                        id: game.id,
-                    }))}/>
-            );
-        }
-    }
-
     renderGameCollections() {
         const collections: any[] = this.props.collections
         return collections.map(collection => (
             <SaleGameSection
+                id={collection.id}
                 title={collection.title}
                 games={collection.games.map(game => ({
                     cover: `${ServerUrl}/${game.band}`,

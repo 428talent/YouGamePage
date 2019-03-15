@@ -35,6 +35,7 @@ export const Api = {
     userWallet: `${ServerUrl}/user/:id/wallet`,
     userTransactionList: `${ServerUrl}/user/:id/transactions`,
     gameCollections: `${ServerUrl}/collections`,
+    gameCollection: `${ServerUrl}/collection/:id`,
     searchGame: `${ServerUrl}/search`,
     settingIndexCollection:`${ServerUrl}/setting/index_collection`,
     goodSaleAna:`${ServerUrl}/goods/sale_ana`,

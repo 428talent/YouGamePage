@@ -8,8 +8,19 @@ export function GetGameCollectionList({page, ...param}): Promise<ApiResponse<Pag
         url: Api.gameCollections,
         method: "get",
         page: page,
-        queryParams:{
+        queryParams: {
             ...param
+        }
+    })
+}
+
+
+export function getCollection({collectionId}) {
+    return apiRequest({
+        url: Api.gameCollection,
+        method: "get",
+        pathParams: {
+            id: collectionId
         }
     })
 }
