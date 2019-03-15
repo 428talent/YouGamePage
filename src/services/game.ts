@@ -33,6 +33,7 @@ export function searchGame({...param}): Promise<ApiResponse<PageResult<Game>>> {
         queryParams: param
     })
 }
+
 export function getGameBand({gameId}): Promise<ApiResponse<Image>> {
     return apiRequest<Image>({
         url: `${Api.fetchGame}/band`,
@@ -77,5 +78,16 @@ export function GetUserInventoryGameList({userId, ...param}): Promise<ApiRespons
             id: userId
         },
         queryParams: param
+    })
+}
+
+
+export function getTag({tagId}) {
+    return apiRequest({
+        url: Api.tag,
+        method: "get",
+        pathParams: {
+            id: tagId
+        }
     })
 }

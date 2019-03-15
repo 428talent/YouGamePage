@@ -9,7 +9,7 @@ import {connect} from "dva";
 import BaseProps from "../base/props";
 import {ServerUrl} from "../config/api";
 import CustomizedTabs from "./components/game-rank";
-import {Typography} from "@material-ui/core";
+import {createStyles, Typography, withStyles} from "@material-ui/core";
 
 interface HomePageProps extends BaseProps {
     collections: any;
@@ -18,7 +18,7 @@ interface HomePageProps extends BaseProps {
 class Home extends Component<HomePageProps, {}> {
     renderNewGame() {
         const newGameCollection = this.props.collections.find(collection => collection.name === "newgame");
-        if(newGameCollection) {
+        if (newGameCollection) {
             return (
                 <SaleGameSection
                     title={"新游戏"}
@@ -26,7 +26,7 @@ class Home extends Component<HomePageProps, {}> {
                         cover: `${ServerUrl}/${game.band}`,
                         price: game.price,
                         name: game.name,
-                        id:game.id,
+                        id: game.id,
                     }))}/>
             );
         }
@@ -36,7 +36,7 @@ class Home extends Component<HomePageProps, {}> {
         const newGameCollection = this.props.collections.find(
             collection => collection.name === "recommend",
         );
-        if(newGameCollection) {
+        if (newGameCollection) {
             return (
                 <SaleGameSection
                     title={"特别推荐"}
@@ -44,14 +44,14 @@ class Home extends Component<HomePageProps, {}> {
                         cover: `${ServerUrl}/${game.band}`,
                         price: game.price,
                         name: game.name,
-                        id:game.id,
+                        id: game.id,
                     }))}/>
             );
         }
     }
 
-    renderGameCollections(){
-        const collections : any[] = this.props.collections
+    renderGameCollections() {
+        const collections: any[] = this.props.collections
         return collections.map(collection => (
             <SaleGameSection
                 title={collection.title}
@@ -59,40 +59,32 @@ class Home extends Component<HomePageProps, {}> {
                     cover: `${ServerUrl}/${game.band}`,
                     price: game.price,
                     name: game.name,
-                    id:game.id,
+                    id: game.id,
                 }))}/>
         ))
     }
 
     render(): React.ReactNode {
-        const {collections} = this.props;
+        const {collections, classes} = this.props;
         console.log(collections);
         return (
-            <div>
-                <div style={{
-                    position: "absolute",
-                    marginTop: 100,
-                    zIndex: 100,
-                    width: "100%",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                }}>
-                </div>
+            <div className={classes.container}>
                 <Banner/>
-
-                {/*{this.renderNewGame()}*/}
-                {/*{this.renderRecommend()}*/}
                 {this.renderGameCollections()}
-                <Typography variant="h5" gutterBottom style={{marginTop:56,paddingLeft:300,paddingRight:300}}>
+                <Typography variant="h5" gutterBottom style={{marginTop: 56, paddingLeft: 300, paddingRight: 300}}>
                     探索
                 </Typography>
                 <CustomizedTabs/>
-                {/*<GameList/>*/}
             </div>
         );
     }
 }
 
+const styles = createStyles(theme => ({
+    container: {
+        paddingBottom: 55
+    }
+}));
 // @ts-ignore
-export default connect(({ home }) => ({...home}))(withRouter(Home));
+export default connect(({home}) => ({...home}))(withRouter(withStyles(styles)(Home)));
+

@@ -1194,6 +1194,13 @@
   dependencies:
     "@types/react" "*"
 
+"@types/react-paginate@^6.2.1":
+  version "6.2.1"
+  resolved "http://registry.npm.taobao.org/@types/react-paginate/download/@types/react-paginate-6.2.1.tgz#2329088d78010ea49661559c8467a24ecd942784"
+  integrity sha1-IykIjXgBDqSWYVWchGeiTs2UJ4Q=
+  dependencies:
+    "@types/react" "*"
+
 "@types/react-router-dom@4.x", "@types/react-router-dom@^4.2.7":
   version "4.3.1"
   resolved "http://registry.npm.taobao.org/@types/react-router-dom/download/@types/react-router-dom-4.3.1.tgz#71fe2918f8f60474a891520def40a63997dafe04"
@@ -11262,7 +11269,7 @@ react-native-swipeout@^2.2.2:
     prop-types "^15.5.10"
     react-tween-state "^0.1.5"
 
-react-paginate@^6.0.0:
+react-paginate@^6.3.0:
   version "6.3.0"
   resolved "http://registry.npm.taobao.org/react-paginate/download/react-paginate-6.3.0.tgz#29cbb5d1645227f4e4f959b9d7f43cfae603f801"
   integrity sha1-Kcu10WRSJ/Tk+Vm51/Q8+uYD+AE=

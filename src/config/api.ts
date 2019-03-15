@@ -37,5 +37,6 @@ export const Api = {
     gameCollections: `${ServerUrl}/collections`,
     searchGame: `${ServerUrl}/search`,
     settingIndexCollection:`${ServerUrl}/setting/index_collection`,
-    goodSaleAna:`${ServerUrl}/goods/sale_ana`
+    goodSaleAna:`${ServerUrl}/goods/sale_ana`,
+    tag:`${ServerUrl}/tag/:id`
 };

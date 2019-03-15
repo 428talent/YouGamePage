@@ -29,6 +29,7 @@ class LoginForm extends React.Component<LoginFormProps, {}> {
                 inputProps={restInput}
                 onChange={onChange}
                 value={value}
+                variant={"outlined"}
             />
         );
         return (
